@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "parler",
     "cats.apps.CatsConfig",
 ]
 
@@ -111,6 +112,23 @@ USE_I18N = True
 
 USE_TZ = True
 
+LANGUAGES = [
+    ('ru', 'Russian'),
+    ('de', 'German'),
+    ('en', 'English'),
+]
+
+PARLER_LANGUAGES = {
+    None: (
+        {'code': 'ru'},
+        {'code': 'de'},
+        {'code': 'en'},
+    ),
+    'default': {
+        'fallbacks': ['en'],   # если нет перевода
+        'hide_untranslated': False,
+    }
+}
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
