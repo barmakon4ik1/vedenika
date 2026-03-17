@@ -1,8 +1,12 @@
+from typing import TYPE_CHECKING
 from django.db import models
 from parler.models import TranslatableModel, TranslatedFields
 from .ems import build_ems_code, validate_components
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
+
+if TYPE_CHECKING:
+    from typing import TYPE_CHECKING
 
 # TranslatableModel- Обязателен для parler.
 
@@ -277,13 +281,6 @@ class CatColor(models.Model):
                 self.ems_code = ""
 
         super().save(*args, **kwargs)
-
-
-class Cat(models.Model):
-    registered_name = models.CharField(max_length=200, unique=True)
-
-    def __str__(self):
-        return self.registered_name
 
 
 class Country(TranslatableModel):
@@ -903,7 +900,7 @@ class Title(TranslatableModel):
     Используется для фиксации титулов из родословных:
     - Аббревиатура титула (например, CH, IC, NW)
     - Полное название титула (можно перевести)
-    - Тип титула (для классификации, например, чемпион, интерчемпион)
+    - Тип титула (для классификации, например, чемпион, интер-чемпион)
     - Дата присвоения титула
     - Примечания
     """
@@ -923,7 +920,7 @@ class Title(TranslatableModel):
 
     class TitleType(models.TextChoices):
         CHAMPION = "CHAMPION", "Чемпион"
-        INTERCHAMPION = "INTERCHAMPION", "Интерчемпион"
+        INTERCHAMPION = "INTERCHAMPION", "Международный чемпион"
         NATIONAL = "NATIONAL", "Национальный титул"
         WORLD = "WORLD", "Мировой титул"
         OTHER = "OTHER", "Другое"
@@ -970,4 +967,294 @@ class Title(TranslatableModel):
         # Берём имя на доступном языке, если оно есть, иначе пустая строка
         full = self.safe_translation_getter("full_name", any_language=True) or ""
         return f"{self.abbreviation} ({full})"
+
+
+class Cat(models.Model):
+    """
+    Главная модель кота в питомнике.
+    Хранит базовую информацию:
+    - официальное имя
+    - пол
+    - даты рождения
+    - идентификаторы
+    - связи с родителями и питомником
+    """
+
+    class Sex(models.TextChoices):
+        MALE = "M", "Самец"
+        FEMALE = "F", "Самка"
+
+    class Status(models.TextChoices):
+        ALIVE = "ALIVE", "Жив"
+        DECEASED = "DECEASED", "Погиб"
+        SOLD = "SOLD", "Продан"
+
+    registered_name = models.CharField(
+        max_length=200,
+        db_index=True,
+        verbose_name="Официальное имя (родословная)"
+    )
+
+    call_name = models.CharField(
+        max_length=100,
+        blank=True,
+        verbose_name="Домашнее имя"
+    )
+
+    sex = models.CharField(
+        max_length=1,
+        choices=Sex.choices,
+        verbose_name="Пол"
+    )
+
+    birth_date = models.DateField(
+        null=True,
+        blank=True,
+        verbose_name="Дата рождения"
+    )
+
+    death_date = models.DateField(
+        null=True,
+        blank=True,
+        verbose_name="Дата смерти"
+    )
+
+    # 🧬 Идентификаторы
+
+    microchip = models.CharField(
+        max_length=50,
+        blank=True,
+        verbose_name="Микрочип"
+    )
+
+    pedigree_number = models.CharField(
+        max_length=100,
+        blank=True,
+        verbose_name="Номер родословной"
+    )
+
+    # 🐾 Связи
+
+    breed = models.ForeignKey(
+        "Breed",
+        on_delete=models.PROTECT,
+        related_name="cats",
+        verbose_name="Порода"
+    )
+
+    cattery = models.ForeignKey(
+        "Cattery",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="cats",
+        verbose_name="Питомник рождения"
+    )
+
+    # 🧬 Родители (само-ссылки)
+
+    father = models.ForeignKey(
+        "self",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="kittens_from_father",
+        limit_choices_to={"sex": "M"},
+        verbose_name="Отец"
+    )
+
+    mother = models.ForeignKey(
+        "self",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="kittens_from_mother",
+        limit_choices_to={"sex": "F"},
+        verbose_name="Мать"
+    )
+
+    owner = models.ForeignKey(
+        Person,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="owned_cats"
+    )
+
+    # 📊 Статус в питомнике
+
+    is_active = models.BooleanField(
+        default=True,
+        verbose_name="Активен"
+    )
+
+    is_for_breeding = models.BooleanField(
+        default=True,
+        verbose_name="Допущен к разведению"
+    )
+
+    remark = models.TextField(
+        blank=True,
+        verbose_name="Примечание"
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    updated_at = models.DateTimeField(
+        auto_now=True
+    )
+
+    litter = models.ForeignKey(
+        "Litter",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="kittens",
+        verbose_name="Помёт"
+    )
+
+    class Meta:
+        verbose_name = "Кот"
+        verbose_name_plural = "Коты"
+        ordering = ["registered_name"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["registered_name", "cattery"],
+                name="unique_name_per_cattery"
+            )
+        ]
+
+    def __str__(self):
+        return self.registered_name
+
+
+class CatName(models.Model):
+    """
+    Альтернативные написания имени кота:
+    - кириллица
+    - латиница
+    - экспортное имя
+    - исторические варианты
+    """
+
+    cat = models.ForeignKey(
+        Cat,
+        on_delete=models.CASCADE,
+        related_name="names"
+    )
+
+    name = models.CharField(max_length=200)
+
+    language_code = models.CharField(
+        max_length=10,
+        blank=True,
+        help_text="ru, de, en и т.д."
+    )
+
+    is_official = models.BooleanField(
+        default=False,
+        help_text="Основное отображаемое имя"
+    )
+
+    remark = models.TextField(blank=True)
+
+    class Meta:
+        ordering = ["-is_official", "name"]
+
+    def __str__(self):
+        return self.name
+
+
+class Litter(models.Model):
+    """
+    Помёт котят.
+    Объединяет котят от одной вязки:
+    - родители
+    - дата рождения
+    - питомник
+    - код помёта
+    """
+
+    litter_code = models.CharField(
+        max_length=50,
+        unique=True,
+        verbose_name="Код помёта"
+    )
+
+    birth_date = models.DateField(
+        verbose_name="Дата рождения"
+    )
+
+    cattery = models.ForeignKey(
+        "Cattery",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="litters",
+        verbose_name="Питомник"
+    )
+
+    father = models.ForeignKey(
+        "Cat",
+        on_delete=models.PROTECT,
+        related_name="litters_as_father",
+        limit_choices_to={"sex": "M"},
+        verbose_name="Отец"
+    )
+
+    mother = models.ForeignKey(
+        "Cat",
+        on_delete=models.PROTECT,
+        related_name="litters_as_mother",
+        limit_choices_to={"sex": "F"},
+        verbose_name="Мать"
+    )
+
+    kittens_count = models.PositiveSmallIntegerField(
+        default=0,
+        verbose_name="Количество котят"
+    )
+
+    remark = models.TextField(blank=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    # Явное объявление для IDE, чтобы PyCharm видел обратную связь
+    if TYPE_CHECKING:
+        kittens: "models.QuerySet[Cat]"
+
+    class Meta:
+        verbose_name = "Помёт"
+        verbose_name_plural = "Помёты"
+        ordering = ["-birth_date"]
+
+    def __str__(self):
+        return f"{self.litter_code} ({self.birth_date})"
+
+    def sync_kittens(self):
+        """
+        Создает недостающих котят в соответствии с kittens_count.
+        Безопасно — не удаляет существующих.
+        """
+        existing_count = self.kittens.count()
+        for i in range(existing_count + 1, self.kittens_count + 1):
+            # для транзакции обязательно заполняем обязательные NOT NULL поля
+            Cat.objects.create(
+                registered_name=f"{self.litter_code} Kitten {i}",
+                sex="M",  # временно, позже можно задать реальный пол
+                birth_date=self.birth_date,
+                breed=self.father.breed if self.father else None,
+                cattery=self.cattery,
+                father=self.father,
+                mother=self.mother,
+                litter=self
+            )
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if self.kittens_count > 0:
+            self.sync_kittens()
+
 
