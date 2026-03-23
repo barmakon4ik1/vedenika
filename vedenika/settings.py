@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "parler",
+    'rest_framework',
     "cats.apps.CatsConfig",
 ]
 
@@ -78,7 +79,7 @@ WSGI_APPLICATION = "vedenika.wsgi.application"
 # Возможные пути к базе на разных машинах
 POSSIBLE_PATHS = [
     Path("D:/Meine Daten/YandexDisk/MyDocu/Katze/db.sqlite3"),
-    Path("F:/YandexDisk/YandexDisk/MyDocu/Katze/db.sqlite3"),
+    Path("F:/YandexDisk/MyDocu/Katze/db.sqlite3"),
 ]
 
 # Ищем существующий путь

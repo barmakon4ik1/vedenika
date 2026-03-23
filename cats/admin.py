@@ -228,8 +228,13 @@ class OrganizationAdmin(TranslatableAdmin):
 # Cats
 # =========================
 
+class CatColorInline(admin.StackedInline):
+    model = CatColor
+    extra = 0
+
 @admin.register(Cat)
 class CatAdmin(admin.ModelAdmin):
+    inlines = [CatColorInline]
     list_display = ("id", "registered_name", "sex", "breed", "cattery", "litter")
     list_filter = ("sex", "breed", "cattery")
     search_fields = ("registered_name", "call_name")
@@ -392,3 +397,4 @@ class PageAdmin(admin.ModelAdmin):
     list_display = ('name', 'slug', 'created_at', 'updated_at')
     prepopulated_fields = {"slug": ("name",)}
     inlines = [ContentBlockInline]
+

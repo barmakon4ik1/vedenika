@@ -236,27 +236,27 @@ class CatColor(models.Model):
     def __str__(self):
         return f"{self.cat.registered_name} — {self.ems_code}"
 
-    # def save(self, *args, **kwargs):
-    #     """
-    #     При сохранении автоматически формируем EMS код цвета
-    #     на основе выбранных компонентов или справочного цвета.
-    #     """
-    #
-    #     # 1. Если задан справочный цвет — используем его
-    #     if self.color:
-    #         self.ems_code = self.color.ems_code
-    #
-    #     # 2. Иначе строим из компонентов
-    #     else:
-    #         components = list(self.components.select_related("type"))
-    #
-    #         if components:
-    #             validate_components(components)
-    #             self.ems_code = build_ems_code(components)
-    #         else:
-    #             self.ems_code = ""
-    #
-    #     super().save(*args, **kwargs)
+    def save(self, *args, **kwargs):
+        """
+        При сохранении автоматически формируем EMS код цвета
+        на основе выбранных компонентов или справочного цвета.
+        """
+
+        # 1. Если задан справочный цвет — используем его
+        if self.color:
+            self.ems_code = self.color.ems_code
+
+        # 2. Иначе строим из компонентов
+        else:
+            components = list(self.components.select_related("type"))
+
+            if components:
+                validate_components(components)
+                self.ems_code = build_ems_code(components)
+            else:
+                self.ems_code = ""
+
+        super().save(*args, **kwargs)
 
 
 class Country(TranslatableModel):
@@ -1104,6 +1104,14 @@ class Cat(models.Model):
 
     def __str__(self):
         return self.registered_name
+
+    @property
+    def ems_code(self):
+        return self.cat_color.ems_code if hasattr(self, "cat_color") else ""
+
+    @property
+    def color(self):
+        return self.cat_color.color if hasattr(self, "cat_color") else None
 
 
 class CatName(models.Model):
