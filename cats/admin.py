@@ -1,6 +1,5 @@
 from django.contrib import admin
 from django import forms
-from django.core.exceptions import ValidationError
 from parler.admin import TranslatableAdmin
 
 from .models import *
