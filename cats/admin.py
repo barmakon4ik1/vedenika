@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django import forms
-from parler.admin import TranslatableAdmin
+from parler.admin import TranslatableAdmin, TranslatableTabularInline
 
 from .models import *
 
@@ -12,6 +12,19 @@ from .models import *
 class TranslatableAdminMixin:
     def get_translated(self, obj, field):
         return obj.safe_translation_getter(field, any_language=True)
+
+
+class ColorAdminForm(forms.ModelForm):
+    class Meta:
+        model = Color
+        fields = "__all__"
+
+    def clean(self):
+        cleaned_data = super().clean()
+        components = cleaned_data.get("components")
+        if components:
+            validate_components(components)
+        return cleaned_data
 
 
 # =========================
@@ -88,29 +101,47 @@ class ColorComponentUsageInline(admin.TabularInline):
 
 @admin.register(Color)
 class ColorAdmin(TranslatableAdmin):
+    form = ColorAdminForm
+
     list_display = ("id", "get_name", "ems_code", "is_active")
     search_fields = ("translations__name", "ems_code")
     list_filter = ("is_active",)
     ordering = ("ems_code",)
+    readonly_fields = ("ems_code",)
 
     inlines = [ColorComponentUsageInline]
 
     def get_name(self, obj):
         return obj.safe_translation_getter("name", any_language=True)
-    get_name.short_description = "Name"
+
+    def save_model(self, request, obj, form, change):
+        """
+        Генерируем EMS код при сохранении Color
+        """
+        super().save_model(request, obj, form, change)
+
+        # Берём компоненты из формы (если объект новый или редактируется)
+        components = form.cleaned_data.get("components")
+        if components:
+            validate_components(components)
+            new_code = build_ems_code(components)
+            if obj.ems_code != new_code:
+                # Обновляем поле в базе, не трогая остальное
+                Color.objects.filter(pk=obj.pk).update(ems_code=new_code)
 
     def save_related(self, request, form, formsets, change):
+        """
+        Генерируем EMS код после сохранения inline (ColorComponentUsage)
+        """
         super().save_related(request, form, formsets, change)
 
         obj = form.instance
         components = obj.components.select_related("type")
-
-        validate_components(components)
-        new_code = build_ems_code(components)
-
-        if obj.ems_code != new_code:
-            obj.ems_code = new_code
-            obj.save(update_fields=["ems_code"])
+        if components.exists():
+            validate_components(components)
+            new_code = build_ems_code(components)
+            if obj.ems_code != new_code:
+                Color.objects.filter(pk=obj.pk).update(ems_code=new_code)
 
 
 # =========================
@@ -278,10 +309,86 @@ class TitleAdmin(TranslatableAdmin):
 # CatColor
 # =========================
 
+
 @admin.register(CatColor)
 class CatColorAdmin(admin.ModelAdmin):
     list_display = ("cat", "ems_code", "color")
     filter_horizontal = ("components",)
     autocomplete_fields = ("cat", "color")
     list_select_related = ("cat", "color")
-    search_fields = ("translations__name", "ems_code")
+    search_fields = ("cat__registered_name", "ems_code")
+    readonly_fields = ("ems_code", "color_name")
+
+    def color_name(self, obj):
+        if obj.color:
+            return obj.color.safe_translation_getter("name", any_language=True)
+        return "-"
+
+    color_name.short_description = "Color name"
+
+    def save_model(self, request, obj, form, change):
+        """
+        Генерируем EMS код при сохранении CatColor
+        """
+        super().save_model(request, obj, form, change)
+
+        if obj.color:
+            # Если задан справочный цвет, берём его EMS
+            new_code = obj.color.ems_code
+        else:
+            components = form.cleaned_data.get("components")
+            if components:
+                validate_components(components)
+                new_code = build_ems_code(components)
+            else:
+                new_code = ""
+
+        if obj.ems_code != new_code:
+            CatColor.objects.filter(pk=obj.pk).update(ems_code=new_code)
+
+    def save_related(self, request, form, formsets, change):
+        """
+        Генерируем EMS код после сохранения компонентов через inline
+        """
+        super().save_related(request, form, formsets, change)
+
+        obj = form.instance
+        if obj.color:
+            new_code = obj.color.ems_code
+        else:
+            components = obj.components.select_related("type")
+            if components.exists():
+                validate_components(components)
+                new_code = build_ems_code(components)
+            else:
+                new_code = ""
+
+        if obj.ems_code != new_code:
+            CatColor.objects.filter(pk=obj.pk).update(ems_code=new_code)
+
+"""
+Пояснения
+    1. TranslatableTabularInline
+        Позволяет редактировать блоки прямо внутри страницы.
+        Каждая строка — один блок (заголовок, параграф, изображение, список).
+    2. sortable_field_name = "order"
+        Можно менять порядок блоков через drag-and-drop в админке.
+    3. TranslatableAdmin / TranslatableTabularInline
+        Автоматически добавляет поля для всех языков, если включена мультиязычность через TranslatableModel.
+    4. prepopulated_fields
+        Слаг генерируется автоматически из названия страницы.
+"""
+# Inline для блоков контента на странице
+class ContentBlockInline(TranslatableTabularInline):
+    model = ContentBlock
+    extra = 1  # по умолчанию добавляется один пустой блок
+    fields = ('order', 'block_type', 'title', 'text', 'image')
+    sortable_field_name = "order"  # позволяет перетаскивать порядок блоков
+    show_change_link = True
+
+# Админка для страниц
+@admin.register(Page)
+class PageAdmin(admin.ModelAdmin):
+    list_display = ('name', 'slug', 'created_at', 'updated_at')
+    prepopulated_fields = {"slug": ("name",)}
+    inlines = [ContentBlockInline]

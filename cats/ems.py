@@ -33,6 +33,7 @@ def validate_components(components):
 
     # Один базовый цвет
     bases = [c for c in components if c.type.code == "BASE"]
+    print("DEBUG:", [(c.code, c.type.code) for c in components])
 
     if len(bases) != 1:
         raise ValidationError(
@@ -86,10 +87,11 @@ def allowed_components(selected, queryset):
     """
     Возвращает queryset компонентов, которые можно добавить к уже выбранным
     """
+    selected_ids = list(selected.values_list("id", flat=True))
 
     # Белый блокирует всё
     if any(c.code == "w" for c in selected):
-        return queryset.filter(code="w")
+        return queryset.filter(code="w") | queryset.filter(id__in=selected_ids)
 
     # Только один BASE
     if any(c.type.code == "BASE" for c in selected):
@@ -102,4 +104,5 @@ def allowed_components(selected, queryset):
     if any(c.code == "y" for c in selected):
         queryset = queryset.exclude(code="s")
 
-    return queryset
+    # 🔥 КРИТИЧНО: вернуть выбранные
+    return queryset | queryset.filter(id__in=selected_ids)

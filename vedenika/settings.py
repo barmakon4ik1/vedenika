@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/6.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -74,13 +75,25 @@ WSGI_APPLICATION = "vedenika.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
+# Возможные пути к базе на разных машинах
+POSSIBLE_PATHS = [
+    Path("D:/Meine Daten/YandexDisk/MyDocu/Katze/db.sqlite3"),
+    Path("F:/YandexDisk/YandexDisk/MyDocu/Katze/db.sqlite3"),
+]
+
+# Ищем существующий путь
+DB_PATH = next((p for p in POSSIBLE_PATHS if p.exists()), None)
+
+if DB_PATH is None:
+    raise FileNotFoundError("SQLite DB not found in known locations")
+
+# Настройка Django
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "NAME": str(DB_PATH),
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators

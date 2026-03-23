@@ -125,49 +125,27 @@ class Color(TranslatableModel):
         name = self.safe_translation_getter("name", any_language=True)
         return f"{name} ({self.ems_code})"
 
-    def build_ems_code(self):
-        """
-        Строит EMS код цвета на основе его компонентов.
-        Сортирует компоненты по типу в соответствии
-        с EMS_ORDER и объединяет компоненты одного типа в одну строку.
-        """
-        components = self.components.select_related("type")
-        return build_ems_code(components)
-
     def save(self, *args, **kwargs):
-        """
-        При сохранении автоматически формируем EMS код цвета на основе выбранных компонентов.
-        Это гарантирует, что EMS код всегда соответствует компонентам цвета.
-        """
-
-        super().save(*args, **kwargs)
-
+        # Получаем компоненты через M2M (если объект уже существует)
         if self.pk:
-
             components = self.components.select_related("type")
-
-            validate_components(components)
-
-            new_code = build_ems_code(components)
-
-            if self.ems_code != new_code:
-                Color.objects.filter(pk=self.pk).update(
-                    ems_code=new_code
-                )
+            if components.exists():
+                validate_components(components)
+                self.ems_code = build_ems_code(components)
+        super().save(*args, **kwargs)
 
     @staticmethod
     def allowed_components(selected):
         """
-        Возвращает QuerySet компонентов, которые можно выбрать в зависимости от уже выбранных компонентов.
-        Например, если уже выбран белый, то остальные компоненты недоступны. Если выбран
-        серебряный, то золотой недоступен и т.д.
+        Возвращает QuerySet компонентов, которые можно выбрать к уже выбранным.
+        С учётом правил EMS (BASE/SILVER/GOLD/WHITE)
         """
-
         qs = ColorComponent.objects.all()
+        selected_ids = [c.id for c in selected]
 
         # Белый блокирует всё
         if any(c.code == "w" for c in selected):
-            return qs.filter(code="w")
+            return qs.filter(code="w") | ColorComponent.objects.filter(id__in=selected_ids)
 
         # Только один BASE
         if any(c.type.code == "BASE" for c in selected):
@@ -176,11 +154,11 @@ class Color(TranslatableModel):
         # Silver vs Gold
         if any(c.code == "s" for c in selected):
             qs = qs.exclude(code="y")
-
         if any(c.code == "y" for c in selected):
             qs = qs.exclude(code="s")
 
-        return qs
+        # вернуть выбранные обратно
+        return qs | ColorComponent.objects.filter(id__in=selected_ids)
 
 
 class ColorComponentType(TranslatableModel):
@@ -258,29 +236,27 @@ class CatColor(models.Model):
     def __str__(self):
         return f"{self.cat.registered_name} — {self.ems_code}"
 
-    def save(self, *args, **kwargs):
-        """
-        При сохранении автоматически формируем EMS код цвета
-        на основе выбранных компонентов или справочного цвета.
-        """
-
-        # 1. Если задан справочный цвет — используем его
-        if self.color:
-            self.ems_code = self.color.ems_code
-
-        # 2. Иначе строим из компонентов
-        else:
-            components = list(
-                self.components.select_related("type")
-            )
-
-            if components:
-                validate_components(components)
-                self.ems_code = build_ems_code(components)
-            else:
-                self.ems_code = ""
-
-        super().save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     """
+    #     При сохранении автоматически формируем EMS код цвета
+    #     на основе выбранных компонентов или справочного цвета.
+    #     """
+    #
+    #     # 1. Если задан справочный цвет — используем его
+    #     if self.color:
+    #         self.ems_code = self.color.ems_code
+    #
+    #     # 2. Иначе строим из компонентов
+    #     else:
+    #         components = list(self.components.select_related("type"))
+    #
+    #         if components:
+    #             validate_components(components)
+    #             self.ems_code = build_ems_code(components)
+    #         else:
+    #             self.ems_code = ""
+    #
+    #     super().save(*args, **kwargs)
 
 
 class Country(TranslatableModel):
@@ -1256,5 +1232,46 @@ class Litter(models.Model):
         super().save(*args, **kwargs)
         if self.kittens_count > 0:
             self.sync_kittens()
+
+
+class Page(models.Model):
+    """
+    Страница сайта. Содержит набор блоков контента.
+    """
+    slug = models.SlugField(unique=True)  # URL страницы: /pages/<slug>/
+    name = models.CharField(max_length=200)  # Для админки
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.name
+
+class ContentBlock(TranslatableModel):
+    """
+    Гибкий блок контента. Может быть заголовком, параграфом, изображением, списком и т.д.
+    """
+    BLOCK_TYPES = [
+        ('title', 'Заголовок'),
+        ('paragraph', 'Параграф'),
+        ('image', 'Изображение'),
+        ('list', 'Список'),
+    ]
+
+    page = models.ForeignKey(Page, related_name="blocks", on_delete=models.CASCADE)
+    order = models.PositiveIntegerField(default=0)  # порядок отображения на странице
+    block_type = models.CharField(max_length=20, choices=BLOCK_TYPES, default='paragraph')
+
+    translations = TranslatedFields(
+        title=models.CharField(max_length=200, blank=True),  # для заголовков или подписи к изображению
+        text=models.TextField(blank=True),  # для параграфов, списков, описаний
+    )
+
+    image = models.ImageField(upload_to="page_blocks/", blank=True, null=True)  # для блоков типа image
+
+    class Meta:
+        ordering = ['order']
+
+    def __str__(self):
+        return f"{self.page.slug} - {self.block_type} ({self.order})"
 
 
