@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django import forms
-from parler.admin import TranslatableAdmin
+from parler.admin import TranslatableAdmin, TranslatableTabularInline
 
 from .models import *
 
@@ -365,3 +365,30 @@ class CatColorAdmin(admin.ModelAdmin):
 
         if obj.ems_code != new_code:
             CatColor.objects.filter(pk=obj.pk).update(ems_code=new_code)
+
+"""
+Пояснения
+    1. TranslatableTabularInline
+        Позволяет редактировать блоки прямо внутри страницы.
+        Каждая строка — один блок (заголовок, параграф, изображение, список).
+    2. sortable_field_name = "order"
+        Можно менять порядок блоков через drag-and-drop в админке.
+    3. TranslatableAdmin / TranslatableTabularInline
+        Автоматически добавляет поля для всех языков, если включена мультиязычность через TranslatableModel.
+    4. prepopulated_fields
+        Слаг генерируется автоматически из названия страницы.
+"""
+# Inline для блоков контента на странице
+class ContentBlockInline(TranslatableTabularInline):
+    model = ContentBlock
+    extra = 1  # по умолчанию добавляется один пустой блок
+    fields = ('order', 'block_type', 'title', 'text', 'image')
+    sortable_field_name = "order"  # позволяет перетаскивать порядок блоков
+    show_change_link = True
+
+# Админка для страниц
+@admin.register(Page)
+class PageAdmin(admin.ModelAdmin):
+    list_display = ('name', 'slug', 'created_at', 'updated_at')
+    prepopulated_fields = {"slug": ("name",)}
+    inlines = [ContentBlockInline]

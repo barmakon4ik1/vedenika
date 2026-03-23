@@ -1234,3 +1234,44 @@ class Litter(models.Model):
             self.sync_kittens()
 
 
+class Page(models.Model):
+    """
+    Страница сайта. Содержит набор блоков контента.
+    """
+    slug = models.SlugField(unique=True)  # URL страницы: /pages/<slug>/
+    name = models.CharField(max_length=200)  # Для админки
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.name
+
+class ContentBlock(TranslatableModel):
+    """
+    Гибкий блок контента. Может быть заголовком, параграфом, изображением, списком и т.д.
+    """
+    BLOCK_TYPES = [
+        ('title', 'Заголовок'),
+        ('paragraph', 'Параграф'),
+        ('image', 'Изображение'),
+        ('list', 'Список'),
+    ]
+
+    page = models.ForeignKey(Page, related_name="blocks", on_delete=models.CASCADE)
+    order = models.PositiveIntegerField(default=0)  # порядок отображения на странице
+    block_type = models.CharField(max_length=20, choices=BLOCK_TYPES, default='paragraph')
+
+    translations = TranslatedFields(
+        title=models.CharField(max_length=200, blank=True),  # для заголовков или подписи к изображению
+        text=models.TextField(blank=True),  # для параграфов, списков, описаний
+    )
+
+    image = models.ImageField(upload_to="page_blocks/", blank=True, null=True)  # для блоков типа image
+
+    class Meta:
+        ordering = ['order']
+
+    def __str__(self):
+        return f"{self.page.slug} - {self.block_type} ({self.order})"
+
+
