@@ -10,3 +10,13 @@ class PageViewSet(viewsets.ModelViewSet):
     queryset = Page.objects.all()
     serializer_class = PageSerializer
     lookup_field = 'slug'
+
+class AddressViewSet(viewsets.ModelViewSet):
+    queryset = Address.objects.all()
+    serializer_class = AddressSerializer
+
+class CountryViewSet(viewsets.ModelViewSet):
+    queryset = Country.objects.all()
+    serializer_class = CountrySerializer
+
+

@@ -1,11 +1,13 @@
 # urls.py
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import CatViewSet, PageViewSet
+from .views import *
 
 router = DefaultRouter()
 router.register(r'cats', CatViewSet)
 router.register(r'pages', PageViewSet)
+router.register(r'address', AddressViewSet)
+router.register(r'country', CountryViewSet)
 
 app_name = 'cats'
 
