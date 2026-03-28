@@ -1,178 +1,111 @@
-from rest_framework import viewsets
-from rest_framework.decorators import action
-from rest_framework.response import Response
-from rest_framework.filters import SearchFilter, OrderingFilter
-from django_filters.rest_framework import DjangoFilterBackend
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.core.exceptions import PermissionDenied
 
-from .models import *
-from .serializers import *
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
-from django.utils import translation
+from .models import MediaFile, Document, Cat
 
 
-class TranslatableModelSerializer(serializers.ModelSerializer):
+# =========================================================
+# 🔐 PERMISSIONS
+# =========================================================
 
-    def to_representation(self, instance):
-        representation = super().to_representation(instance)
+def is_admin(user):
+    return user.is_authenticated and user.is_staff
 
-        translatable_fields = getattr(self.Meta, "translatable_fields", [])
 
-        request = self.context.get("request")
+def owner_required(obj, user):
+    return obj.owner == user
 
-        # 👇 берём язык из ?lang= или fallback
-        lang = None
-        if request:
-            lang = request.GET.get("lang") or getattr(request, "LANGUAGE_CODE", None)
 
-        if not lang:
-            lang = translation.get_language()
+# =========================================================
+# 📁 MEDIA
+# =========================================================
 
-        for field in translatable_fields:
-            representation[field] = instance.safe_translation_getter(
-                field,
-                language_code=lang,   # 🔥 КЛЮЧЕВОЕ
-                any_language=True
+@login_required
+def my_media(request):
+    media = MediaFile.objects.filter(owner=request.user)
+    return render(request, "my_media.html", {"media": media})
+
+
+@login_required
+def upload_media(request):
+    if request.method == "POST":
+        file = request.FILES.get("file")
+
+        if file:
+            MediaFile.objects.create(
+                file=file,
+                owner=request.user
             )
 
-        return representation
+        return redirect("my_media")
+
+    return render(request, "upload_media.html")
 
 
-class BaseViewSet(viewsets.ModelViewSet):
+@login_required
+def delete_media(request, pk):
+    media = get_object_or_404(MediaFile, pk=pk)
 
-    def get_language(self):
-        request = self.request
-        return request.GET.get("lang") or request.headers.get("Accept-Language")
+    if not owner_required(media, request.user):
+        raise PermissionDenied()
 
-    def get_queryset(self):
-        lang = self.request.GET.get("lang")
-        if lang:
-            translation.activate(lang)
-
-        return super().get_queryset()
+    media.delete()
+    return redirect("my_media")
 
 
-# --- CAT ---
+# =========================================================
+# 📄 DOCUMENTS
+# =========================================================
 
-class CatViewSet(BaseViewSet):
-    queryset = Cat.objects.select_related(
-        "breed", "cattery", "father", "mother", "owner"
-    ).prefetch_related(
-        "names",
-        "health_records",
-        "cat_color__components",
-    )
+@login_required
+def my_documents(request):
+    docs = Document.objects.filter(owner=request.user)
+    return render(request, "my_documents.html", {"documents": docs})
 
-    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
 
-    filterset_fields = [
-        "sex",
-        "breed",
-        "cattery",
-        "is_active",
-        "is_for_breeding",
-    ]
+@login_required
+def upload_document(request):
+    if request.method == "POST":
+        file_id = request.POST.get("file_id")
+        file = get_object_or_404(MediaFile, id=file_id)
 
-    search_fields = [
-        "registered_name",
-        "call_name",
-        "pedigree_number",
-    ]
+        if not owner_required(file, request.user):
+            raise PermissionDenied()
 
-    ordering_fields = ["registered_name", "birth_date"]
-    ordering = ["registered_name"]
-
-    def get_serializer_class(self):
-        if self.action == "list":
-            return CatListSerializer
-        return CatDetailSerializer
-
-    # --- КАСТОМНЫЕ ENDPOINTS ---
-
-    @action(detail=True)
-    def pedigree(self, request, pk=None):
-        cat = self.get_object()
-
-        data = {
-            "cat": cat.registered_name,
-            "father": str(cat.father) if cat.father else None,
-            "mother": str(cat.mother) if cat.mother else None,
-        }
-
-        return Response(data)
-
-    @action(detail=True)
-    def offspring(self, request, pk=None):
-        cat = self.get_object()
-
-        kittens = Cat.objects.filter(
-            models.Q(father=cat) | models.Q(mother=cat)
+        Document.objects.create(
+            file=file,
+            owner=request.user,
+            title=request.POST.get("title", "")
         )
 
-        serializer = CatListSerializer(kittens, many=True)
-        return Response(serializer.data)
+        return redirect("my_documents")
+
+    media = MediaFile.objects.filter(owner=request.user)
+    return render(request, "upload_document.html", {"media": media})
 
 
-# --- COLOR ---
+# =========================================================
+# 🐱 CATS (публичные)
+# =========================================================
 
-class ColorViewSet(BaseViewSet):
-    queryset = Color.objects.all()
-    serializer_class = ColorSerializer
-
-
-class ColorComponentViewSet(BaseViewSet):
-    queryset = ColorComponent.objects.all()
-    serializer_class = ColorComponentSerializer
+def cat_list(request):
+    cats = Cat.objects.filter(is_active=True)
+    return render(request, "cat_list.html", {"cats": cats})
 
 
-# --- BREED ---
-
-class BreedViewSet(BaseViewSet):
-    queryset = Breed.objects.all()
-    serializer_class = BreedSerializer
+def cat_detail(request, pk):
+    cat = get_object_or_404(Cat, pk=pk)
+    return render(request, "cat_detail.html", {"cat": cat})
 
 
-# --- Cattery ---
+# =========================================================
+# 🛠 ADMIN (если нужен вне admin)
+# =========================================================
 
-class CatteryViewSet(viewsets.ModelViewSet):
-    queryset = Cattery.objects.all()
-    serializer_class = CatterySerializer
-
-
-# --- PERSON ---
-
-class PersonViewSet(viewsets.ModelViewSet):
-    queryset = Person.objects.all()
-    serializer_class = PersonSerializer
-
-
-# --- ADDRESS ---
-
-class AddressViewSet(BaseViewSet):
-    queryset = Address.objects.all()
-    serializer_class = AddressSerializer
-
-
-class CountryViewSet(BaseViewSet):
-    queryset = Country.objects.all()
-    serializer_class = CountrySerializer
-
-
-# --- LITTER ---
-
-class LitterViewSet(viewsets.ModelViewSet):
-    queryset = Litter.objects.all()
-    serializer_class = LitterSerializer
-
-    @action(detail=True)
-    def kittens(self, request, pk=None):
-        litter = self.get_object()
-        serializer = CatListSerializer(litter.kittens.all(), many=True)
-        return Response(serializer.data)
-
-
-# --- CMS ---
-
-class PageViewSet(BaseViewSet):
-    queryset = Page.objects.prefetch_related("blocks")
-    serializer_class = PageSerializer
-    lookup_field = "slug"
+@user_passes_test(is_admin)
+def admin_dashboard(request):
+    return render(request, "admin_dashboard.html")

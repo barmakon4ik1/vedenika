@@ -1,9 +1,13 @@
 from typing import TYPE_CHECKING
-from django.db import models
 from parler.models import TranslatableModel, TranslatedFields
 from .ems import build_ems_code, validate_components
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
+from django.db import models
+from django.contrib.auth import get_user_model
+from django.db.models import Q
+
+User = get_user_model()
 
 if TYPE_CHECKING:
     from typing import TYPE_CHECKING
@@ -540,14 +544,16 @@ class Cattery(TranslatableModel):
 
 class Person(models.Model):
     """
-    Модель человека. Позволяет:
-    -   Хранить имя и фамилию человека (например, заводчика, владельца
-    или судьи)
-    -   Хранить контактную информацию (email, телефон) для связи
-    -   Указывать адрес человека, связанный с моделями Country, Region и City
-    для обеспечения целостности данных
-    -   Активность человека (можно скрывать устаревшие или неактивные записи)
+    Человек (владелец, заводчик и т.д.)
     """
+
+    user = models.OneToOneField(
+        User,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="person_profile"
+    )
 
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
@@ -556,7 +562,7 @@ class Person(models.Model):
     phone = models.CharField(max_length=50, blank=True)
 
     address = models.ForeignKey(
-        Address,
+        "Address",
         on_delete=models.SET_NULL,
         null=True,
         blank=True
@@ -564,29 +570,53 @@ class Person(models.Model):
 
     is_active = models.BooleanField(default=True)
 
+    class Meta:
+        ordering = ["last_name", "first_name"]
+
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
 
 
 class MediaFile(models.Model):
     """
-    Модель для хранения медиафайлов, связанных с котами. Позволяет:
-    -   Хранить файлы (например, фотографии котов) с помощью FileField,
-    который автоматически обрабатывает загрузку и хранение файлов
-    -   Указывать название и описание файла для удобства идентификации
-    -   Хранить дату и время загрузки файла для отслеживания истории
-    -   Указывать, является ли файл публичным (например, для отображения на сайте
-    или для внутреннего использования)
+    Модель для хранения медиафайлов.
+
+    - файл
+    - владелец (кто загрузил)
+    - тип файла
+    - публичность
     """
 
+    class MediaType(models.TextChoices):
+        PHOTO = "PHOTO", "Фото"
+        DOCUMENT = "DOCUMENT", "Документ"
+        OTHER = "OTHER", "Другое"
+
     file = models.FileField(upload_to="media/")
+
+    owner = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name="media_files"
+    )
 
     title = models.CharField(max_length=200, blank=True)
     description = models.TextField(blank=True)
 
+    media_type = models.CharField(
+        max_length=20,
+        choices=MediaType.choices,
+        default=MediaType.PHOTO
+    )
+
     uploaded_at = models.DateTimeField(auto_now_add=True)
 
     is_public = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ["-uploaded_at"]
 
     def __str__(self):
         return self.title or str(self.file)
@@ -736,31 +766,21 @@ class Organization(TranslatableModel):
 
 class Membership(models.Model):
     """
-    Модель членства в организации.
-
-    Позволяет:
-    - Связывать заводчика или питомник с организацией
-    - Указывать тип членства
-    - Отслеживать даты начала и окончания членства
-    - Хранить активность и примечания
+    Членство в организации
     """
 
-    # Связь с организацией
     organization = models.ForeignKey(
         "Organization",
         on_delete=models.CASCADE,
-        related_name="memberships",
-        verbose_name="Организация"
+        related_name="memberships"
     )
 
-    # Можно привязать либо к питомнику, либо к человеку
     cattery = models.ForeignKey(
         "Cattery",
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
-        related_name="memberships",
-        verbose_name="Питомник"
+        related_name="memberships"
     )
 
     person = models.ForeignKey(
@@ -768,11 +788,9 @@ class Membership(models.Model):
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
-        related_name="memberships",
-        verbose_name="Член (человек)"
+        related_name="memberships"
     )
 
-    # Тип членства
     class MembershipType(models.TextChoices):
         BREEDER = "BREEDER", "Заводчик"
         ASSISTANT = "ASSISTANT", "Помощник"
@@ -782,24 +800,27 @@ class Membership(models.Model):
     membership_type = models.CharField(
         max_length=20,
         choices=MembershipType.choices,
-        default=MembershipType.BREEDER,
-        verbose_name="Тип членства"
+        default=MembershipType.BREEDER
     )
 
-    # Даты членства
-    start_date = models.DateField(verbose_name="Дата начала", null=True, blank=True)
-    end_date = models.DateField(verbose_name="Дата окончания", null=True, blank=True)
+    start_date = models.DateField(null=True, blank=True)
+    end_date = models.DateField(null=True, blank=True)
 
-    # Активность
-    is_active = models.BooleanField(default=True, verbose_name="Активно")
+    is_active = models.BooleanField(default=True)
 
-    # Примечание
-    remark = models.TextField(blank=True, verbose_name="Примечание")
+    remark = models.TextField(blank=True)
 
     class Meta:
-        verbose_name = "Членство"
-        verbose_name_plural = "Членства"
         ordering = ["organization", "cattery", "person"]
+        constraints = [
+            models.CheckConstraint(
+                condition=(
+                        Q(person__isnull=False, cattery__isnull=True) |
+                        Q(person__isnull=True, cattery__isnull=False)
+                ),
+                name="membership_target_check"
+            )
+        ]
 
     def __str__(self):
         target = self.cattery or self.person or "Не указан"
@@ -847,12 +868,22 @@ class HealthRecord(models.Model):
 
 class Document(models.Model):
     """
-    Модель для хранения документов (договоры, родословные, сертификаты):
-    - привязка к коту, питомнику или человеку
-    - название и описание
-    - дата документа
+    Документы (родословные, договоры и т.д.)
     """
-    file = models.ForeignKey(MediaFile, on_delete=models.CASCADE)
+
+    file = models.ForeignKey(
+        "MediaFile",
+        on_delete=models.CASCADE,
+        related_name="documents"
+    )
+
+    owner = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name="documents"
+    )
 
     title = models.CharField(max_length=200, blank=True)
     description = models.TextField(blank=True)
@@ -863,8 +894,16 @@ class Document(models.Model):
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey("content_type", "object_id")
 
-    doc_type = models.CharField(max_length=50, blank=True, verbose_name="Тип документа (родословная, договор и т.д.)")
-    is_public = models.BooleanField(default=False, verbose_name="Публичный")
+    doc_type = models.CharField(
+        max_length=50,
+        blank=True,
+        verbose_name="Тип документа"
+    )
+
+    is_public = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ["-uploaded_at"]
 
     def __str__(self):
         return self.title or str(self.file)
@@ -1116,15 +1155,11 @@ class Cat(models.Model):
 
 class CatName(models.Model):
     """
-    Альтернативные написания имени кота:
-    - кириллица
-    - латиница
-    - экспортное имя
-    - исторические варианты
+    Альтернативные имена кота
     """
 
     cat = models.ForeignKey(
-        Cat,
+        "Cat",
         on_delete=models.CASCADE,
         related_name="names"
     )
@@ -1133,19 +1168,16 @@ class CatName(models.Model):
 
     language_code = models.CharField(
         max_length=10,
-        blank=True,
-        help_text="ru, de, en и т.д."
+        blank=True
     )
 
-    is_official = models.BooleanField(
-        default=False,
-        help_text="Основное отображаемое имя"
-    )
+    is_official = models.BooleanField(default=False)
 
     remark = models.TextField(blank=True)
 
     class Meta:
         ordering = ["-is_official", "name"]
+        unique_together = ("cat", "name", "language_code")
 
     def __str__(self):
         return self.name
@@ -1244,20 +1276,26 @@ class Litter(models.Model):
 
 class Page(models.Model):
     """
-    Страница сайта. Содержит набор блоков контента.
+    Страница сайта
     """
-    slug = models.SlugField(unique=True)  # URL страницы: /pages/<slug>/
-    name = models.CharField(max_length=200)  # Для админки
+
+    slug = models.SlugField(unique=True)
+    name = models.CharField(max_length=200)
+
+    is_active = models.BooleanField(default=True)
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.name
 
+
 class ContentBlock(TranslatableModel):
     """
-    Гибкий блок контента. Может быть заголовком, параграфом, изображением, списком и т.д.
+    Блок контента страницы
     """
+
     BLOCK_TYPES = [
         ('title', 'Заголовок'),
         ('paragraph', 'Параграф'),
@@ -1265,16 +1303,32 @@ class ContentBlock(TranslatableModel):
         ('list', 'Список'),
     ]
 
-    page = models.ForeignKey(Page, related_name="blocks", on_delete=models.CASCADE)
-    order = models.PositiveIntegerField(default=0)  # порядок отображения на странице
-    block_type = models.CharField(max_length=20, choices=BLOCK_TYPES, default='paragraph')
-
-    translations = TranslatedFields(
-        title=models.CharField(max_length=200, blank=True),  # для заголовков или подписи к изображению
-        text=models.TextField(blank=True),  # для параграфов, списков, описаний
+    page = models.ForeignKey(
+        "Page",
+        related_name="blocks",
+        on_delete=models.CASCADE
     )
 
-    image = models.ImageField(upload_to="page_blocks/", blank=True, null=True)  # для блоков типа image
+    order = models.PositiveIntegerField(default=0)
+
+    block_type = models.CharField(
+        max_length=20,
+        choices=BLOCK_TYPES,
+        default='paragraph'
+    )
+
+    translations = TranslatedFields(
+        title=models.CharField(max_length=200, blank=True),
+        text=models.TextField(blank=True),
+    )
+
+    image = models.ImageField(
+        upload_to="page_blocks/",
+        blank=True,
+        null=True
+    )
+
+    is_active = models.BooleanField(default=True)
 
     class Meta:
         ordering = ['order']
