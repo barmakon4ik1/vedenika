@@ -1,4 +1,6 @@
 {% load static %}
+{% load i18n %}
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -11,17 +13,60 @@
 <body>
 
 <!-- NAVBAR -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark px-3">
-    <a class="navbar-brand d-flex align-items-center" href="/">
-        <img src="{% static 'img/Vedenika-Logo2.png' %}"
-             alt="Logo"
-             style="height:40px; margin-right:10px;">
-        Vedenika
-    </a>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
 
-    <div class="ms-auto">
-        <a class="btn btn-outline-light btn-sm" href="/cats/">Cats</a>
-        <a class="btn btn-outline-light btn-sm" href="/media/">Media</a>
+        <!-- ЛОГО -->
+        <a class="navbar-brand" href="/">
+            <img src="{% static 'img/Vedenika-Logo2.png' %}" height="40">
+        </a>
+
+        <!-- КНОПКА (mobile) -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- МЕНЮ -->
+        <div class="collapse navbar-collapse" id="navbarNav">
+
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/">{% trans "Главная" %}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/cats/">{% trans "Коты" %}</a>
+                </li>
+            </ul>
+
+            <!-- 🌍 ПЕРЕКЛЮЧАТЕЛЬ ЯЗЫКА -->
+            <div class="d-flex align-items-center">
+
+                {% get_current_language as LANGUAGE_CODE %}
+
+                <form action="{% url 'set_language' %}" method="post" class="d-flex gap-2">
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{{ request.path }}">
+
+                    <button type="submit" name="language" value="ru" class="btn p-0 border-0">
+                        <img src="{% static 'img/ru.png' %}" width="32"
+                             {% if LANGUAGE_CODE == 'ru' %}style="opacity:1"{% else %}style="opacity:0.5"{% endif %}>
+                    </button>
+
+                    <button type="submit" name="language" value="de" class="btn p-0 border-0">
+                        <img src="{% static 'img/de.png' %}" width="32"
+                             {% if LANGUAGE_CODE == 'de' %}style="opacity:1"{% else %}style="opacity:0.5"{% endif %}>
+                    </button>
+
+                    <button type="submit" name="language" value="en" class="btn p-0 border-0">
+                        <img src="{% static 'img/en.png' %}" width="32"
+                             {% if LANGUAGE_CODE == 'en' %}style="opacity:1"{% else %}style="opacity:0.5"{% endif %}>
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
     </div>
 </nav>
 
