@@ -6,8 +6,10 @@ from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.db.models import Q
+from .utils.media_paths import upload_to_media, upload_to_cat
 
 User = get_user_model()
+
 
 if TYPE_CHECKING:
     from typing import TYPE_CHECKING
@@ -592,7 +594,7 @@ class MediaFile(models.Model):
         DOCUMENT = "DOCUMENT", "Документ"
         OTHER = "OTHER", "Другое"
 
-    file = models.FileField(upload_to="media/")
+    file = models.FileField(upload_to=upload_to_media)
 
     owner = models.ForeignKey(
         User,
@@ -1151,6 +1153,16 @@ class Cat(models.Model):
     @property
     def color(self):
         return self.cat_color.color if hasattr(self, "cat_color") else None
+
+    def get_images(self):
+        if not self.pk:
+            return MediaLink.objects.none()
+
+        content_type = ContentType.objects.get_for_model(self.__class__)
+        return MediaLink.objects.filter(
+            content_type=content_type,
+            object_id=self.pk
+        ).select_related("file")
 
 
 class CatName(models.Model):

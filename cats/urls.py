@@ -1,7 +1,10 @@
 from django.urls import path
 from . import views
+from .views import CatDetailView
 
 urlpatterns = [
+    path("", views.home, name="home"),
+
     # MEDIA
     path("media/", views.my_media, name="my_media"),
     path("media/upload/", views.upload_media, name="upload_media"),
@@ -13,7 +16,7 @@ urlpatterns = [
 
     # CATS
     path("cats/", views.cat_list, name="cat_list"),
-    path("cats/<int:pk>/", views.cat_detail, name="cat_detail"),
+    path("cat/<int:pk>/", CatDetailView.as_view(), name="cat_detail"),
 
     # ADMIN
     path("admin-dashboard/", views.admin_dashboard, name="admin_dashboard"),

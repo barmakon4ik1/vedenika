@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ cat.registered_name }}</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="container mt-4">
+
+    <!-- Заголовок -->
+    <h1 class="mb-3">{{ cat.registered_name }}</h1>
+
+    {% if cat.call_name %}
+        <h4 class="text-muted">{{ cat.call_name }}</h4>
+    {% endif %}
+
+    <hr>
+
+    <!-- Основная информация -->
+    <div class="row">
+        <div class="col-md-6">
+            <p><strong>Пол:</strong> {{ cat.get_sex_display }}</p>
+            <p><strong>Дата рождения:</strong> {{ cat.birth_date }}</p>
+            <p><strong>Порода:</strong> {{ cat.breed }}</p>
+            <p><strong>Окрас:</strong> {{ cat.ems_code }}</p>
+            <p><strong>Питомник:</strong> {{ cat.cattery }}</p>
+        </div>
+    </div>
+
+    <hr>
+
+    <!-- Галерея -->
+    <h3 class="mb-3">Фотографии</h3>
+
+    <div class="row">
+        {% for link in images %}
+            <div class="col-md-4 mb-3">
+                <div class="card">
+                    <img src="{{ link.file.file.url }}" class="card-img-top" alt="">
+                    <div class="card-body">
+                        <p class="card-text">{{ link.file.title }}</p>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <p>Нет изображений</p>
+        {% endfor %}
+    </div>
+
+</div>
+
+</body>
+</html>

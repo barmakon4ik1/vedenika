@@ -6,6 +6,7 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 from .models import MediaFile, Document, Cat
+from django.views.generic import DetailView
 
 
 # =========================================================
@@ -97,11 +98,6 @@ def cat_list(request):
     return render(request, "cat_list.html", {"cats": cats})
 
 
-def cat_detail(request, pk):
-    cat = get_object_or_404(Cat, pk=pk)
-    return render(request, "cat_detail.html", {"cat": cat})
-
-
 # =========================================================
 # 🛠 ADMIN (если нужен вне admin)
 # =========================================================
@@ -109,3 +105,28 @@ def cat_detail(request, pk):
 @user_passes_test(is_admin)
 def admin_dashboard(request):
     return render(request, "admin_dashboard.html")
+
+
+
+# =========================================================
+# 🐱 CATS (страница с деталями, с использованием DetailView)
+# =========================================================
+class CatDetailView(DetailView):
+    model = Cat
+    template_name = "cat_detail.html"
+    context_object_name = "cat"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        cat = self.object
+
+        context["images"] = cat.get_images()
+
+        return context
+
+
+# =========================================================
+# 🐱 Home page
+# =========================================================
+def home(request):
+    return render(request, "home.html")
