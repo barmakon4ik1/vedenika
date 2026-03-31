@@ -2,7 +2,7 @@
 {% load i18n %}
 
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="{{ LANGUAGE_CODE|default:'ru' }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -15,28 +15,35 @@
 <body>
 
 <!-- NAVBAR -->
-<nav class="navbar navbar-expand-lg navbar-light bg-light py-0">
+<nav class="navbar navbar-expand-lg navbar-light bg-light py-0 border-bottom shadow-sm">
     <div class="container">
 
         <!-- ЛОГО -->
-        <a class="navbar-brand" href="/">
-            <img src="{% static 'img/Vedenika-Logo2.png' %}" height="40">
+        <a class="navbar-brand" href="{% url 'home' %}">
+            <img src="{% static 'img/Vedenika-Logo2.png' %}" alt="Vedenika logo" height="40">
         </a>
 
         <!-- КНОПКА (mobile) -->
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
 
         <!-- МЕНЮ -->
         <div class="collapse navbar-collapse" id="navbarNav">
 
-            <ul class="navbar-nav me-auto">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link" href="/">{% trans "Главная" %}</a>
+                    <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}"
+                       href="{% url 'home' %}">
+                        {% trans "Главная" %}
+                    </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/cats/">{% trans "Коты" %}</a>
+                    <a class="nav-link {% if request.resolver_match.url_name == 'cat_list' or request.resolver_match.url_name == 'cat_detail' %}active{% endif %}"
+                       href="{% url 'cat_list' %}">
+                        {% trans "Коты" %}
+                    </a>
                 </li>
             </ul>
 
@@ -45,23 +52,23 @@
 
                 {% get_current_language as LANGUAGE_CODE %}
 
-                <form action="{% url 'set_language' %}" method="post" class="d-flex gap-2">
+                <form action="{% url 'set_language' %}" method="post" class="d-flex gap-2 lang-switcher">
                     {% csrf_token %}
                     <input type="hidden" name="next" value="{{ request.get_full_path }}">
 
-                    <button type="submit" name="language" value="ru" class="btn p-0 border-0">
-                        <img src="{% static 'img/ru.png' %}" width="32"
-                             {% if LANGUAGE_CODE == 'ru' %}style="opacity:1"{% else %}style="opacity:0.5"{% endif %}>
+                    <button type="submit" name="language" value="ru" class="btn p-0 border-0 bg-transparent">
+                        <img src="{% static 'img/ru.png' %}" alt="Русский"
+                             class="lang-flag {% if LANGUAGE_CODE == 'ru' %}active{% endif %}">
                     </button>
 
-                    <button type="submit" name="language" value="de" class="btn p-0 border-0">
-                        <img src="{% static 'img/de.png' %}" width="32"
-                             {% if LANGUAGE_CODE == 'de' %}style="opacity:1"{% else %}style="opacity:0.5"{% endif %}>
+                    <button type="submit" name="language" value="de" class="btn p-0 border-0 bg-transparent">
+                        <img src="{% static 'img/de.png' %}" alt="Deutsch"
+                             class="lang-flag {% if LANGUAGE_CODE == 'de' %}active{% endif %}">
                     </button>
 
-                    <button type="submit" name="language" value="en" class="btn p-0 border-0">
-                        <img src="{% static 'img/en.png' %}" width="32"
-                             {% if LANGUAGE_CODE == 'en' %}style="opacity:1"{% else %}style="opacity:0.5"{% endif %}>
+                    <button type="submit" name="language" value="en" class="btn p-0 border-0 bg-transparent">
+                        <img src="{% static 'img/en.png' %}" alt="English"
+                             class="lang-flag {% if LANGUAGE_CODE == 'en' %}active{% endif %}">
                     </button>
 
                 </form>
@@ -73,10 +80,26 @@
 </nav>
 
 <!-- CONTENT -->
-<div class="container mt-4">
+<main class="container mt-4">
     {% block content %}
     {% endblock %}
-</div>
+</main>
 
+<!-- FOOTER -->
+<footer class="site-footer mt-5">
+    <div class="container">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                © {% now "Y" %} Vedenika
+            </div>
+            <div class="footer-links">
+                <a href="{% url 'home' %}">{% trans "Главная" %}</a>
+                <a href="{% url 'cat_list' %}">{% trans "Коты" %}</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

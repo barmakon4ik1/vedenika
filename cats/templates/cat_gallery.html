@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}Фото — {{ cat.registered_name }}{% endblock %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+    <div>
+        <h2 class="mb-1">{{ cat.registered_name }}</h2>
+        <div class="text-muted">Галерея фотографий</div>
+    </div>
+
+    <div class="d-flex gap-2">
+        <a href="{% url 'cat_detail' cat.pk %}" class="btn btn-outline-secondary btn-sm">
+            Назад к карточке
+        </a>
+
+        {% if request.user.is_staff %}
+            <a href="{% url 'cat_upload_photo' cat.pk %}" class="btn btn-primary btn-sm">
+                Добавить фото
+            </a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row g-4">
+    {% for photo in photos %}
+        <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+            <div class="card h-100 shadow-sm cat-card">
+                <div class="cat-image">
+                    <img src="{{ photo.file.file.url }}" alt="{{ cat.registered_name }}">
+                </div>
+
+                {% if request.user.is_staff %}
+                    <div class="card-body pt-3">
+                        <form method="post" action="{% url 'delete_cat_photo' cat.pk photo.pk %}">
+                            {% csrf_token %}
+                            <button type="submit"
+                                    class="btn btn-outline-danger btn-sm w-100"
+                                    onclick="return confirm('Удалить фото?');">
+                                Удалить фото
+                            </button>
+                        </form>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    {% empty %}
+        <div class="col-12">
+            <div class="alert alert-light border">
+                Для этого кота пока нет фотографий.
+            </div>
+
+            {% if request.user.is_staff %}
+                <a href="{% url 'cat_upload_photo' cat.pk %}" class="btn btn-primary btn-sm">
+                    Добавить первое фото
+                </a>
+            {% endif %}
+        </div>
+    {% endfor %}
+</div>
+
+{% endblock %}

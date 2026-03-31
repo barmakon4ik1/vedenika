@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+    <div class="col-12 col-lg-8">
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="mb-0">{{ page_title }}</h2>
+            <a href="{% url 'cat_list' %}" class="btn btn-outline-secondary btn-sm">К списку</a>
+        </div>
+
+        <form method="post" class="card shadow-sm p-4">
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+
+            <div class="row g-3">
+
+                <div class="col-12">
+                    <label class="form-label">Официальное имя</label>
+                    {{ form.registered_name }}
+                    {{ form.registered_name.errors }}
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Домашнее имя</label>
+                    {{ form.call_name }}
+                    {{ form.call_name.errors }}
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Пол</label>
+                    {{ form.sex }}
+                    {{ form.sex.errors }}
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Дата рождения</label>
+                    {{ form.birth_date }}
+                    {{ form.birth_date.errors }}
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Порода</label>
+                    {{ form.breed }}
+                    {{ form.breed.errors }}
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Питомник</label>
+                    {{ form.cattery }}
+                    {{ form.cattery.errors }}
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Номер родословной</label>
+                    {{ form.pedigree_number }}
+                    {{ form.pedigree_number.errors }}
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Микрочип</label>
+                    {{ form.microchip }}
+                    {{ form.microchip.errors }}
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Отец</label>
+                    {{ form.father }}
+                    {{ form.father.errors }}
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Мать</label>
+                    {{ form.mother }}
+                    {{ form.mother.errors }}
+                </div>
+
+                <div class="col-12">
+                    <label class="form-label">Примечание</label>
+                    {{ form.remark }}
+                    {{ form.remark.errors }}
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-check mt-2">
+                        {{ form.is_active }}
+                        <label class="form-check-label" for="{{ form.is_active.id_for_label }}">
+                            Активен
+                        </label>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-check mt-2">
+                        {{ form.is_for_breeding }}
+                        <label class="form-check-label" for="{{ form.is_for_breeding.id_for_label }}">
+                            Допущен к разведению
+                        </label>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="mt-4 d-flex gap-2">
+                <button type="submit" class="btn btn-primary">Сохранить</button>
+                <a href="{% url 'cat_list' %}" class="btn btn-outline-secondary">Отмена</a>
+            </div>
+
+        </form>
+
+    </div>
+</div>
+
+{% endblock %}

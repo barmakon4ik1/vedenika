@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Загрузка фото{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-12 col-md-8 col-lg-6">
+        <h3 class="mb-4">Загрузить фото: {{ cat.registered_name }}</h3>
+
+        <form method="post" enctype="multipart/form-data" class="card p-4 shadow-sm">
+            {% csrf_token %}
+
+            <div class="mb-3">
+                <label for="id_file" class="form-label">Выберите изображение</label>
+                <input type="file" name="file" id="id_file" class="form-control" accept="image/*" required>
+            </div>
+
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary">
+                    Загрузить
+                </button>
+                <a href="{% url 'cat_detail' cat.pk %}" class="btn btn-outline-secondary">
+                    Назад
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

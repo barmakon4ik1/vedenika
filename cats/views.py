@@ -1,14 +1,15 @@
+from django.contrib.contenttypes.models import ContentType
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.exceptions import PermissionDenied
-
 from django.contrib.auth import get_user_model
+from .models import MediaFile, Document, Cat, MediaLink
+from django.views.generic import DetailView, ListView
+from django.http import HttpResponseForbidden
+from django.contrib.admin.views.decorators import staff_member_required
+from .forms import CatForm
+
 User = get_user_model()
-
-from .models import MediaFile, Document, Cat
-from django.views.generic import DetailView
-
-
 # =========================================================
 # 🔐 PERMISSIONS
 # =========================================================
@@ -130,3 +131,107 @@ class CatDetailView(DetailView):
 # =========================================================
 def home(request):
     return render(request, "home.html")
+
+# =========================================================
+# 🐱 Страница котов
+# =========================================================
+class CatListView(ListView):
+    model = Cat
+    template_name = "cat_list.html"
+    context_object_name = "cats"
+    paginate_by = 24
+
+    def get_queryset(self):
+        return (
+            Cat.objects
+            .select_related("breed", "cattery", "cat_color")
+            .prefetch_related("cat_color__components")
+            .order_by("registered_name")
+        )
+
+
+def upload_cat_photo(request, pk):
+    if not request.user.is_staff:
+        return HttpResponseForbidden("Недостаточно прав")
+
+    cat = get_object_or_404(Cat, pk=pk)
+
+    if request.method == "POST":
+        file = request.FILES.get("file")
+
+        if file:
+            media = MediaFile.objects.create(
+                file=file,
+                owner=request.user if request.user.is_authenticated else None,
+                media_type=MediaFile.MediaType.PHOTO,
+                title=cat.registered_name,
+            )
+
+            MediaLink.objects.create(
+                file=media,
+                content_object=cat,
+                role="photo",
+            )
+
+        return redirect("cat_gallery", pk=cat.pk)
+
+    return render(request, "cat_upload.html", {"cat": cat})
+
+
+def delete_cat_photo(request, cat_pk, photo_pk):
+    if not request.user.is_staff:
+        return HttpResponseForbidden("Недостаточно прав")
+
+    cat = get_object_or_404(Cat, pk=cat_pk)
+
+    photo_link = get_object_or_404(
+        MediaLink.objects.select_related("file"),
+        pk=photo_pk,
+        object_id=cat.pk,
+        content_type=ContentType.objects.get_for_model(Cat),
+    )
+
+    media_file = photo_link.file
+
+    if request.method == "POST":
+        if media_file.file:
+            media_file.file.delete(save=False)
+
+        media_file.delete()
+        return redirect("cat_gallery", pk=cat.pk)
+
+    return redirect("cat_gallery", pk=cat.pk)
+
+
+class CatGalleryView(DetailView):
+    model = Cat
+    template_name = "cat_gallery.html"
+    context_object_name = "cat"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        content_type = ContentType.objects.get_for_model(Cat)
+
+        context["photos"] = (
+            MediaLink.objects
+            .filter(
+                content_type=content_type,
+                object_id=self.object.pk,
+                role="photo"
+            )
+            .select_related("file")
+            .order_by("-file__uploaded_at")
+        )
+        return context
+
+@staff_member_required
+def cat_create(request):
+    if request.method == "POST":
+        form = CatForm(request.POST)
+        if form.is_valid():
+            cat = form.save()
+            return redirect("cat_detail", pk=cat.pk)
+    else:
+        form = CatForm()
+
+    return render(request, "cat_form.html", {"form": form, "page_title": "Добавить кота"})
