@@ -1,0 +1,49 @@
+/* ===== NAVBAR BASE ===== */
+.navbar {
+    min-height: 56px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+/* ===== LOGO ===== */
+.navbar-brand img {
+    height: 60px;
+    transition: 0.2s;
+}
+
+/* ===== MENU LINKS ===== */
+.navbar-nav .nav-link {
+    padding-left: 12px;
+    padding-right: 12px;
+}
+
+/* ===== LANGUAGE SWITCHER ===== */
+form img {
+    transition: 0.2s;
+}
+
+form img:hover {
+    transform: scale(1.1);
+}
+
+/* ===== MOBILE ===== */
+@media (max-width: 768px) {
+
+    .navbar {
+        min-height: 50px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+
+    .navbar-brand img {
+        height: 40px;
+    }
+
+    .navbar-nav {
+        margin-top: 10px;
+    }
+
+    form img {
+        width: 24px;
+    }
+}
