@@ -9,8 +9,20 @@ from django.db.models import Q
 from .utils.media_paths import upload_to_media
 from django.utils.translation import get_language
 from django.conf import settings
+import os
+from django.utils.text import slugify
 
 User = get_user_model()
+
+
+def upload_to_cat_photo(instance, filename):
+    """
+    Фото кота хранятся в:
+    images/cat_<id>/<filename>
+    """
+    base, ext = os.path.splitext(filename)
+    safe_name = slugify(base) or "photo"
+    return f"images/cat_{instance.cat_id}/{safe_name}{ext.lower()}"
 
 
 if TYPE_CHECKING:
@@ -1269,24 +1281,17 @@ class Cat(models.Model):
         return self.cat_color.color if hasattr(self, "cat_color") else None
 
     def get_images(self):
-        if not self.pk:
-            return MediaLink.objects.none()
-
-        content_type = ContentType.objects.get_for_model(self.__class__)
-        return (
-            MediaLink.objects
-            .filter(
-                content_type=content_type,
-                object_id=self.pk,
-                role="photo"
-            )
-            .select_related("file")
-            .order_by("sort_order", "-is_primary", "-id")
-        )
+        """
+        Временно оставляем старое имя метода,
+        но теперь возвращаем фотографии из CatPhoto.
+        """
+        return self.photos.filter(is_active=True)
 
     def get_main_image(self):
-        images = self.get_images()
-        return images.filter(is_primary=True).first() or images.first()
+        return (
+                self.photos.filter(is_active=True, is_primary=True).first()
+                or self.photos.filter(is_active=True).first()
+        )
 
 
 class CatName(models.Model):
@@ -1473,3 +1478,65 @@ class ContentBlock(TranslatableModel):
         return f"{self.page.slug} - {self.block_type} ({self.order})"
 
 
+class CatPhoto(models.Model):
+    """
+    Отдельная модель фотографий кота.
+    Фото хранятся в images/cat_<id>/...
+    """
+
+    cat = models.ForeignKey(
+        "Cat",
+        on_delete=models.CASCADE,
+        related_name="photos",
+        verbose_name="Кот"
+    )
+
+    image = models.ImageField(
+        upload_to=upload_to_cat_photo,
+        verbose_name="Фотография"
+    )
+
+    title = models.CharField(
+        max_length=200,
+        blank=True,
+        verbose_name="Название"
+    )
+
+    description = models.TextField(
+        blank=True,
+        verbose_name="Описание"
+    )
+
+    is_primary = models.BooleanField(
+        default=False,
+        verbose_name="Главное фото"
+    )
+
+    sort_order = models.PositiveIntegerField(
+        default=0,
+        verbose_name="Порядок"
+    )
+
+    uploaded_at = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name="Дата загрузки"
+    )
+
+    is_active = models.BooleanField(
+        default=True,
+        verbose_name="Активно"
+    )
+
+    class Meta:
+        verbose_name = "Фото кота"
+        verbose_name_plural = "Фотографии котов"
+        ordering = ["sort_order", "-is_primary", "-uploaded_at"]
+
+    def __str__(self):
+        return self.title or f"{self.cat.registered_name} - photo #{self.pk}"
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+
+        if self.is_primary:
+            CatPhoto.objects.filter(cat=self.cat).exclude(pk=self.pk).update(is_primary=False)

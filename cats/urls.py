@@ -19,11 +19,11 @@ urlpatterns = [
     path("cats/", CatListView.as_view(), name="cat_list"),
     path("cats/add/", cat_create, name="cat_add"),
     path("cats/<int:pk>/edit/", cat_update, name="cat_edit"),
-    path("cats/<int:cat_pk>/photo/<int:photo_pk>/set-main/", set_main_photo, name="set_main_photo"),
     path("cats/<int:pk>/", CatDetailView.as_view(), name="cat_detail"),
     path("cats/<int:pk>/gallery/", CatGalleryView.as_view(), name="cat_gallery"),
     path("cats/<int:pk>/upload-photo/", upload_cat_photo, name="cat_upload_photo"),
     path("cats/<int:cat_pk>/photo/<int:photo_pk>/delete/", delete_cat_photo, name="delete_cat_photo"),
+    path("cats/<int:cat_pk>/photo/<int:photo_pk>/set-main/", set_main_photo, name="set_main_photo"),
     path("cats/<int:cat_pk>/color/add/", color_create_for_cat, name="color_create_for_cat"),
     path("cats/<int:cat_pk>/color/edit/", color_update_for_cat, name="color_update_for_cat"),
 

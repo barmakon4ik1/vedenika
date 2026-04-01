@@ -21,9 +21,9 @@
                 <div class="card h-100 shadow-sm cat-card">
 
                     <div class="cat-image">
-                        {% with img=cat.get_images.first %}
+                        {% with img=cat.get_main_image %}
                             {% if img %}
-                                <img src="{{ img.file.file.url }}" alt="{{ cat.registered_name }}">
+                                <img src="{{ img.image.url }}" alt="{{ cat.registered_name }}">
                             {% else %}
                                 <div class="no-image">Нет изображения</div>
                             {% endif %}

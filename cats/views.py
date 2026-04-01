@@ -1,9 +1,13 @@
+from django.contrib.contenttypes.models import ContentType
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.exceptions import PermissionDenied
+from django.contrib.auth import get_user_model
 from django.views.generic import DetailView, ListView
 from django.http import HttpResponseForbidden
 from django.contrib.admin.views.decorators import staff_member_required
+
+from .models import *
 from .forms import *
 
 User = get_user_model()
@@ -119,6 +123,7 @@ class CatDetailView(DetailView):
         cat = self.object
 
         context["images"] = cat.get_images()
+        context["main_image"] = cat.get_main_image()
 
         return context
 
@@ -184,54 +189,50 @@ class CatListView(ListView):
         return context
 
 
+@staff_member_required
 def upload_cat_photo(request, pk):
-    if not request.user.is_staff:
-        return HttpResponseForbidden("Недостаточно прав")
-
     cat = get_object_or_404(Cat, pk=pk)
 
     if request.method == "POST":
-        file = request.FILES.get("file")
+        form = CatPhotoForm(request.POST, request.FILES)
+        if form.is_valid():
+            photo = form.save(cat=cat)
 
-        if file:
-            media = MediaFile.objects.create(
-                file=file,
-                owner=request.user if request.user.is_authenticated else None,
-                media_type=MediaFile.MediaType.PHOTO,
-                title=cat.registered_name,
-            )
+            if photo.is_primary:
+                CatPhoto.objects.filter(cat=cat).exclude(pk=photo.pk).update(is_primary=False)
+            elif not cat.photos.filter(is_primary=True).exists():
+                photo.is_primary = True
+                photo.save(update_fields=["is_primary"])
 
-            MediaLink.objects.create(
-                file=media,
-                content_object=cat,
-                role="photo",
-            )
+            return redirect("cat_gallery", pk=cat.pk)
+    else:
+        form = CatPhotoForm(initial={"is_active": True})
 
-        return redirect("cat_gallery", pk=cat.pk)
-
-    return render(request, "cat_upload.html", {"cat": cat})
+    return render(request, "cat_upload.html", {
+        "cat": cat,
+        "form": form,
+    })
 
 
+@staff_member_required
 def delete_cat_photo(request, cat_pk, photo_pk):
-    if not request.user.is_staff:
-        return HttpResponseForbidden("Недостаточно прав")
-
     cat = get_object_or_404(Cat, pk=cat_pk)
-
-    photo_link = get_object_or_404(
-        MediaLink.objects.select_related("file"),
-        pk=photo_pk,
-        object_id=cat.pk,
-        content_type=ContentType.objects.get_for_model(Cat),
-    )
-
-    media_file = photo_link.file
+    photo = get_object_or_404(CatPhoto, pk=photo_pk, cat=cat)
 
     if request.method == "POST":
-        if media_file.file:
-            media_file.file.delete(save=False)
+        was_primary = photo.is_primary
 
-        media_file.delete()
+        if photo.image:
+            photo.image.delete(save=False)
+
+        photo.delete()
+
+        if was_primary:
+            new_primary = cat.photos.filter(is_active=True).order_by("sort_order", "-uploaded_at").first()
+            if new_primary:
+                new_primary.is_primary = True
+                new_primary.save(update_fields=["is_primary"])
+
         return redirect("cat_gallery", pk=cat.pk)
 
     return redirect("cat_gallery", pk=cat.pk)
@@ -244,19 +245,9 @@ class CatGalleryView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        content_type = ContentType.objects.get_for_model(Cat)
-
-        context["photos"] = (
-            MediaLink.objects
-            .filter(
-                content_type=content_type,
-                object_id=self.object.pk,
-                role="photo"
-            )
-            .select_related("file")
-            .order_by("-file__uploaded_at")
-        )
+        context["photos"] = self.object.photos.filter(is_active=True).order_by("sort_order", "-is_primary", "-uploaded_at")
         return context
+
 
 @staff_member_required
 def cat_create(request):
@@ -296,24 +287,12 @@ def cat_update(request, pk):
 @staff_member_required
 def set_main_photo(request, cat_pk, photo_pk):
     cat = get_object_or_404(Cat, pk=cat_pk)
-    content_type = ContentType.objects.get_for_model(Cat)
+    photo = get_object_or_404(CatPhoto, pk=photo_pk, cat=cat)
 
-    MediaLink.objects.filter(
-        content_type=content_type,
-        object_id=cat.pk,
-        role="photo"
-    ).update(is_primary=False)
-
-    photo = get_object_or_404(
-        MediaLink,
-        pk=photo_pk,
-        content_type=content_type,
-        object_id=cat.pk,
-        role="photo"
-    )
-
-    photo.is_primary = True
-    photo.save()
+    if request.method == "POST":
+        CatPhoto.objects.filter(cat=cat).update(is_primary=False)
+        photo.is_primary = True
+        photo.save(update_fields=["is_primary"])
 
     return redirect("cat_gallery", pk=cat.pk)
 
@@ -366,3 +345,5 @@ def color_update_for_cat(request, cat_pk):
         "is_edit": True,
         "color": color,
     })
+
+

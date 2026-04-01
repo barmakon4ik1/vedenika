@@ -15,7 +15,7 @@
             {% with img=cat.get_main_image %}
                 {% if img %}
                     <a href="{% url 'cat_gallery' cat.pk %}">
-                        <img src="{{ img.file.file.url }}" class="img-fluid rounded" alt="{{ cat.registered_name }}">
+                        <img src="{{ img.image.url }}" class="img-fluid rounded" alt="{{ cat.registered_name }}">
                     </a>
                 {% else %}
                     <div class="no-image-big">
@@ -68,7 +68,8 @@
             <li><strong>Родился:</strong> {{ cat.birth_date|default:"—" }}</li>
             <li><strong>Номер родословной:</strong> {{ cat.pedigree_number|default:"—" }}</li>
             <li><strong>Микрочип:</strong> {{ cat.microchip|default:"—" }}</li>
-            <li><strong>Окрас:</strong>
+            <li>
+                <strong>Окрас:</strong>
                 {% if cat.color %}
                     {{ cat.color }}
                 {% else %}
@@ -86,7 +87,7 @@
             <li><strong>Питомник:</strong> {{ cat.cattery|default:"—" }}</li>
             <li><strong>Отец:</strong> {{ cat.father|default:"—" }}</li>
             <li><strong>Мать:</strong> {{ cat.mother|default:"—" }}</li>
-            <li><strong>Владелец:</strong> {{ cat.owner|default:"—" }}</li>
+
         </ul>
 
         {% if request.user.is_staff %}

@@ -28,19 +28,36 @@
         <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
             <div class="card h-100 shadow-sm cat-card">
                 <div class="cat-image">
-                    <img src="{{ photo.file.file.url }}" alt="{{ cat.registered_name }}">
+                    <img src="{{ photo.image.url }}" alt="{{ cat.registered_name }}">
                 </div>
 
                 {% if request.user.is_staff %}
                     <div class="card-body pt-3">
-                        <form method="post" action="{% url 'delete_cat_photo' cat.pk photo.pk %}">
-                            {% csrf_token %}
-                            <button type="submit"
-                                    class="btn btn-outline-danger btn-sm w-100"
-                                    onclick="return confirm('Удалить фото?');">
-                                Удалить фото
-                            </button>
-                        </form>
+                        <div class="d-grid gap-2">
+
+                            {% if not photo.is_primary %}
+                                <form method="post" action="{% url 'set_main_photo' cat.pk photo.pk %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-outline-primary btn-sm w-100">
+                                        Сделать главным
+                                    </button>
+                                </form>
+                            {% else %}
+                                <button type="button" class="btn btn-primary btn-sm w-100" disabled>
+                                    Главное фото
+                                </button>
+                            {% endif %}
+
+                            <form method="post" action="{% url 'delete_cat_photo' cat.pk photo.pk %}">
+                                {% csrf_token %}
+                                <button type="submit"
+                                        class="btn btn-outline-danger btn-sm w-100"
+                                        onclick="return confirm('Удалить фото?');">
+                                    Удалить фото
+                                </button>
+                            </form>
+
+                        </div>
                     </div>
                 {% endif %}
             </div>

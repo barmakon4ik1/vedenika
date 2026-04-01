@@ -203,3 +203,35 @@ class ColorForm(forms.ModelForm):
             color.rebuild_ems_code(save=True)
 
         return color
+
+
+class CatPhotoForm(forms.ModelForm):
+    class Meta:
+        model = CatPhoto
+        fields = [
+            "image",
+            "title",
+            "description",
+            "is_primary",
+            "sort_order",
+            "is_active",
+        ]
+        widgets = {
+            "image": forms.ClearableFileInput(attrs={"class": "form-control"}),
+            "title": forms.TextInput(attrs={"class": "form-control"}),
+            "description": forms.Textarea(attrs={"class": "form-control", "rows": 3}),
+            "is_primary": forms.CheckboxInput(attrs={"class": "form-check-input"}),
+            "sort_order": forms.NumberInput(attrs={"class": "form-control", "min": 0}),
+            "is_active": forms.CheckboxInput(attrs={"class": "form-check-input"}),
+        }
+
+    def save(self, commit=True, cat=None):
+        photo = super().save(commit=False)
+
+        if cat is not None:
+            photo.cat = cat
+
+        if commit:
+            photo.save()
+
+        return photo
