@@ -6,7 +6,9 @@ from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.db.models import Q
-from .utils.media_paths import upload_to_media, upload_to_cat
+from .utils.media_paths import upload_to_media
+from django.utils.translation import get_language
+from django.conf import settings
 
 User = get_user_model()
 
@@ -92,7 +94,8 @@ class Color(TranslatableModel):
     translations = TranslatedFields(
         name=models.CharField(
             max_length=200,
-            verbose_name="Color name"
+            verbose_name="Color name",
+            blank=True
         )
     )
 
@@ -117,27 +120,83 @@ class Color(TranslatableModel):
     remark = models.TextField(
         blank=True,
         verbose_name="Remark (for internal use)"
-    )  # Позволяет хранить дополнительную информацию, которая может быть полезна
-    # для администраторов, но не обязательно для отображения пользователям
-    # (например, примечания по классификации, ссылки на источники информации и т.д.)
-
+    )
 
     class Meta:
         verbose_name = "Color"
         verbose_name_plural = "Colors"
         ordering = ["ems_code"]
 
+    def get_components_ordered(self):
+        """
+        Возвращает компоненты цвета в правильном порядке EMS.
+        """
+        return [
+            usage.component
+            for usage in self.component_usages.select_related(
+                "component",
+                "component__type"
+            ).all()
+        ]
+
+    def build_localized_name(self, language_code=None):
+        """
+        Собирает локализованное имя окраса из переведённых компонентов.
+        """
+        from django.utils.translation import get_language
+
+        language_code = language_code or get_language() or "ru"
+        components = self.get_components_ordered()
+
+        if components:
+            parts = []
+            for component in components:
+                part = component.safe_translation_getter(
+                    "name",
+                    language_code=language_code,
+                    any_language=True
+                )
+                if part:
+                    parts.append(part.strip())
+
+            if parts:
+                return " ".join(parts)
+
+        manual_name = self.safe_translation_getter(
+            "name",
+            language_code=language_code,
+            any_language=True
+        )
+        return (manual_name or "").strip()
+
+    @property
+    def localized_name(self):
+        return self.build_localized_name()
+
+    def get_display_name(self, language_code=None):
+        name = self.build_localized_name(language_code=language_code)
+        if name:
+            return f"{name} ({self.ems_code})"
+        return f"({self.ems_code})"
+
     def __str__(self):
-        name = self.safe_translation_getter("name", any_language=True)
-        return f"{name} ({self.ems_code})"
+        return self.get_display_name()
+
+    def rebuild_ems_code(self, save=True):
+        """
+        Пересчитывает EMS код по компонентам.
+        """
+        components = self.get_components_ordered()
+        if components:
+            validate_components(components)
+            self.ems_code = build_ems_code(components)
+
+        if save:
+            super().save(update_fields=["ems_code"])
+
+        return self.ems_code
 
     def save(self, *args, **kwargs):
-        # Получаем компоненты через M2M (если объект уже существует)
-        if self.pk:
-            components = self.components.select_related("type")
-            if components.exists():
-                validate_components(components)
-                self.ems_code = build_ems_code(components)
         super().save(*args, **kwargs)
 
     @staticmethod
@@ -149,21 +208,17 @@ class Color(TranslatableModel):
         qs = ColorComponent.objects.all()
         selected_ids = [c.id for c in selected]
 
-        # Белый блокирует всё
         if any(c.code == "w" for c in selected):
             return qs.filter(code="w") | ColorComponent.objects.filter(id__in=selected_ids)
 
-        # Только один BASE
         if any(c.type.code == "BASE" for c in selected):
             qs = qs.exclude(type__code="BASE")
 
-        # Silver vs Gold
         if any(c.code == "s" for c in selected):
             qs = qs.exclude(code="y")
         if any(c.code == "y" for c in selected):
             qs = qs.exclude(code="s")
 
-        # вернуть выбранные обратно
         return qs | ColorComponent.objects.filter(id__in=selected_ids)
 
 
@@ -223,17 +278,35 @@ class ColorComponent(TranslatableModel):
 
 class CatColor(models.Model):
     """
-    Модель, связывающая кота с его цветом. Позволяет:
--   Указывать несколько компонентов цвета для одного кота (например, основа + узор + интенсивность)
--   Хранить готовый EMS код цвета для быстрого доступа
--   Связывать с общей моделью Color, если она есть (для удобства фильтрации и статистики)
+    Модель, связывающая кота с его цветом.
     """
-    cat = models.OneToOneField("cats.Cat", on_delete=models.CASCADE, related_name="cat_color")
-    components = models.ManyToManyField(ColorComponent, related_name="cat_colors")
 
-    ems_code = models.CharField(max_length=50, verbose_name="EMS code")
+    cat = models.OneToOneField(
+        "cats.Cat",
+        on_delete=models.CASCADE,
+        related_name="cat_color"
+    )
 
-    color = models.ForeignKey("Color", null=True, blank=True, on_delete=models.SET_NULL, related_name="cat_colors")
+    components = models.ManyToManyField(
+        ColorComponent,
+        related_name="cat_colors",
+        blank=True
+    )
+
+    ems_code = models.CharField(
+        max_length=50,
+        verbose_name="EMS code",
+        blank=True,
+        default=""
+    )
+
+    color = models.ForeignKey(
+        "Color",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="cat_colors"
+    )
 
     class Meta:
         verbose_name = "Cat Color"
@@ -242,27 +315,52 @@ class CatColor(models.Model):
     def __str__(self):
         return f"{self.cat.registered_name} — {self.ems_code}"
 
-    def save(self, *args, **kwargs):
+    def rebuild_ems_code(self, save=True):
         """
-        При сохранении автоматически формируем EMS код цвета
-        на основе выбранных компонентов или справочного цвета.
+        Пересчитывает EMS код безопасно:
+        - если выбран справочный цвет -> берём его ems_code
+        - иначе собираем из компонентов
         """
-
-        # 1. Если задан справочный цвет — используем его
         if self.color:
             self.ems_code = self.color.ems_code
-
-        # 2. Иначе строим из компонентов
         else:
-            components = list(self.components.select_related("type"))
-
-            if components:
-                validate_components(components)
-                self.ems_code = build_ems_code(components)
-            else:
+            if not self.pk:
                 self.ems_code = ""
+            else:
+                components = list(self.components.select_related("type"))
+                if components:
+                    validate_components(components)
+                    self.ems_code = build_ems_code(components)
+                else:
+                    self.ems_code = ""
+
+        if save:
+            super().save(update_fields=["ems_code"] if self.pk else None)
+
+        return self.ems_code
+
+    def save(self, *args, **kwargs):
+        """
+        На первом сохранении нельзя трогать ManyToMany components,
+        потому что объект ещё без pk.
+        """
+        if self.color:
+            self.ems_code = self.color.ems_code
+        elif not self.pk:
+            self.ems_code = ""
 
         super().save(*args, **kwargs)
+
+        if not self.color and self.pk:
+            components = list(self.components.select_related("type"))
+            new_code = ""
+            if components:
+                validate_components(components)
+                new_code = build_ems_code(components)
+
+            if self.ems_code != new_code:
+                self.ems_code = new_code
+                super().save(update_fields=["ems_code"])
 
 
 class Country(TranslatableModel):
@@ -625,14 +723,7 @@ class MediaFile(models.Model):
 
 
 class MediaLink(models.Model):
-    """Модель для связывания медиафайлов с различными объектами (например, котами,
-    питомниками, странами и т.д.) с помощью GenericForeignKey.
-    Позволяет:
-    -   Связывать медиафайлы с любыми моделями без необходимости создавать отдельные
-    поля для каждой модели
-    -   Указывать роль файла (например, "фото", родословная","
-    "контракт" и т.д.) для более точного описания его назначения
-    """
+    """Модель для связывания медиафайлов с различными объектами."""
 
     file = models.ForeignKey(
         MediaFile,
@@ -656,6 +747,22 @@ class MediaLink(models.Model):
         blank=True,
         help_text="photo, pedigree, contract, etc."
     )
+
+    is_primary = models.BooleanField(
+        default=False,
+        verbose_name="Главное фото"
+    )
+
+    sort_order = models.PositiveIntegerField(
+        default=0,
+        verbose_name="Порядок"
+    )
+
+    class Meta:
+        ordering = ["sort_order", "-id"]
+
+    def __str__(self):
+        return f"{self.content_object} -> {self.file} ({self.role})"
 
 
 class Organization(TranslatableModel):
@@ -917,7 +1024,7 @@ class Title(TranslatableModel):
     Используется для фиксации титулов из родословных:
     - Аббревиатура титула (например, CH, IC, NW)
     - Полное название титула (можно перевести)
-    - Тип титула (для классификации, например, чемпион, интер-чемпион)
+    - Тип титула (для классификации, например, чемпион, интернациональный чемпион)
     - Дата присвоения титула
     - Примечания
     """
@@ -1036,8 +1143,6 @@ class Cat(models.Model):
         verbose_name="Дата смерти"
     )
 
-    # 🧬 Идентификаторы
-
     microchip = models.CharField(
         max_length=50,
         blank=True,
@@ -1049,8 +1154,6 @@ class Cat(models.Model):
         blank=True,
         verbose_name="Номер родословной"
     )
-
-    # 🐾 Связи
 
     breed = models.ForeignKey(
         "Breed",
@@ -1067,8 +1170,6 @@ class Cat(models.Model):
         related_name="cats",
         verbose_name="Питомник рождения"
     )
-
-    # 🧬 Родители (само-ссылки)
 
     father = models.ForeignKey(
         "self",
@@ -1098,8 +1199,6 @@ class Cat(models.Model):
         related_name="owned_cats"
     )
 
-    # 📊 Статус в питомнике
-
     is_active = models.BooleanField(
         default=True,
         verbose_name="Активен"
@@ -1108,6 +1207,11 @@ class Cat(models.Model):
     is_for_breeding = models.BooleanField(
         default=True,
         verbose_name="Допущен к разведению"
+    )
+
+    is_featured = models.BooleanField(
+        default=False,
+        verbose_name="Показывать на витрине"
     )
 
     remark = models.TextField(
@@ -1140,7 +1244,17 @@ class Cat(models.Model):
             models.UniqueConstraint(
                 fields=["registered_name", "cattery"],
                 name="unique_name_per_cattery"
-            )
+            ),
+            models.UniqueConstraint(
+                fields=["microchip"],
+                condition=~Q(microchip=""),
+                name="unique_nonempty_microchip"
+            ),
+            models.UniqueConstraint(
+                fields=["pedigree_number"],
+                condition=~Q(pedigree_number=""),
+                name="unique_nonempty_pedigree_number"
+            ),
         ]
 
     def __str__(self):
@@ -1159,10 +1273,20 @@ class Cat(models.Model):
             return MediaLink.objects.none()
 
         content_type = ContentType.objects.get_for_model(self.__class__)
-        return MediaLink.objects.filter(
-            content_type=content_type,
-            object_id=self.pk
-        ).select_related("file")
+        return (
+            MediaLink.objects
+            .filter(
+                content_type=content_type,
+                object_id=self.pk,
+                role="photo"
+            )
+            .select_related("file")
+            .order_by("sort_order", "-is_primary", "-id")
+        )
+
+    def get_main_image(self):
+        images = self.get_images()
+        return images.filter(is_primary=True).first() or images.first()
 
 
 class CatName(models.Model):

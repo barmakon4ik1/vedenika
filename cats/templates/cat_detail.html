@@ -12,7 +12,7 @@
 
         <div class="cat-photo-box shadow-sm">
 
-            {% with img=cat.get_images.first %}
+            {% with img=cat.get_main_image %}
                 {% if img %}
                     <a href="{% url 'cat_gallery' cat.pk %}">
                         <img src="{{ img.file.file.url }}" class="img-fluid rounded" alt="{{ cat.registered_name }}">
@@ -31,19 +31,9 @@
                 <a href="{% url 'cat_upload_photo' cat.pk %}" class="btn btn-outline-primary btn-sm">
                     Добавить фото
                 </a>
-
-                {% with img=cat.get_images.first %}
-                    {% if img %}
-                        <form method="post" action="{% url 'delete_cat_photo' cat.pk img.pk %}">
-                            {% csrf_token %}
-                            <button type="submit"
-                                    class="btn btn-outline-danger btn-sm"
-                                    onclick="return confirm('Удалить фото?');">
-                                Удалить фото
-                            </button>
-                        </form>
-                    {% endif %}
-                {% endwith %}
+                <a href="{% url 'cat_gallery' cat.pk %}" class="btn btn-outline-secondary btn-sm">
+                    Галерея
+                </a>
             </div>
         {% endif %}
 
@@ -59,19 +49,15 @@
         </div>
 
         <div class="mb-3">
-
             {% if cat.sex == "M" %}
                 <span class="badge bg-primary">♂ Самец</span>
             {% else %}
                 <span class="badge bg-danger">♀ Самка</span>
             {% endif %}
 
-            {% if cat.cat_color %}
-                <span class="badge bg-secondary">
-                    EMS: {{ cat.cat_color.ems_code }}
-                </span>
+            {% if cat.ems_code %}
+                <span class="badge bg-secondary">EMS: {{ cat.ems_code }}</span>
             {% endif %}
-
         </div>
 
         <hr>
@@ -82,6 +68,13 @@
             <li><strong>Родился:</strong> {{ cat.birth_date|default:"—" }}</li>
             <li><strong>Номер родословной:</strong> {{ cat.pedigree_number|default:"—" }}</li>
             <li><strong>Микрочип:</strong> {{ cat.microchip|default:"—" }}</li>
+            <li><strong>Окрас:</strong>
+                {% if cat.color %}
+                    {{ cat.color }}
+                {% else %}
+                    —
+                {% endif %}
+            </li>
         </ul>
 
         <hr>
@@ -93,7 +86,27 @@
             <li><strong>Питомник:</strong> {{ cat.cattery|default:"—" }}</li>
             <li><strong>Отец:</strong> {{ cat.father|default:"—" }}</li>
             <li><strong>Мать:</strong> {{ cat.mother|default:"—" }}</li>
+            <li><strong>Владелец:</strong> {{ cat.owner|default:"—" }}</li>
         </ul>
+
+        {% if request.user.is_staff %}
+            <hr>
+            <div class="d-flex gap-2 flex-wrap">
+                <a href="{% url 'cat_edit' cat.pk %}" class="btn btn-outline-dark btn-sm">
+                    Редактировать кота
+                </a>
+
+                {% if cat.color %}
+                    <a href="{% url 'color_update_for_cat' cat.pk %}" class="btn btn-outline-primary btn-sm">
+                        Редактировать окрас
+                    </a>
+                {% else %}
+                    <a href="{% url 'color_create_for_cat' cat.pk %}" class="btn btn-primary btn-sm">
+                        Добавить окрас
+                    </a>
+                {% endif %}
+            </div>
+        {% endif %}
 
     </div>
 

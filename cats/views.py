@@ -1,13 +1,10 @@
-from django.contrib.contenttypes.models import ContentType
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.exceptions import PermissionDenied
-from django.contrib.auth import get_user_model
-from .models import MediaFile, Document, Cat, MediaLink
 from django.views.generic import DetailView, ListView
 from django.http import HttpResponseForbidden
 from django.contrib.admin.views.decorators import staff_member_required
-from .forms import CatForm
+from .forms import *
 
 User = get_user_model()
 # =========================================================
@@ -141,13 +138,50 @@ class CatListView(ListView):
     context_object_name = "cats"
     paginate_by = 24
 
+    OWNER_PERSON_ID = 1   # <-- сюда поставь реальный id из cats_person
+
     def get_queryset(self):
-        return (
+        qs = (
             Cat.objects
-            .select_related("breed", "cattery", "cat_color")
+            .filter(
+                is_active=True,
+                is_featured=True,
+                owner_id=self.OWNER_PERSON_ID
+            )
+            .select_related(
+                "breed", "cattery", "cat_color",
+                "father", "mother", "owner", "litter"
+            )
             .prefetch_related("cat_color__components")
             .order_by("registered_name")
+            .distinct()
         )
+
+        breed = self.request.GET.get("breed")
+        sex = self.request.GET.get("sex")
+        color = self.request.GET.get("color")
+
+        if breed:
+            qs = qs.filter(breed_id=breed)
+
+        if sex:
+            qs = qs.filter(sex=sex)
+
+        if color:
+            qs = qs.filter(cat_color__color_id=color)
+
+        return qs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        from .models import Breed, Color
+
+        context["breeds"] = Breed.objects.filter(is_active=True).order_by("ems_code")
+        context["colors"] = Color.objects.filter(is_active=True).order_by("ems_code")
+        context["selected_breed"] = self.request.GET.get("breed", "")
+        context["selected_sex"] = self.request.GET.get("sex", "")
+        context["selected_color"] = self.request.GET.get("color", "")
+        return context
 
 
 def upload_cat_photo(request, pk):
@@ -234,4 +268,101 @@ def cat_create(request):
     else:
         form = CatForm()
 
-    return render(request, "cat_form.html", {"form": form, "page_title": "Добавить кота"})
+    return render(request, "cat_form.html", {
+        "form": form,
+        "page_title": "Добавить кота",
+        "is_edit": False,
+    })
+
+@staff_member_required
+def cat_update(request, pk):
+    cat = get_object_or_404(Cat, pk=pk)
+
+    if request.method == "POST":
+        form = CatForm(request.POST, instance=cat)
+        if form.is_valid():
+            cat = form.save()
+            return redirect("cat_detail", pk=cat.pk)
+    else:
+        form = CatForm(instance=cat)
+
+    return render(request, "cat_form.html", {
+        "form": form,
+        "page_title": "Редактировать кота",
+        "is_edit": True,
+        "cat": cat,
+    })
+
+@staff_member_required
+def set_main_photo(request, cat_pk, photo_pk):
+    cat = get_object_or_404(Cat, pk=cat_pk)
+    content_type = ContentType.objects.get_for_model(Cat)
+
+    MediaLink.objects.filter(
+        content_type=content_type,
+        object_id=cat.pk,
+        role="photo"
+    ).update(is_primary=False)
+
+    photo = get_object_or_404(
+        MediaLink,
+        pk=photo_pk,
+        content_type=content_type,
+        object_id=cat.pk,
+        role="photo"
+    )
+
+    photo.is_primary = True
+    photo.save()
+
+    return redirect("cat_gallery", pk=cat.pk)
+
+@staff_member_required
+def color_create_for_cat(request, cat_pk):
+    cat = get_object_or_404(Cat, pk=cat_pk)
+
+    if request.method == "POST":
+        form = ColorForm(request.POST)
+        if form.is_valid():
+            color = form.save()
+
+            cat_color, _ = CatColor.objects.get_or_create(cat=cat)
+            cat_color.color = color
+            cat_color.save()
+
+            return redirect("cat_detail", pk=cat.pk)
+    else:
+        form = ColorForm()
+
+    return render(request, "color_form.html", {
+        "form": form,
+        "page_title": f"Добавить окрас для {cat.registered_name}",
+        "cat": cat,
+        "is_edit": False,
+    })
+
+
+@staff_member_required
+def color_update_for_cat(request, cat_pk):
+    cat = get_object_or_404(Cat, pk=cat_pk)
+
+    if not hasattr(cat, "cat_color") or not cat.cat_color.color:
+        return redirect("color_create_for_cat", cat_pk=cat.pk)
+
+    color = cat.cat_color.color
+
+    if request.method == "POST":
+        form = ColorForm(request.POST, instance=color)
+        if form.is_valid():
+            form.save()
+            return redirect("cat_detail", pk=cat.pk)
+    else:
+        form = ColorForm(instance=color)
+
+    return render(request, "color_form.html", {
+        "form": form,
+        "page_title": f"Редактировать окрас для {cat.registered_name}",
+        "cat": cat,
+        "is_edit": True,
+        "color": color,
+    })

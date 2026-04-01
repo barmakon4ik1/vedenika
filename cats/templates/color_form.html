@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+    <div class="col-12 col-xl-9">
+
+        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+            <h2 class="mb-0">{{ page_title }}</h2>
+            <a href="{% url 'cat_detail' cat.pk %}" class="btn btn-outline-secondary btn-sm">К карточке кота</a>
+        </div>
+
+        <form method="post" class="card shadow-sm p-4">
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+
+            {% if is_edit and color %}
+                <div class="alert alert-light border">
+                    <strong>Текущий окрас:</strong> {{ color }}
+                </div>
+            {% else %}
+                <div class="alert alert-light border">
+                    Название окраса и EMS-код будут собраны автоматически из выбранных компонентов.
+                </div>
+            {% endif %}
+
+            <div class="row g-3">
+
+                <div class="col-12">
+                    <label class="form-label">Компоненты окраса</label>
+                    {{ form.components }}
+                    {{ form.components.errors }}
+                    <div class="form-text">
+                        Компоненты сохраняются в порядке EMS автоматически.
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <label class="form-label">Примечание</label>
+                    {{ form.remark }}
+                    {{ form.remark.errors }}
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-check mt-2">
+                        {{ form.is_active }}
+                        <label class="form-check-label" for="{{ form.is_active.id_for_label }}">
+                            Активен
+                        </label>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="mt-4 d-flex gap-2 flex-wrap">
+                <button type="submit" class="btn btn-primary">Сохранить окрас</button>
+                <a href="{% url 'cat_detail' cat.pk %}" class="btn btn-outline-secondary">Отмена</a>
+            </div>
+
+        </form>
+
+    </div>
+</div>
+
+{% endblock %}

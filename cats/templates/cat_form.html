@@ -5,9 +5,9 @@
 {% block content %}
 
 <div class="row justify-content-center">
-    <div class="col-12 col-lg-8">
+    <div class="col-12 col-xl-10">
 
-        <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
             <h2 class="mb-0">{{ page_title }}</h2>
             <a href="{% url 'cat_list' %}" class="btn btn-outline-secondary btn-sm">К списку</a>
         </div>
@@ -23,28 +23,34 @@
 
             <div class="row g-3">
 
-                <div class="col-12">
+                <div class="col-12 col-lg-6">
                     <label class="form-label">Официальное имя</label>
                     {{ form.registered_name }}
                     {{ form.registered_name.errors }}
                 </div>
 
-                <div class="col-md-6">
+                <div class="col-12 col-lg-6">
                     <label class="form-label">Домашнее имя</label>
                     {{ form.call_name }}
                     {{ form.call_name.errors }}
                 </div>
 
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <label class="form-label">Пол</label>
                     {{ form.sex }}
                     {{ form.sex.errors }}
                 </div>
 
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <label class="form-label">Дата рождения</label>
                     {{ form.birth_date }}
                     {{ form.birth_date.errors }}
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">Дата смерти</label>
+                    {{ form.death_date }}
+                    {{ form.death_date.errors }}
                 </div>
 
                 <div class="col-md-6">
@@ -54,21 +60,21 @@
                 </div>
 
                 <div class="col-md-6">
+                    <label class="form-label">Окрас</label>
+                    {{ form.color }}
+                    {{ form.color.errors }}
+                </div>
+
+                <div class="col-md-6">
                     <label class="form-label">Питомник</label>
                     {{ form.cattery }}
                     {{ form.cattery.errors }}
                 </div>
 
                 <div class="col-md-6">
-                    <label class="form-label">Номер родословной</label>
-                    {{ form.pedigree_number }}
-                    {{ form.pedigree_number.errors }}
-                </div>
-
-                <div class="col-md-6">
-                    <label class="form-label">Микрочип</label>
-                    {{ form.microchip }}
-                    {{ form.microchip.errors }}
+                    <label class="form-label">Владелец</label>
+                    {{ form.owner }}
+                    {{ form.owner.errors }}
                 </div>
 
                 <div class="col-md-6">
@@ -83,13 +89,31 @@
                     {{ form.mother.errors }}
                 </div>
 
+                <div class="col-md-6">
+                    <label class="form-label">Помёт</label>
+                    {{ form.litter }}
+                    {{ form.litter.errors }}
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Номер родословной</label>
+                    {{ form.pedigree_number }}
+                    {{ form.pedigree_number.errors }}
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Микрочип</label>
+                    {{ form.microchip }}
+                    {{ form.microchip.errors }}
+                </div>
+
                 <div class="col-12">
                     <label class="form-label">Примечание</label>
                     {{ form.remark }}
                     {{ form.remark.errors }}
                 </div>
 
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <div class="form-check mt-2">
                         {{ form.is_active }}
                         <label class="form-check-label" for="{{ form.is_active.id_for_label }}">
@@ -98,7 +122,7 @@
                     </div>
                 </div>
 
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <div class="form-check mt-2">
                         {{ form.is_for_breeding }}
                         <label class="form-check-label" for="{{ form.is_for_breeding.id_for_label }}">
@@ -107,11 +131,24 @@
                     </div>
                 </div>
 
+                <div class="col-md-4">
+                    <div class="form-check mt-2">
+                        {{ form.is_featured }}
+                        <label class="form-check-label" for="{{ form.is_featured.id_for_label }}">
+                            Показывать на витрине
+                        </label>
+                    </div>
+                </div>
+
             </div>
 
-            <div class="mt-4 d-flex gap-2">
+            <div class="mt-4 d-flex gap-2 flex-wrap">
                 <button type="submit" class="btn btn-primary">Сохранить</button>
                 <a href="{% url 'cat_list' %}" class="btn btn-outline-secondary">Отмена</a>
+
+                {% if is_edit and cat %}
+                    <a href="{% url 'cat_detail' cat.pk %}" class="btn btn-outline-dark">К карточке кота</a>
+                {% endif %}
             </div>
 
         </form>
