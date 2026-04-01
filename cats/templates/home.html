@@ -1,21 +1,577 @@
 {% extends "base.html" %}
+{% load static %}
+{% load i18n %}
 
-{% block title %}Главная{% endblock %}
+{% block title %}Vedenika — Питомник мейн-кунов{% endblock %}
 
 {% block content %}
 
-<div class="text-center">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500&display=swap');
 
-    <h1 class="mb-4">Vedenika Cats System</h1>
+  :root {
+    --cream:    #f7f2ea;
+    --cream2:   #efe8d8;
+    --warm-tan: #c9a96e;
+    --warm-brown: #7a5c3a;
+    --dark:     #2c2015;
+    --muted:    #8c7660;
+    --card-bg:  #fdfaf5;
+  }
 
-    <p class="text-muted">
-        Управление питомником, котами, документами и медиа
-    </p>
+  .home-wrap {
+    font-family: 'Jost', sans-serif;
+    color: var(--dark);
+  }
 
-    <div class="mt-4">
-        <a href="/cats/" class="btn btn-primary">Открыть котов</a>
-        <a href="/media/" class="btn btn-secondary">Медиа</a>
+  /* ========= HERO ========= */
+
+  .hero {
+    position: relative;
+    background: var(--cream);
+    border-radius: 20px;
+    overflow: hidden;
+    padding: 72px 56px 64px;
+    margin-bottom: 72px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: center;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 80% at 80% 50%, rgba(201,169,110,0.13) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 60% at 10% 90%, rgba(201,169,110,0.10) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .hero-text {
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-eyebrow {
+    font-family: 'Jost', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--warm-tan);
+    margin-bottom: 20px;
+  }
+
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 58px;
+    font-weight: 500;
+    line-height: 1.08;
+    color: var(--dark);
+    margin-bottom: 24px;
+  }
+
+  .hero-title em {
+    font-style: italic;
+    color: var(--warm-brown);
+  }
+
+  .hero-desc {
+    font-size: 16px;
+    font-weight: 300;
+    line-height: 1.75;
+    color: var(--muted);
+    max-width: 380px;
+    margin-bottom: 36px;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .btn-primary-warm {
+    background: var(--warm-brown);
+    color: #fdf8f0;
+    padding: 13px 28px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    transition: background 0.2s ease, transform 0.15s ease;
+    display: inline-block;
+  }
+
+  .btn-primary-warm:hover {
+    background: var(--dark);
+    color: #fdf8f0;
+    transform: translateY(-1px);
+  }
+
+  .btn-ghost-warm {
+    color: var(--warm-brown);
+    padding: 13px 4px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    border-bottom: 1.5px solid var(--warm-tan);
+    transition: color 0.2s ease, border-color 0.2s ease;
+    display: inline-block;
+  }
+
+  .btn-ghost-warm:hover {
+    color: var(--dark);
+    border-color: var(--dark);
+  }
+
+  .hero-visual {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .hero-stat-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+
+  .hero-stat {
+    background: var(--card-bg);
+    border: 1px solid rgba(201,169,110,0.25);
+    border-radius: 16px;
+    padding: 24px 20px;
+  }
+
+  .hero-stat-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 42px;
+    font-weight: 500;
+    color: var(--warm-brown);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .hero-stat-label {
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--muted);
+    letter-spacing: 0.3px;
+  }
+
+  .hero-stat-wide {
+    background: var(--warm-brown);
+    border-radius: 16px;
+    padding: 22px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .hero-stat-wide-icon {
+    font-size: 28px;
+    flex-shrink: 0;
+  }
+
+  .hero-stat-wide-text {
+    font-size: 14px;
+    font-weight: 400;
+    color: rgba(253,248,240,0.85);
+    line-height: 1.5;
+  }
+
+  .hero-stat-wide-text strong {
+    display: block;
+    color: #fdf8f0;
+    font-weight: 500;
+    font-size: 15px;
+    margin-bottom: 2px;
+  }
+
+  /* ========= SECTION HEADER ========= */
+
+  .section-header {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+
+  .section-eyebrow {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--warm-tan);
+    margin-bottom: 14px;
+  }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 40px;
+    font-weight: 500;
+    color: var(--dark);
+    line-height: 1.15;
+  }
+
+  .section-title em {
+    font-style: italic;
+    color: var(--warm-brown);
+  }
+
+  /* ========= BREED FEATURES ========= */
+
+  .features-section {
+    margin-bottom: 72px;
+  }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  .feature-card {
+    background: var(--card-bg);
+    border: 1px solid rgba(201,169,110,0.2);
+    border-radius: 18px;
+    padding: 32px 28px;
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+  }
+
+  .feature-card:hover {
+    box-shadow: 0 8px 32px rgba(122,92,58,0.10);
+    transform: translateY(-2px);
+  }
+
+  .feature-icon {
+    width: 48px;
+    height: 48px;
+    background: var(--cream);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    margin-bottom: 20px;
+  }
+
+  .feature-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--dark);
+    margin-bottom: 10px;
+  }
+
+  .feature-desc {
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 1.7;
+    color: var(--muted);
+  }
+
+  /* ========= CTA BANNER ========= */
+
+  .cta-banner {
+    background: var(--cream2);
+    border-radius: 20px;
+    padding: 56px 48px;
+    margin-bottom: 72px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 40px;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta-banner::after {
+    content: '🐾';
+    position: absolute;
+    right: 220px;
+    top: 50%;
+    transform: translateY(-50%) rotate(-15deg);
+    font-size: 80px;
+    opacity: 0.07;
+    pointer-events: none;
+  }
+
+  .cta-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 36px;
+    font-weight: 500;
+    color: var(--dark);
+    margin-bottom: 12px;
+    line-height: 1.2;
+  }
+
+  .cta-title em {
+    font-style: italic;
+    color: var(--warm-brown);
+  }
+
+  .cta-desc {
+    font-size: 15px;
+    font-weight: 300;
+    color: var(--muted);
+    line-height: 1.7;
+    max-width: 520px;
+  }
+
+  /* ========= BREED INFO ========= */
+
+  .breed-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: start;
+    margin-bottom: 72px;
+  }
+
+  .breed-text-side {}
+
+  .breed-text-side .section-header {
+    text-align: left;
+  }
+
+  .breed-body {
+    font-size: 15px;
+    font-weight: 300;
+    line-height: 1.85;
+    color: var(--muted);
+    margin-bottom: 20px;
+  }
+
+  .breed-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 24px;
+  }
+
+  .breed-tag {
+    background: var(--cream);
+    border: 1px solid rgba(201,169,110,0.3);
+    color: var(--warm-brown);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    padding: 6px 14px;
+    border-radius: 50px;
+  }
+
+  .breed-facts-side {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .breed-fact {
+    background: var(--card-bg);
+    border: 1px solid rgba(201,169,110,0.18);
+    border-left: 3px solid var(--warm-tan);
+    border-radius: 0 12px 12px 0;
+    padding: 18px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .breed-fact-label {
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--muted);
+  }
+
+  .breed-fact-value {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--warm-brown);
+  }
+
+  /* ========= RESPONSIVE ========= */
+
+  @media (max-width: 900px) {
+    .hero {
+      grid-template-columns: 1fr;
+      padding: 48px 32px;
+    }
+
+    .hero-title { font-size: 44px; }
+
+    .features-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .breed-section {
+      grid-template-columns: 1fr;
+    }
+
+    .cta-banner {
+      grid-template-columns: 1fr;
+      padding: 40px 32px;
+    }
+
+    .cta-banner::after { display: none; }
+  }
+
+  @media (max-width: 600px) {
+    .hero { padding: 36px 24px; }
+    .hero-title { font-size: 36px; }
+    .hero-stat-row { grid-template-columns: 1fr 1fr; }
+    .section-title { font-size: 32px; }
+  }
+</style>
+
+<div class="home-wrap">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-text">
+      <div class="hero-eyebrow">{% trans "Питомник мейн-кунов" %} · Vedenika</div>
+      <h1 class="hero-title">
+        {% trans "Красота" %}<br>
+        <em>{% trans "в каждом коте" %}</em>
+      </h1>
+      <p class="hero-desc">
+        {% trans "Разведение мейн-кунов с любовью и заботой. Здоровые котята с подтверждёнными родословными и документами FIFe." %}
+      </p>
+      <div class="hero-actions">
+        <a href="{% url 'cat_list' %}" class="btn-primary-warm">
+          {% trans "Познакомиться с котами" %}
+        </a>
+        <a href="#breed" class="btn-ghost-warm">
+          {% trans "О породе" %}
+        </a>
+      </div>
     </div>
+
+    <div class="hero-visual">
+      <div class="hero-stat-row">
+        <div class="hero-stat">
+          <div class="hero-stat-num">FIFe</div>
+          <div class="hero-stat-label">{% trans "Зарегистрированный питомник" %}</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-num">MCO</div>
+          <div class="hero-stat-label">{% trans "EMS-код породы" %}</div>
+        </div>
+      </div>
+      <div class="hero-stat-wide">
+        <div class="hero-stat-wide-icon">🏆</div>
+        <div class="hero-stat-wide-text">
+          <strong>{% trans "Выставочные котята" %}</strong>
+          {% trans "Титулованные производители, проверенная генетика" %}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="features-section">
+    <div class="section-header">
+      <div class="section-eyebrow">{% trans "Почему Vedenika" %}</div>
+      <h2 class="section-title">{% trans "Наш подход к <em>разведению</em>" %}</h2>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🧬</div>
+        <div class="feature-title">{% trans "Генетика и здоровье" %}</div>
+        <p class="feature-desc">
+          {% trans "Все производители проверены на HCM, PKD и другие наследственные заболевания. Результаты тестов открыты и доступны." %}
+        </p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">📋</div>
+        <div class="feature-title">{% trans "Полные документы" %}</div>
+        <p class="feature-desc">
+          {% trans "Метрика, международная родословная FIFe, ветеринарный паспорт и договор купли-продажи для каждого котёнка." %}
+        </p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🤝</div>
+        <div class="feature-title">{% trans "Поддержка покупателей" %}</div>
+        <p class="feature-desc">
+          {% trans "Мы сопровождаем новых владельцев: советы по уходу, питанию и социализации. Связь с питомником на всю жизнь питомца." %}
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- BREED INFO -->
+  <section class="breed-section" id="breed">
+    <div class="breed-text-side">
+      <div class="section-header">
+        <div class="section-eyebrow">{% trans "О породе" %}</div>
+        <h2 class="section-title">{% trans "Мейн-кун — <em>лесной кот</em>" %}</h2>
+      </div>
+      <p class="breed-body">
+        {% trans "Мейн-кун — одна из крупнейших домашних пород, родом из штата Мэн, США. Эти кошки отличаются мощным телосложением, густой шерстью с характерным «воротником» и невероятно дружелюбным характером." %}
+      </p>
+      <p class="breed-body">
+        {% trans "Несмотря на внушительные размеры, мейн-куны остаются игривыми и ласковыми на протяжении всей жизни. Их нередко сравнивают с собаками за преданность хозяину и умение понимать настроение." %}
+      </p>
+      <div class="breed-tags">
+        <span class="breed-tag">{% trans "Дружелюбный" %}</span>
+        <span class="breed-tag">{% trans "Игривый" %}</span>
+        <span class="breed-tag">{% trans "Уживчивый" %}</span>
+        <span class="breed-tag">{% trans "Умный" %}</span>
+        <span class="breed-tag">{% trans "Ласковый" %}</span>
+      </div>
+    </div>
+
+    <div class="breed-facts-side">
+      <div class="breed-fact">
+        <span class="breed-fact-label">{% trans "Вес самцов" %}</span>
+        <span class="breed-fact-value">6–10 кг</span>
+      </div>
+      <div class="breed-fact">
+        <span class="breed-fact-label">{% trans "Вес самок" %}</span>
+        <span class="breed-fact-value">4–7 кг</span>
+      </div>
+      <div class="breed-fact">
+        <span class="breed-fact-label">{% trans "Продолжительность жизни" %}</span>
+        <span class="breed-fact-value">12–15 лет</span>
+      </div>
+      <div class="breed-fact">
+        <span class="breed-fact-label">{% trans "Тип шерсти" %}</span>
+        <span class="breed-fact-value">{% trans "Полудлинная" %}</span>
+      </div>
+      <div class="breed-fact">
+        <span class="breed-fact-label">{% trans "Признание FIFe" %}</span>
+        <span class="breed-fact-value">{% trans "Полное" %}</span>
+      </div>
+      <div class="breed-fact">
+        <span class="breed-fact-label">{% trans "EMS код" %}</span>
+        <span class="breed-fact-value">MCO</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-banner">
+    <div>
+      <h2 class="cta-title">{% trans "Ищете <em>котёнка</em>?" %}</h2>
+      <p class="cta-desc">
+        {% trans "Познакомьтесь с нашими котами и узнайте о доступных котятах. Мы рады ответить на любые вопросы о породе и условиях приобретения." %}
+      </p>
+    </div>
+    <div>
+      <a href="{% url 'cat_list' %}" class="btn-primary-warm">
+        {% trans "Смотреть котов" %} →
+      </a>
+    </div>
+  </section>
 
 </div>
 
