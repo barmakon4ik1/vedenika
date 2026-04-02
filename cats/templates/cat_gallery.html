@@ -6,380 +6,6 @@
 
 {% block content %}
 
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500&display=swap');
-
-  :root {
-    --cream:      #f7f2ea;
-    --cream2:     #efe8d8;
-    --warm-tan:   #c9a96e;
-    --warm-brown: #7a5c3a;
-    --dark:       #2c2015;
-    --muted:      #8c7660;
-    --card-bg:    #fdfaf5;
-    --border:     rgba(201,169,110,0.22);
-  }
-
-  .gallery-wrap {
-    font-family: 'Jost', sans-serif;
-    color: var(--dark);
-  }
-
-  /* ===== BREADCRUMB ===== */
-
-  .breadcrumb-warm {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 13px;
-    color: var(--muted);
-    margin-bottom: 32px;
-    flex-wrap: wrap;
-  }
-
-  .breadcrumb-warm a {
-    color: var(--warm-tan);
-    text-decoration: none;
-    transition: color 0.15s;
-  }
-
-  .breadcrumb-warm a:hover { color: var(--warm-brown); }
-
-  .breadcrumb-sep { color: var(--border); font-size: 16px; }
-
-  /* ===== PAGE HEADER ===== */
-
-  .gallery-header {
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: 16px;
-    margin-bottom: 40px;
-    flex-wrap: wrap;
-  }
-
-  .gallery-header-left {}
-
-  .gallery-eyebrow {
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--warm-tan);
-    margin-bottom: 8px;
-  }
-
-  .gallery-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 42px;
-    font-weight: 500;
-    color: var(--dark);
-    line-height: 1.1;
-    margin: 0;
-  }
-
-  .gallery-title em {
-    font-style: italic;
-    color: var(--warm-brown);
-  }
-
-  .gallery-header-actions {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-    flex-shrink: 0;
-    flex-wrap: wrap;
-  }
-
-  .btn-gallery {
-    padding: 10px 20px;
-    border-radius: 10px;
-    font-family: 'Jost', sans-serif;
-    font-size: 13px;
-    font-weight: 400;
-    text-decoration: none;
-    transition: all 0.18s ease;
-    white-space: nowrap;
-    border: 1px solid var(--border);
-  }
-
-  .btn-gallery-primary {
-    background: var(--warm-brown);
-    color: #fdf8f0;
-    border-color: var(--warm-brown);
-  }
-
-  .btn-gallery-primary:hover {
-    background: var(--dark);
-    border-color: var(--dark);
-    color: #fdf8f0;
-  }
-
-  .btn-gallery-outline {
-    background: var(--card-bg);
-    color: var(--warm-brown);
-  }
-
-  .btn-gallery-outline:hover {
-    background: var(--cream);
-    border-color: var(--warm-tan);
-    color: var(--dark);
-  }
-
-  /* ===== MASONRY GRID ===== */
-
-  .gallery-grid {
-    columns: 4;
-    column-gap: 16px;
-    margin-bottom: 48px;
-  }
-
-  .gallery-item {
-    break-inside: avoid;
-    margin-bottom: 16px;
-    position: relative;
-    border-radius: 14px;
-    overflow: hidden;
-    background: var(--cream);
-    cursor: pointer;
-  }
-
-  .gallery-item img {
-    width: 100%;
-    height: auto;
-    display: block;
-    transition: transform 0.4s ease;
-  }
-
-  .gallery-item:hover img {
-    transform: scale(1.04);
-  }
-
-  /* primary badge */
-  .gallery-primary-badge {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    background: rgba(44,32,21,0.6);
-    color: rgba(253,248,240,0.95);
-    font-size: 10px;
-    font-weight: 500;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    padding: 4px 10px;
-    border-radius: 50px;
-    backdrop-filter: blur(4px);
-    pointer-events: none;
-  }
-
-  /* hover overlay */
-  .gallery-item-overlay {
-    position: absolute;
-    inset: 0;
-    background: rgba(44,32,21,0);
-    transition: background 0.25s ease;
-    display: flex;
-    align-items: flex-end;
-    padding: 14px;
-  }
-
-  .gallery-item:hover .gallery-item-overlay {
-    background: rgba(44,32,21,0.38);
-  }
-
-  .gallery-item-actions {
-    display: flex;
-    gap: 6px;
-    opacity: 0;
-    transform: translateY(6px);
-    transition: opacity 0.22s ease, transform 0.22s ease;
-    width: 100%;
-  }
-
-  .gallery-item:hover .gallery-item-actions {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  .gallery-action-btn {
-    flex: 1;
-    text-align: center;
-    padding: 7px 10px;
-    border-radius: 8px;
-    font-family: 'Jost', sans-serif;
-    font-size: 11px;
-    font-weight: 500;
-    border: none;
-    cursor: pointer;
-    transition: background 0.15s;
-    white-space: nowrap;
-  }
-
-  .gallery-action-btn.make-primary {
-    background: rgba(253,248,240,0.92);
-    color: var(--warm-brown);
-  }
-
-  .gallery-action-btn.make-primary:hover {
-    background: #fdf8f0;
-  }
-
-  .gallery-action-btn.is-primary {
-    background: rgba(201,169,110,0.85);
-    color: #fdf8f0;
-    pointer-events: none;
-  }
-
-  .gallery-action-btn.delete {
-    background: rgba(162,45,45,0.82);
-    color: #fff;
-    flex: 0;
-    padding: 7px 10px;
-  }
-
-  .gallery-action-btn.delete:hover {
-    background: rgba(162,45,45,1);
-  }
-
-  /* ===== LIGHTBOX ===== */
-
-  .lightbox-backdrop {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(20,14,8,0.92);
-    z-index: 1000;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .lightbox-backdrop.open {
-    display: flex;
-  }
-
-  .lightbox-inner {
-    position: relative;
-    max-width: 90vw;
-    max-height: 90vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .lightbox-img {
-    max-width: 90vw;
-    max-height: 88vh;
-    width: auto;
-    height: auto;
-    border-radius: 12px;
-    display: block;
-    box-shadow: 0 24px 80px rgba(0,0,0,0.6);
-  }
-
-  .lightbox-close {
-    position: fixed;
-    top: 20px;
-    right: 24px;
-    background: rgba(255,255,255,0.12);
-    border: none;
-    color: rgba(253,248,240,0.85);
-    font-size: 22px;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background 0.18s;
-    line-height: 1;
-    z-index: 1001;
-  }
-
-  .lightbox-close:hover {
-    background: rgba(255,255,255,0.22);
-  }
-
-  .lightbox-nav {
-    position: fixed;
-    top: 50%;
-    transform: translateY(-50%);
-    background: rgba(255,255,255,0.1);
-    border: none;
-    color: rgba(253,248,240,0.8);
-    font-size: 20px;
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background 0.18s;
-    z-index: 1001;
-  }
-
-  .lightbox-nav:hover {
-    background: rgba(255,255,255,0.2);
-  }
-
-  .lightbox-nav.prev { left: 20px; }
-  .lightbox-nav.next { right: 20px; }
-
-  .lightbox-counter {
-    position: fixed;
-    bottom: 24px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-family: 'Jost', sans-serif;
-    font-size: 13px;
-    color: rgba(253,248,240,0.55);
-    letter-spacing: 1px;
-    z-index: 1001;
-  }
-
-  /* ===== EMPTY STATE ===== */
-
-  .empty-gallery {
-    text-align: center;
-    padding: 80px 24px;
-    color: var(--muted);
-  }
-
-  .empty-gallery-icon {
-    font-size: 52px;
-    opacity: 0.2;
-    margin-bottom: 20px;
-  }
-
-  .empty-gallery-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 28px;
-    color: var(--dark);
-    margin-bottom: 10px;
-  }
-
-  .empty-gallery-desc {
-    font-size: 14px;
-    font-weight: 300;
-    line-height: 1.7;
-    margin-bottom: 24px;
-  }
-
-  /* ===== RESPONSIVE ===== */
-
-  @media (max-width: 900px) {
-    .gallery-grid { columns: 3; }
-    .gallery-title { font-size: 34px; }
-  }
-
-  @media (max-width: 600px) {
-    .gallery-grid { columns: 2; column-gap: 10px; }
-    .gallery-item { margin-bottom: 10px; }
-    .gallery-title { font-size: 28px; }
-    .lightbox-nav { display: none; }
-  }
-</style>
 
 <div class="gallery-wrap">
 
@@ -391,7 +17,7 @@
     <span class="breadcrumb-sep">/</span>
     <a href="{% url 'cat_detail' cat.pk %}">{{ cat.registered_name }}</a>
     <span class="breadcrumb-sep">/</span>
-    <span style="color: var(--muted);">{% trans "Галерея" %}</span>
+    <span class="text-muted-warm">{% trans "Галерея" %}</span>
   </nav>
 
   <!-- PAGE HEADER -->
@@ -402,11 +28,11 @@
     </div>
 
     <div class="gallery-header-actions">
-      <a href="{% url 'cat_detail' cat.pk %}" class="btn-gallery btn-gallery-outline">
+      <a href="{% url 'cat_detail' cat.pk %}" class="btn-sq btn-sq-outline">
         ← {% trans "К карточке" %}
       </a>
       {% if request.user.is_staff %}
-        <a href="{% url 'cat_upload_photo' cat.pk %}" class="btn-gallery btn-gallery-primary">
+        <a href="{% url 'cat_upload_photo' cat.pk %}" class="btn-sq btn-sq-primary">
           + {% trans "Добавить фото" %}
         </a>
       {% endif %}
@@ -430,14 +56,14 @@
               <div class="gallery-item-actions">
 
                 {% if not photo.is_primary %}
-                  <form method="post" action="{% url 'set_main_photo' cat.pk photo.pk %}" style="flex: 1;">
+                  <form method="post" action="{% url 'set_main_photo' cat.pk photo.pk %}" class="flex-1">
                     {% csrf_token %}
-                    <button type="submit" class="gallery-action-btn make-primary" style="width: 100%;">
+                    <button type="submit" class="gallery-action-btn make-primary w-100">
                       ★ {% trans "Главным" %}
                     </button>
                   </form>
                 {% else %}
-                  <button class="gallery-action-btn is-primary" style="flex: 1;">
+                  <button class="gallery-action-btn is-primary" class="flex-1">
                     ★ {% trans "Главное фото" %}
                   </button>
                 {% endif %}
@@ -526,7 +152,7 @@
         {% trans "Для этого кота ещё не добавлено ни одной фотографии." %}
       </p>
       {% if request.user.is_staff %}
-        <a href="{% url 'cat_upload_photo' cat.pk %}" class="btn-gallery btn-gallery-primary" style="display: inline-block;">
+        <a href="{% url 'cat_upload_photo' cat.pk %}" class="btn-sq btn-sq-primary">
           + {% trans "Добавить первое фото" %}
         </a>
       {% endif %}

@@ -6,7 +6,7 @@ from django.contrib.auth import get_user_model
 from django.views.generic import DetailView, ListView
 from django.http import HttpResponseForbidden
 from django.contrib.admin.views.decorators import staff_member_required
-
+from django.utils import timezone
 from .models import *
 from .forms import *
 
@@ -346,4 +346,121 @@ def color_update_for_cat(request, cat_pk):
         "color": color,
     })
 
+
+# =========================================================
+# 🐾 LITTERS
+# =========================================================
+
+class LitterListView(ListView):
+    model = Litter
+    template_name = "litter_list.html"
+    context_object_name = "litters"
+    ordering = ["-birth_date"]
+
+    def get_queryset(self):
+        return (
+            Litter.objects
+            .select_related("father", "mother", "cattery")
+            .prefetch_related(
+                "kittens",
+                "kittens__photos",
+                "kittens__cat_color",
+                "father__photos",
+                "mother__photos",
+            )
+            .order_by("-birth_date")
+        )
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        today = timezone.now().date()
+
+        litters_data = []
+        for litter in context["litters"]:
+            kittens = list(litter.kittens.all())
+            males   = [k for k in kittens if k.sex == "M"]
+            females = [k for k in kittens if k.sex == "F"]
+
+            # Возраст в полных месяцах
+            delta = today - litter.birth_date
+            age_months = delta.days // 30
+
+            # Помёт считается активным, если котята моложе 12 месяцев
+            is_active = age_months < 12
+
+            litters_data.append({
+                "litter":     litter,
+                "kittens":    kittens,
+                "males":      males,
+                "females":    females,
+                "age_months": age_months,
+                "is_active":  is_active,
+            })
+
+        context["litters_data"] = litters_data
+        return context
+
+
+class LitterDetailView(DetailView):
+    model = Litter
+    template_name = "litter_detail.html"
+    context_object_name = "litter"
+
+    def get_queryset(self):
+        return (
+            Litter.objects
+            .select_related("father", "mother", "cattery")
+            .prefetch_related(
+                "kittens",
+                "kittens__photos",
+                "kittens__cat_color",
+                "kittens__cat_color__color",
+                "father__photos",
+                "father__cat_color",
+                "mother__photos",
+                "mother__cat_color",
+            )
+        )
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        litter  = self.object
+        today   = timezone.now().date()
+
+        kittens = list(litter.kittens.select_related(
+            "cat_color", "cat_color__color"
+        ).prefetch_related("photos").order_by("sex", "registered_name"))
+
+        males   = [k for k in kittens if k.sex == "M"]
+        females = [k for k in kittens if k.sex == "F"]
+
+        delta      = today - litter.birth_date
+        age_months = delta.days // 30
+        age_weeks  = delta.days // 7
+        is_active  = age_months < 12
+
+        # Локации котят (без имён владельцев — только город/страна)
+        kitten_locations = {}
+        for kitten in kittens:
+            if kitten.owner and kitten.owner.address:
+                addr = kitten.owner.address
+                parts = []
+                if addr.city:
+                    parts.append(str(addr.city))
+                if addr.country:
+                    parts.append(str(addr.country))
+                kitten_locations[kitten.pk] = ", ".join(parts)
+            else:
+                kitten_locations[kitten.pk] = None
+
+        context.update({
+            "kittens":          kittens,
+            "males":            males,
+            "females":          females,
+            "age_months":       age_months,
+            "age_weeks":        age_weeks,
+            "is_active":        is_active,
+            "kitten_locations": kitten_locations,
+        })
+        return context
 

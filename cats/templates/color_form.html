@@ -1,72 +1,122 @@
 {% extends "base.html" %}
+{% load static %}
+{% load i18n %}
 
-{% block title %}{{ page_title }}{% endblock %}
+{% block title %}{{ page_title }} — Vedenika{% endblock %}
 
 {% block content %}
 
-<div class="row justify-content-center">
-    <div class="col-12 col-xl-9">
+<div class="form-page-wrap">
 
-        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
-            <h2 class="mb-0">{{ page_title }}</h2>
-            <a href="{% url 'cat_detail' cat.pk %}" class="btn btn-outline-secondary btn-sm">К карточке кота</a>
+  <!-- BREADCRUMB -->
+  <nav class="breadcrumb-warm">
+    <a href="{% url 'home' %}">{% trans "Главная" %}</a>
+    <span class="breadcrumb-sep">/</span>
+    <a href="{% url 'cat_list' %}">{% trans "Коты" %}</a>
+    <span class="breadcrumb-sep">/</span>
+    <a href="{% url 'cat_detail' cat.pk %}">{{ cat.registered_name }}</a>
+    <span class="breadcrumb-sep">/</span>
+    <span class="breadcrumb-current">{{ page_title }}</span>
+  </nav>
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div>
+      <div class="eyebrow">{{ cat.registered_name }}</div>
+      <h1 class="page-title">
+        {% if is_edit %}{% trans "Редактировать" %}{% else %}{% trans "Добавить" %}{% endif %}
+        <em>{% trans "окрас" %}</em>
+      </h1>
+    </div>
+    <a href="{% url 'cat_detail' cat.pk %}" class="btn-sq btn-sq-outline">← {% trans "К карточке" %}</a>
+  </div>
+
+  <form method="post">
+    {% csrf_token %}
+
+    {% if form.non_field_errors %}
+      <div class="form-errors">
+        {% for error in form.non_field_errors %}
+          <div class="form-error-item">{{ error }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <!-- SECTION: ТЕКУЩИЙ ОКРАС (только при редактировании) -->
+    {% if is_edit and color %}
+      <div class="color-block" style="margin-bottom: 20px;">
+        <div>
+          <div class="color-block-label">{% trans "Текущий окрас" %}</div>
+          <div class="color-block-value">{{ color }}</div>
+        </div>
+      </div>
+    {% endif %}
+
+    <!-- SECTION: КОМПОНЕНТЫ -->
+    <div class="form-section">
+      <div class="form-section-header">
+        <div class="form-section-title">{% trans "Компоненты окраса EMS" %}</div>
+      </div>
+
+      <div class="color-form-hint">
+        <div class="color-form-hint-icon">ℹ</div>
+        <div class="color-form-hint-text">
+          {% trans "Название окраса и EMS-код формируются автоматически из выбранных компонентов в соответствии со стандартом FIFe." %}
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label class="form-field-label" for="{{ form.components.id_for_label }}">
+          {% trans "Компоненты" %} <span class="form-required">*</span>
+        </label>
+        {{ form.components }}
+        {% if form.components.errors %}
+          <div class="form-field-errors">{{ form.components.errors }}</div>
+        {% endif %}
+        <div class="form-field-hint">
+          {% trans "Удерживайте Ctrl (или Cmd на Mac) для выбора нескольких компонентов." %}
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION: ДОПОЛНИТЕЛЬНО -->
+    <div class="form-section">
+      <div class="form-section-header">
+        <div class="form-section-title">{% trans "Дополнительно" %}</div>
+      </div>
+      <div class="form-grid">
+
+        <div class="form-field col-full">
+          <label class="form-field-label" for="{{ form.remark.id_for_label }}">
+            {% trans "Примечание" %}
+          </label>
+          {{ form.remark }}
+          {% if form.remark.errors %}
+            <div class="form-field-errors">{{ form.remark.errors }}</div>
+          {% endif %}
         </div>
 
-        <form method="post" class="card shadow-sm p-4">
-            {% csrf_token %}
+      </div>
 
-            {% if form.non_field_errors %}
-                <div class="alert alert-danger">
-                    {{ form.non_field_errors }}
-                </div>
-            {% endif %}
-
-            {% if is_edit and color %}
-                <div class="alert alert-light border">
-                    <strong>Текущий окрас:</strong> {{ color }}
-                </div>
-            {% else %}
-                <div class="alert alert-light border">
-                    Название окраса и EMS-код будут собраны автоматически из выбранных компонентов.
-                </div>
-            {% endif %}
-
-            <div class="row g-3">
-
-                <div class="col-12">
-                    <label class="form-label">Компоненты окраса</label>
-                    {{ form.components }}
-                    {{ form.components.errors }}
-                    <div class="form-text">
-                        Компоненты сохраняются в порядке EMS автоматически.
-                    </div>
-                </div>
-
-                <div class="col-12">
-                    <label class="form-label">Примечание</label>
-                    {{ form.remark }}
-                    {{ form.remark.errors }}
-                </div>
-
-                <div class="col-md-6">
-                    <div class="form-check mt-2">
-                        {{ form.is_active }}
-                        <label class="form-check-label" for="{{ form.is_active.id_for_label }}">
-                            Активен
-                        </label>
-                    </div>
-                </div>
-
-            </div>
-
-            <div class="mt-4 d-flex gap-2 flex-wrap">
-                <button type="submit" class="btn btn-primary">Сохранить окрас</button>
-                <a href="{% url 'cat_detail' cat.pk %}" class="btn btn-outline-secondary">Отмена</a>
-            </div>
-
-        </form>
-
+      <div class="form-checkboxes" style="margin-top: 18px;">
+        <label class="form-checkbox-card">
+          {{ form.is_active }}
+          <div class="form-checkbox-body">
+            <div class="form-checkbox-title">{% trans "Активен" %}</div>
+            <div class="form-checkbox-desc">{% trans "Окрас доступен для выбора" %}</div>
+          </div>
+        </label>
+      </div>
     </div>
+
+    <!-- ACTIONS -->
+    <div class="form-actions">
+      <button type="submit" class="btn-warm">{% trans "Сохранить окрас" %}</button>
+      <a href="{% url 'cat_detail' cat.pk %}" class="btn-sq btn-sq-muted">{% trans "Отмена" %}</a>
+    </div>
+
+  </form>
+
 </div>
 
 {% endblock %}

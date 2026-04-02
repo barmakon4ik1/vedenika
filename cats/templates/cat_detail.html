@@ -6,473 +6,6 @@
 
 {% block content %}
 
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500&display=swap');
-
-  :root {
-    --cream:      #f7f2ea;
-    --cream2:     #efe8d8;
-    --warm-tan:   #c9a96e;
-    --warm-brown: #7a5c3a;
-    --dark:       #2c2015;
-    --muted:      #8c7660;
-    --card-bg:    #fdfaf5;
-    --border:     rgba(201,169,110,0.22);
-  }
-
-  .detail-wrap {
-    font-family: 'Jost', sans-serif;
-    color: var(--dark);
-  }
-
-  /* ===== BREADCRUMB ===== */
-
-  .breadcrumb-warm {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 13px;
-    color: var(--muted);
-    margin-bottom: 32px;
-    flex-wrap: wrap;
-  }
-
-  .breadcrumb-warm a {
-    color: var(--warm-tan);
-    text-decoration: none;
-    transition: color 0.15s;
-  }
-
-  .breadcrumb-warm a:hover {
-    color: var(--warm-brown);
-  }
-
-  .breadcrumb-sep {
-    color: var(--border);
-    font-size: 16px;
-  }
-
-  .breadcrumb-current {
-    color: var(--muted);
-    font-weight: 400;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 260px;
-  }
-
-  /* ===== MAIN LAYOUT ===== */
-
-  .detail-grid {
-    display: grid;
-    grid-template-columns: 420px 1fr;
-    gap: 48px;
-    align-items: start;
-  }
-
-  /* ===== LEFT COLUMN ===== */
-
-  .detail-photo-main {
-    background: var(--cream);
-    border-radius: 20px;
-    overflow: hidden;
-    aspect-ratio: 4 / 5;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 14px;
-    position: relative;
-  }
-
-  .detail-photo-main a {
-    display: block;
-    width: 100%;
-    height: 100%;
-  }
-
-  .detail-photo-main img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-    transition: transform 0.4s ease;
-  }
-
-  .detail-photo-main:hover img {
-    transform: scale(1.03);
-  }
-
-  .detail-no-photo {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    color: var(--muted);
-  }
-
-  .detail-no-photo-icon {
-    font-size: 52px;
-    opacity: 0.2;
-  }
-
-  .detail-no-photo-text {
-    font-size: 13px;
-    letter-spacing: 0.5px;
-  }
-
-  .detail-photo-overlay {
-    position: absolute;
-    bottom: 14px;
-    right: 14px;
-    background: rgba(44,32,21,0.55);
-    color: rgba(253,248,240,0.9);
-    font-size: 12px;
-    font-weight: 400;
-    padding: 6px 12px;
-    border-radius: 50px;
-    backdrop-filter: blur(4px);
-    letter-spacing: 0.3px;
-    pointer-events: none;
-  }
-
-  .detail-photo-actions {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-  }
-
-  .btn-photo-action {
-    flex: 1;
-    text-align: center;
-    padding: 9px 14px;
-    border-radius: 10px;
-    font-family: 'Jost', sans-serif;
-    font-size: 13px;
-    font-weight: 400;
-    text-decoration: none;
-    transition: all 0.18s ease;
-    border: 1px solid var(--border);
-    color: var(--warm-brown);
-    background: var(--card-bg);
-    white-space: nowrap;
-  }
-
-  .btn-photo-action:hover {
-    background: var(--cream);
-    border-color: var(--warm-tan);
-    color: var(--dark);
-  }
-
-  /* ===== RIGHT COLUMN ===== */
-
-  .detail-right {}
-
-  /* name block */
-  .detail-name-block {
-    margin-bottom: 24px;
-  }
-
-  .detail-sex-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    padding: 4px 12px;
-    border-radius: 50px;
-    margin-bottom: 12px;
-  }
-
-  .detail-sex-badge.male {
-    background: rgba(55,138,221,0.12);
-    color: #185fa5;
-  }
-
-  .detail-sex-badge.female {
-    background: rgba(212,83,126,0.12);
-    color: #993556;
-  }
-
-  .detail-name {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 48px;
-    font-weight: 500;
-    color: var(--dark);
-    line-height: 1.05;
-    margin-bottom: 6px;
-  }
-
-  .detail-callname {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 20px;
-    font-style: italic;
-    color: var(--muted);
-    margin-bottom: 12px;
-  }
-
-  .detail-subtitle {
-    font-size: 14px;
-    font-weight: 300;
-    color: var(--muted);
-    letter-spacing: 0.2px;
-  }
-
-  /* EMS badge */
-  .ems-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    background: var(--cream);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 10px 16px;
-    margin-bottom: 28px;
-  }
-
-  .ems-label {
-    font-size: 10px;
-    font-weight: 500;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--warm-tan);
-  }
-
-  .ems-code {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 20px;
-    font-weight: 500;
-    color: var(--warm-brown);
-    letter-spacing: 1px;
-  }
-
-  /* info sections */
-  .detail-section {
-    margin-bottom: 28px;
-  }
-
-  .detail-section-title {
-    font-size: 10px;
-    font-weight: 500;
-    letter-spacing: 2.5px;
-    text-transform: uppercase;
-    color: var(--warm-tan);
-    margin-bottom: 14px;
-    padding-bottom: 8px;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .detail-fields {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px 24px;
-  }
-
-  .detail-field {
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-  }
-
-  .detail-field-label {
-    font-size: 11px;
-    font-weight: 400;
-    color: var(--muted);
-    letter-spacing: 0.3px;
-  }
-
-  .detail-field-value {
-    font-size: 15px;
-    font-weight: 400;
-    color: var(--dark);
-    line-height: 1.3;
-  }
-
-  .detail-field-value a {
-    color: var(--warm-brown);
-    text-decoration: none;
-    border-bottom: 1px solid rgba(201,169,110,0.4);
-    transition: border-color 0.15s, color 0.15s;
-  }
-
-  .detail-field-value a:hover {
-    color: var(--dark);
-    border-color: var(--dark);
-  }
-
-  .detail-field-value.empty {
-    color: var(--muted);
-    font-style: italic;
-    font-size: 13px;
-  }
-
-  /* color block */
-  .color-block {
-    background: var(--cream);
-    border: 1px solid var(--border);
-    border-left: 3px solid var(--warm-tan);
-    border-radius: 0 12px 12px 0;
-    padding: 14px 18px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 28px;
-  }
-
-  .color-block-left {}
-
-  .color-block-label {
-    font-size: 10px;
-    font-weight: 500;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--warm-tan);
-    margin-bottom: 4px;
-  }
-
-  .color-block-value {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 19px;
-    font-weight: 500;
-    color: var(--dark);
-  }
-
-  /* admin actions */
-  .admin-actions {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-    padding-top: 24px;
-    border-top: 1px solid var(--border);
-    margin-top: 8px;
-  }
-
-  .btn-admin {
-    padding: 9px 18px;
-    border-radius: 10px;
-    font-family: 'Jost', sans-serif;
-    font-size: 13px;
-    font-weight: 400;
-    text-decoration: none;
-    transition: all 0.18s ease;
-    white-space: nowrap;
-  }
-
-  .btn-admin-primary {
-    background: var(--warm-brown);
-    color: #fdf8f0;
-    border: 1px solid var(--warm-brown);
-  }
-
-  .btn-admin-primary:hover {
-    background: var(--dark);
-    border-color: var(--dark);
-    color: #fdf8f0;
-  }
-
-  .btn-admin-outline {
-    background: transparent;
-    color: var(--warm-brown);
-    border: 1px solid var(--border);
-  }
-
-  .btn-admin-outline:hover {
-    background: var(--cream);
-    border-color: var(--warm-tan);
-    color: var(--dark);
-  }
-
-  /* ===== GALLERY STRIP ===== */
-
-  .gallery-strip-wrap {
-    margin-top: 48px;
-  }
-
-  .gallery-strip-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 16px;
-  }
-
-  .gallery-strip-title {
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 2.5px;
-    text-transform: uppercase;
-    color: var(--warm-tan);
-  }
-
-  .gallery-strip-link {
-    font-size: 13px;
-    color: var(--warm-brown);
-    text-decoration: none;
-    border-bottom: 1px solid rgba(201,169,110,0.4);
-    transition: color 0.15s;
-  }
-
-  .gallery-strip-link:hover {
-    color: var(--dark);
-  }
-
-  .gallery-strip {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
-  }
-
-  .gallery-thumb {
-    aspect-ratio: 1;
-    border-radius: 12px;
-    overflow: hidden;
-    background: var(--cream);
-  }
-
-  .gallery-thumb img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-    transition: transform 0.3s ease;
-  }
-
-  .gallery-thumb:hover img {
-    transform: scale(1.06);
-  }
-
-  /* ===== RESPONSIVE ===== */
-
-  @media (max-width: 900px) {
-    .detail-grid {
-      grid-template-columns: 1fr;
-      gap: 32px;
-    }
-
-    .detail-photo-main {
-      aspect-ratio: 16 / 10;
-    }
-
-    .detail-name { font-size: 38px; }
-
-    .gallery-strip {
-      grid-template-columns: repeat(4, 1fr);
-    }
-  }
-
-  @media (max-width: 600px) {
-    .detail-name { font-size: 30px; }
-
-    .detail-fields {
-      grid-template-columns: 1fr;
-    }
-
-    .gallery-strip {
-      grid-template-columns: repeat(3, 1fr);
-    }
-  }
-</style>
 
 <div class="detail-wrap">
 
@@ -578,18 +111,18 @@
             <div class="color-block-value">{{ cat.color }}</div>
           </div>
           {% if request.user.is_staff %}
-            <a href="{% url 'color_update_for_cat' cat.pk %}" class="btn-admin btn-admin-outline" style="padding: 6px 14px; font-size: 12px;">
+            <a href="{% url 'color_update_for_cat' cat.pk %}" class="btn-sq btn-sq-outline">
               {% trans "Изменить" %}
             </a>
           {% endif %}
         </div>
       {% elif request.user.is_staff %}
-        <div class="color-block" style="border-left-color: rgba(201,169,110,0.3);">
+        <div class="color-block color-block--muted">
           <div class="color-block-left">
             <div class="color-block-label">{% trans "Окрас" %}</div>
-            <div class="color-block-value" style="color: var(--muted); font-style: italic; font-size: 16px;">{% trans "Не задан" %}</div>
+            <div class="color-block-value color-block-value--empty">{% trans "Не задан" %}</div>
           </div>
-          <a href="{% url 'color_create_for_cat' cat.pk %}" class="btn-admin btn-admin-primary" style="padding: 6px 14px; font-size: 12px;">
+          <a href="{% url 'color_create_for_cat' cat.pk %}" class="btn-sq btn-sq-primary">
             + {% trans "Добавить" %}
           </a>
         </div>
@@ -672,28 +205,28 @@
       <!-- SECTION: СТАТУС -->
       <div class="detail-section">
         <div class="detail-section-title">{% trans "Статус" %}</div>
-        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+        <div class="status-tags">
 
           {% if cat.is_for_breeding %}
-            <span style="background: rgba(15,110,86,0.1); color: #0f6e56; font-size: 12px; font-weight: 500; padding: 5px 14px; border-radius: 50px; letter-spacing: 0.3px;">
+            <span class="status-tag status-tag--green">
               ✓ {% trans "Допущен к разведению" %}
             </span>
           {% endif %}
 
           {% if cat.is_featured %}
-            <span style="background: rgba(201,169,110,0.15); color: var(--warm-brown); font-size: 12px; font-weight: 500; padding: 5px 14px; border-radius: 50px; letter-spacing: 0.3px;">
+            <span class="status-tag status-tag--tan">
               ★ {% trans "На витрине" %}
             </span>
           {% endif %}
 
           {% if not cat.is_active %}
-            <span style="background: rgba(140,118,96,0.1); color: var(--muted); font-size: 12px; padding: 5px 14px; border-radius: 50px;">
+            <span class="status-tag status-tag--muted">
               {% trans "Неактивен" %}
             </span>
           {% endif %}
 
           {% if cat.death_date %}
-            <span style="background: rgba(162,45,45,0.08); color: #a32d2d; font-size: 12px; padding: 5px 14px; border-radius: 50px;">
+            <span class="status-tag status-tag--red">
               {% trans "Дата гибели" %}: {{ cat.death_date }}
             </span>
           {% endif %}
@@ -704,13 +237,13 @@
       <!-- ADMIN ACTIONS -->
       {% if request.user.is_staff %}
         <div class="admin-actions">
-          <a href="{% url 'cat_edit' cat.pk %}" class="btn-admin btn-admin-primary">
+          <a href="{% url 'cat_edit' cat.pk %}" class="btn-sq btn-sq-primary">
             {% trans "Редактировать кота" %}
           </a>
-          <a href="{% url 'cat_gallery' cat.pk %}" class="btn-admin btn-admin-outline">
+          <a href="{% url 'cat_gallery' cat.pk %}" class="btn-sq btn-sq-outline">
             {% trans "Галерея" %}
           </a>
-          <a href="{% url 'cat_upload_photo' cat.pk %}" class="btn-admin btn-admin-outline">
+          <a href="{% url 'cat_upload_photo' cat.pk %}" class="btn-sq btn-sq-outline">
             + {% trans "Фото" %}
           </a>
         </div>

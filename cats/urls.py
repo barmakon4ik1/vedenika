@@ -27,6 +27,10 @@ urlpatterns = [
     path("cats/<int:cat_pk>/color/add/", color_create_for_cat, name="color_create_for_cat"),
     path("cats/<int:cat_pk>/color/edit/", color_update_for_cat, name="color_update_for_cat"),
 
+    # LITTERS  <-- НОВОЕ
+    path("litters/", LitterListView.as_view(), name="litter_list"),
+    path("litters/<int:pk>/", LitterDetailView.as_view(), name="litter_detail"),
+
     # ADMIN
     path("admin-dashboard/", views.admin_dashboard, name="admin_dashboard"),
 ]
