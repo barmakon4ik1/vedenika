@@ -149,7 +149,7 @@ class CatListView(ListView):
         qs = (
             Cat.objects
             .filter(
-                is_active=True,
+                # is_active=True,
                 is_featured=True,
                 owner_id=self.OWNER_PERSON_ID
             )
