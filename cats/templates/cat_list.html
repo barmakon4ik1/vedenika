@@ -40,8 +40,8 @@
         <label class="filter-label">{% trans "Пол" %}</label>
         <select name="sex" class="filter-select">
           <option value="">{% trans "Любой" %}</option>
-          <option value="M" {% if selected_sex == "M" %}selected{% endif %}>{% trans "Самец" %}</option>
-          <option value="F" {% if selected_sex == "F" %}selected{% endif %}>{% trans "Самка" %}</option>
+          <option value="M" {% if selected_sex == "M" %}selected{% endif %}>{% trans "Кот" %}</option>
+          <option value="F" {% if selected_sex == "F" %}selected{% endif %}>{% trans "Кошка" %}</option>
         </select>
       </div>
 
@@ -77,8 +77,9 @@
   {% endif %}
 
   <!-- CATS GRID -->
+{% if cats_active %}
   <div class="cats-grid">
-    {% for cat in cats %}
+    {% for cat in cats_active %}
       <a href="{% url 'cat_detail' cat.pk %}" class="cat-card-link">
         <div class="cat-card-warm">
 
@@ -95,9 +96,9 @@
             {% endwith %}
 
             {% if cat.sex == "M" %}
-              <span class="cat-sex-badge male">♂ {% trans "Самец" %}</span>
+              <span class="cat-sex-badge male">♂ {% trans "Кот" %}</span>
             {% else %}
-              <span class="cat-sex-badge female">♀ {% trans "Самка" %}</span>
+              <span class="cat-sex-badge female">♀ {% trans "Кошка" %}</span>
             {% endif %}
           </div>
 
@@ -130,9 +131,6 @@
               {% if cat.is_for_breeding %}
                 <span class="cat-tag">{% trans "Разведение" %}</span>
               {% endif %}
-              {% if not cat.is_active %}
-                <span class="cat-tag cat-tag--inactive">{% trans "Неактивен" %}</span>
-              {% endif %}
               {% if cat.pedigree_number %}
                 <span class="cat-tag">{% trans "Родословная" %}</span>
               {% endif %}
@@ -141,28 +139,97 @@
           </div>
         </div>
       </a>
-
-    {% empty %}
-      <div class="col-12">
-        <div class="empty-state">
-          <div class="empty-state-icon">🐾</div>
-          <div class="empty-state-title">{% trans "Коты не найдены" %}</div>
-          <p class="empty-state-desc">
-            {% if selected_breed or selected_sex or selected_color %}
-              {% trans "Попробуйте изменить или сбросить фильтры." %}
-            {% else %}
-              {% trans "Пока ни одного кота не добавлено." %}
-            {% endif %}
-          </p>
-          {% if selected_breed or selected_sex or selected_color %}
-            <a href="{% url 'cat_list' %}" class="btn-filter-reset mt-3 d-inline-block">
-              {% trans "Сбросить фильтры" %}
-            </a>
-          {% endif %}
-        </div>
-      </div>
     {% endfor %}
   </div>
+
+{% elif not cats_inactive %}
+  <div class="empty-state">
+    <div class="empty-state-icon">🐾</div>
+    <div class="empty-state-title">{% trans "Коты не найдены" %}</div>
+    <p class="empty-state-desc">
+      {% if selected_breed or selected_sex or selected_color %}
+        {% trans "Попробуйте изменить или сбросить фильтры." %}
+      {% else %}
+        {% trans "Пока ни одного кота не добавлено." %}
+      {% endif %}
+    </p>
+    {% if selected_breed or selected_sex or selected_color %}
+      <a href="{% url 'cat_list' %}" class="btn-filter-reset mt-3 d-inline-block">
+        {% trans "Сбросить фильтры" %}
+      </a>
+    {% endif %}
+  </div>
+{% endif %}
+
+{% if cats_inactive %}
+  <div class="litter-section-header" style="margin-top: 48px; margin-bottom: 24px;">
+    <div class="litter-section-title" style="color: var(--muted);">
+      {% trans "Ранее в питомнике" %}
+    </div>
+    <div class="litter-section-count">{{ cats_inactive|length }}</div>
+  </div>
+
+  <div class="cats-grid">
+    {% for cat in cats_inactive %}
+      <a href="{% url 'cat_detail' cat.pk %}" class="cat-card-link">
+        <div class="cat-card-warm cat-card-warm--inactive">
+
+          <div class="cat-card-image">
+            {% with img=cat.get_main_image %}
+              {% if img %}
+                <img src="{{ img.image.url }}" alt="{{ cat.registered_name }}">
+              {% else %}
+                <div class="cat-no-image">
+                  <div class="cat-no-image-icon">🐱</div>
+                  <div class="cat-no-image-text">{% trans "Нет фото" %}</div>
+                </div>
+              {% endif %}
+            {% endwith %}
+
+            {% if cat.sex == "M" %}
+              <span class="cat-sex-badge male">♂ {% trans "Кот" %}</span>
+            {% else %}
+              <span class="cat-sex-badge female">♀ {% trans "Кошка" %}</span>
+            {% endif %}
+          </div>
+
+          <div class="cat-card-body">
+            <div class="cat-card-name">{{ cat.registered_name }}</div>
+            {% if cat.call_name %}
+              <div class="cat-card-callname">«{{ cat.call_name }}»</div>
+            {% endif %}
+
+            <div class="cat-card-meta">
+              <div class="cat-card-meta-row">
+                <span>{% trans "Порода" %}</span>
+                <span>{{ cat.breed }}</span>
+              </div>
+              {% if cat.cattery %}
+                <div class="cat-card-meta-row">
+                  <span>{% trans "Питомник" %}</span>
+                  <span>{{ cat.cattery }}</span>
+                </div>
+              {% endif %}
+              {% if cat.ems_code %}
+                <div class="cat-card-meta-row">
+                  <span>EMS</span>
+                  <span>{{ cat.ems_code }}</span>
+                </div>
+              {% endif %}
+            </div>
+
+            <div class="cat-card-footer">
+              {% if cat.pedigree_number %}
+                <span class="cat-tag">{% trans "Родословная" %}</span>
+              {% endif %}
+            </div>
+
+          </div>
+        </div>
+      </a>
+    {% endfor %}
+  </div>
+{% endif %}
 
   <!-- PAGINATION -->
   {% if is_paginated %}

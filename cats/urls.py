@@ -33,4 +33,7 @@ urlpatterns = [
 
     # ADMIN
     path("admin-dashboard/", views.admin_dashboard, name="admin_dashboard"),
+
+    # Impressum
+    path("impressum/", views.impressum, name="impressum"),
 ]

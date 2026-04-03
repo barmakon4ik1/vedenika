@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}Impressum — Vedenika{% endblock %}
+
+{% block content %}
+
+<div class="form-page-wrap">
+
+  <nav class="breadcrumb-warm">
+    <a href="{% url 'home' %}">{% trans "Главная" %}</a>
+    <span class="breadcrumb-sep">/</span>
+    <span class="breadcrumb-current">Impressum</span>
+  </nav>
+
+  <div class="page-header">
+    <div>
+      <div class="eyebrow">{% trans "Правовая информация" %}</div>
+      <h1 class="page-title"><em>Impressum</em></h1>
+    </div>
+  </div>
+
+  <!-- ANGABEN GEMÄSS § 5 TMG -->
+  <div class="form-section">
+    <div class="form-section-header">
+      <div class="form-section-title">Angaben gemäß § 5 TMG</div>
+    </div>
+
+    {% if owner %}
+      <div class="impressum-block">
+        <div class="impressum-name">
+          {{ owner.first_name }} {{ owner.last_name }}
+        </div>
+        <div class="impressum-label">{% trans "Züchter / Заводчик" %}</div>
+      </div>
+
+      {% if owner.address %}
+        <div class="impressum-block">
+          <div class="impressum-section-title">{% trans "Anschrift / Адрес" %}</div>
+          <div class="impressum-text">
+            {% if owner.address.street %}{{ owner.address.street }}
+              {% if owner.address.house_number %} {{ owner.address.house_number }}{% endif %}
+            {% endif %}
+            {% if owner.address.street %}<br>{% endif %}
+            {% if owner.address.postal_code %}{{ owner.address.postal_code }} {% endif %}
+            {% if owner.address.city %}{{ owner.address.city }}{% endif %}
+            {% if owner.address.city or owner.address.postal_code %}<br>{% endif %}
+            {% if owner.address.country %}{{ owner.address.country }}{% endif %}
+          </div>
+        </div>
+      {% else %}
+        <div class="impressum-block">
+          <div class="impressum-section-title">{% trans "Anschrift / Адрес" %}</div>
+          <div class="impressum-placeholder">— {% trans "не указан" %} —</div>
+        </div>
+      {% endif %}
+
+      <div class="impressum-block">
+        <div class="impressum-section-title">{% trans "Kontakt / Контакт" %}</div>
+        <div class="impressum-contacts">
+          {% if owner.email %}
+            <div class="impressum-contact-row">
+              <span class="impressum-contact-label">E-Mail</span>
+              <a href="mailto:{{ owner.email }}" class="impressum-contact-value">{{ owner.email }}</a>
+            </div>
+          {% endif %}
+          {% if owner.phone %}
+            <div class="impressum-contact-row">
+              <span class="impressum-contact-label">{% trans "Telefon" %}</span>
+              <a href="tel:{{ owner.phone }}" class="impressum-contact-value">{{ owner.phone }}</a>
+            </div>
+          {% endif %}
+          {% if not owner.email and not owner.phone %}
+            <div class="impressum-placeholder">— {% trans "не указан" %} —</div>
+          {% endif %}
+        </div>
+      </div>
+
+    {% else %}
+      <div class="impressum-placeholder">— {% trans "Данные владельца не найдены в базе" %} —</div>
+    {% endif %}
+  </div>
+
+  <!-- HAFTUNGSAUSSCHLUSS -->
+  <div class="form-section">
+    <div class="form-section-header">
+      <div class="form-section-title">Haftungsausschluss</div>
+    </div>
+    <div class="impressum-legal-text">
+      <p>
+        <strong>Haftung für Inhalte:</strong>
+        Die Inhalte unserer Seiten wurden mit größter Sorgfalt erstellt.
+        Für die Richtigkeit, Vollständigkeit und Aktualität der Inhalte können wir jedoch keine Gewähr übernehmen.
+      </p>
+      <p>
+        <strong>Haftung für Links:</strong>
+        Unser Angebot enthält Links zu externen Webseiten Dritter, auf deren Inhalte wir keinen Einfluss haben.
+        Deshalb können wir für diese fremden Inhalte auch keine Gewähr übernehmen.
+      </p>
+      <p>
+        <strong>Urheberrecht:</strong>
+        Die durch die Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten unterliegen dem deutschen Urheberrecht.
+        Die Vervielfältigung, Bearbeitung, Verbreitung und jede Art der Verwertung außerhalb der Grenzen des Urheberrechtes
+        bedürfen der schriftlichen Zustimmung des jeweiligen Autors bzw. Erstellers.
+      </p>
+    </div>
+  </div>
+
+  <!-- DATENSCHUTZ -->
+  <div class="form-section">
+    <div class="form-section-header">
+      <div class="form-section-title">Datenschutzerklärung</div>
+    </div>
+    <div class="impressum-legal-text">
+      <p>
+        <strong>Datenschutz:</strong>
+        Die Nutzung unserer Webseite ist in der Regel ohne Angabe personenbezogener Daten möglich.
+        Soweit auf unseren Seiten personenbezogene Daten erhoben werden, erfolgt dies auf freiwilliger Basis.
+        Diese Daten werden ohne Ihre ausdrückliche Zustimmung nicht an Dritte weitergegeben.
+      </p>
+      <p>
+        Wir weisen darauf hin, dass die Datenübertragung im Internet Sicherheitslücken aufweisen kann.
+        Ein lückenloser Schutz der Daten vor dem Zugriff durch Dritte ist nicht möglich.
+      </p>
+    </div>
+  </div>
+
+</div>
+
+{% endblock %}

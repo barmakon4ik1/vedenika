@@ -682,6 +682,17 @@ class Person(models.Model):
 
     is_active = models.BooleanField(default=True)
 
+    # ===== Социальные сети =====
+    instagram = models.URLField(blank=True, verbose_name="Instagram")
+    facebook = models.URLField(blank=True, verbose_name="Facebook")
+    tiktok = models.URLField(blank=True, verbose_name="TikTok")
+    whatsapp = models.CharField(
+        max_length=30,
+        blank=True,
+        verbose_name="WhatsApp",
+        help_text="Номер телефона с кодом страны, например +491234567890"
+    )
+
     class Meta:
         ordering = ["last_name", "first_name"]
 
@@ -1117,8 +1128,8 @@ class Cat(models.Model):
     """
 
     class Sex(models.TextChoices):
-        MALE = "M", "Самец"
-        FEMALE = "F", "Самка"
+        MALE = "M", "Кот"
+        FEMALE = "F", "Кошка"
 
     class Status(models.TextChoices):
         ALIVE = "ALIVE", "Жив"
@@ -1375,6 +1386,12 @@ class Litter(models.Model):
     )
 
     remark = models.TextField(blank=True)
+
+    is_active = models.BooleanField(
+        default=True,
+        verbose_name="Активный помёт",
+        help_text="Снимите галочку когда все котята разъехались"
+    )
 
     created_at = models.DateTimeField(auto_now_add=True)
 

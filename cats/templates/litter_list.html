@@ -100,11 +100,11 @@
           </div>
           <div class="litter-stat">
             <div class="litter-stat-num">{{ item.males|length }}</div>
-            <div class="litter-stat-label">{% trans "самцов" %}</div>
+            <div class="litter-stat-label">{% trans "котов" %}</div>
           </div>
           <div class="litter-stat">
             <div class="litter-stat-num">{{ item.females|length }}</div>
-            <div class="litter-stat-label">{% trans "самок" %}</div>
+            <div class="litter-stat-label">{% trans "кошек" %}</div>
           </div>
 
           <a href="{% url 'litter_detail' litter.pk %}" class="litter-detail-btn">

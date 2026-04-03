@@ -192,8 +192,17 @@ class AddressAdmin(admin.ModelAdmin):
 
 @admin.register(Person)
 class PersonAdmin(admin.ModelAdmin):
-    list_display = ("id", "first_name", "last_name", "email")
+    list_display  = ("id", "first_name", "last_name", "email")
     search_fields = ("first_name", "last_name", "email")
+    fieldsets = (
+        (None, {
+            "fields": ("user", "first_name", "last_name", "email", "phone", "address", "is_active")
+        }),
+        ("Социальные сети", {
+            "fields": ("instagram", "facebook", "vk", "tiktok", "whatsapp"),
+            "classes": ("collapse",),
+        }),
+    )
 
 
 # =========================
@@ -245,8 +254,9 @@ class CatAdmin(admin.ModelAdmin):
 
 @admin.register(Litter)
 class LitterAdmin(admin.ModelAdmin):
-    list_display = ("id", "litter_code", "birth_date", "cattery", "kittens_count")
-    list_filter = ("cattery", "birth_date")
+    list_display = ("id", "litter_code", "birth_date", "cattery", "kittens_count", "is_active")
+    list_filter = ("cattery", "birth_date", "is_active")
+    list_editable = ("is_active",)  # можно переключать прямо из списка
     autocomplete_fields = ("father", "mother", "cattery")
 
 

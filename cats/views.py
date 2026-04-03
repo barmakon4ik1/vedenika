@@ -1,16 +1,22 @@
-from django.contrib.contenttypes.models import ContentType
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.exceptions import PermissionDenied
-from django.contrib.auth import get_user_model
 from django.views.generic import DetailView, ListView
-from django.http import HttpResponseForbidden
 from django.contrib.admin.views.decorators import staff_member_required
 from django.utils import timezone
-from .models import *
 from .forms import *
+from django.conf import settings
+owner_id = settings.CATTERY_OWNER_PERSON_ID
 
 User = get_user_model()
+OWNER_PERSON_ID = 1
+
+def impressum(request):
+    owner = Person.objects.select_related("address__city", "address__country").filter(
+        pk=OWNER_PERSON_ID
+    ).first()
+    return render(request, "impressum.html", {"owner": owner})
+
 # =========================================================
 # 🔐 PERMISSIONS
 # =========================================================
@@ -186,6 +192,12 @@ class CatListView(ListView):
         context["selected_breed"] = self.request.GET.get("breed", "")
         context["selected_sex"] = self.request.GET.get("sex", "")
         context["selected_color"] = self.request.GET.get("color", "")
+
+        # Разделяем на активных и неактивных
+        cats = context["cats"]
+        context["cats_active"] = [c for c in cats if c.is_active]
+        context["cats_inactive"] = [c for c in cats if not c.is_active]
+
         return context
 
 
@@ -385,8 +397,8 @@ class LitterListView(ListView):
             delta = today - litter.birth_date
             age_months = delta.days // 30
 
-            # Помёт считается активным, если котята моложе 12 месяцев
-            is_active = age_months < 12
+            # Помёт считается активным, пока галочка стоит
+            is_active = litter.is_active
 
             litters_data.append({
                 "litter":     litter,
