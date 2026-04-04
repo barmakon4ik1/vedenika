@@ -476,3 +476,88 @@ class LitterDetailView(DetailView):
         })
         return context
 
+
+# =========================================================
+# 🖼 GALLERY
+# =========================================================
+
+class GalleryListView(ListView):
+    model = GalleryAlbum
+    template_name = "gallery_list.html"
+    context_object_name = "albums"
+
+    def get_queryset(self):
+        return (
+            GalleryAlbum.objects
+            .filter(is_active=True)
+            .prefetch_related("photos")
+            .order_by("-date", "-created_at")
+        )
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        albums = context["albums"]
+
+        # Разбиваем по категориям
+        context["albums_life"]   = [a for a in albums if a.category == "LIFE"]
+        context["albums_litter"] = [a for a in albums if a.category == "LITTER"]
+        context["albums_art"]    = [a for a in albums if a.category == "ART"]
+
+        # Текущий фильтр
+        context["selected_category"] = self.request.GET.get("category", "")
+        return context
+
+
+class GalleryAlbumView(DetailView):
+    model = GalleryAlbum
+    template_name = "gallery_album.html"
+    context_object_name = "album"
+
+    def get_queryset(self):
+        return GalleryAlbum.objects.filter(is_active=True).prefetch_related(
+            "photos"
+        )
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["photos"] = self.object.photos.filter(
+            is_active=True
+        ).order_by("sort_order", "-uploaded_at")
+        return context
+
+
+# =========================================================
+# 🎬 VIDEO
+# =========================================================
+
+class VideoListView(ListView):
+    model = Video
+    template_name = "video_list.html"
+    context_object_name = "videos"
+
+    def get_queryset(self):
+        return Video.objects.filter(is_active=True).order_by("-date", "-created_at")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        videos = context["videos"]
+        context["videos_life"]   = [v for v in videos if v.category == "LIFE"]
+        context["videos_litter"] = [v for v in videos if v.category == "LITTER"]
+        context["videos_other"]  = [v for v in videos if v.category == "OTHER"]
+        return context
+
+
+# =========================================================
+# 🐱 О ПОРОДЕ
+# =========================================================
+
+def about_breed(request):
+    return render(request, "about_breed.html")
+
+
+# =========================================================
+# 📬 КОНТАКТЫ
+# =========================================================
+
+def contacts(request):
+    return render(request, "contacts.html")

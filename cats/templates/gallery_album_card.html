@@ -1,0 +1,35 @@
+{% load i18n %}
+
+<a href="{% url 'gallery_album' album.pk %}" class="album-card-link">
+  <div class="album-card">
+
+    <div class="album-card-cover">
+      {% with cover=album.get_cover %}
+        {% if cover %}
+          <img src="{{ cover.url }}" alt="{{ album.safe_translation_getter('title', any_language=True) }}">
+        {% else %}
+          <div class="album-no-cover">
+            <span>📷</span>
+          </div>
+        {% endif %}
+      {% endwith %}
+
+      <div class="album-card-count">{{ album.photos_count }}</div>
+    </div>
+
+    <div class="album-card-body">
+      <div class="album-card-title">
+        {{ album.safe_translation_getter("title", any_language=True) }}
+      </div>
+      {% if album.date %}
+        <div class="album-card-date">{{ album.date|date:"d.m.Y" }}</div>
+      {% endif %}
+      {% with desc=album.safe_translation_getter("description", any_language=True) %}
+        {% if desc %}
+          <div class="album-card-desc">{{ desc|truncatechars:80 }}</div>
+        {% endif %}
+      {% endwith %}
+    </div>
+
+  </div>
+</a>

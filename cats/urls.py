@@ -36,4 +36,17 @@ urlpatterns = [
 
     # Impressum
     path("impressum/", views.impressum, name="impressum"),
+
+    # GALLERY
+    path("gallery/", GalleryListView.as_view(), name="gallery_list"),
+    path("gallery/<int:pk>/", GalleryAlbumView.as_view(), name="gallery_album"),
+
+    # VIDEO
+    path("video/", VideoListView.as_view(), name="video_list"),
+
+    # BREED INFO
+    path("about-breed/", views.about_breed, name="about_breed"),
+
+    # CONTACTS
+    path("contacts/", views.contacts, name="contacts"),
 ]

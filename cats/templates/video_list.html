@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "Видео" %} — Vedenika{% endblock %}
+
+{% block content %}
+
+<div class="gallery-page-wrap">
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div>
+      <div class="eyebrow">{% trans "Питомник Vedenika" %}</div>
+      <h1 class="page-title">{% trans "Видео" %}<em>{% trans "тека" %}</em></h1>
+    </div>
+  </div>
+
+  {% if not videos %}
+    <div class="empty-state">
+      <div class="empty-state-icon">🎬</div>
+      <div class="empty-state-title">{% trans "Видео пока не добавлены" %}</div>
+      <p class="empty-state-desc">{% trans "Скоро здесь появятся видео из жизни питомника." %}</p>
+    </div>
+
+  {% else %}
+
+    {% if videos_life %}
+      <div class="gallery-section">
+        <div class="gallery-section-header">
+          <div class="gallery-section-title">{% trans "Повседневная жизнь" %}</div>
+        </div>
+        <div class="video-grid">
+          {% for video in videos_life %}
+            {% include "video_card.html" %}
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+
+    {% if videos_litter %}
+      <div class="gallery-section">
+        <div class="gallery-section-header">
+          <div class="gallery-section-title">{% trans "Котята и помёты" %}</div>
+        </div>
+        <div class="video-grid">
+          {% for video in videos_litter %}
+            {% include "video_card.html" %}
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+
+    {% if videos_other %}
+      <div class="gallery-section">
+        <div class="gallery-section-header">
+          <div class="gallery-section-title">{% trans "Разное" %}</div>
+        </div>
+        <div class="video-grid">
+          {% for video in videos_other %}
+            {% include "video_card.html" %}
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+
+  {% endif %}
+
+</div>
+
+<!-- VIDEO MODAL -->
+<div class="video-modal-backdrop" id="videoModal">
+  <button class="lightbox-close" id="videoModalClose">✕</button>
+  <div class="video-modal-inner">
+    <div class="video-modal-embed" id="videoModalEmbed"></div>
+  </div>
+</div>
+
+<script>
+  (function() {
+    var modal     = document.getElementById('videoModal');
+    var embedWrap = document.getElementById('videoModalEmbed');
+    var closeBtn  = document.getElementById('videoModalClose');
+
+    document.querySelectorAll('.video-card[data-embed]').forEach(function(card) {
+      card.addEventListener('click', function() {
+        var embed = card.dataset.embed;
+        if (embed) {
+          embedWrap.innerHTML = '<iframe src="' + embed + '?autoplay=1" frameborder="0" allowfullscreen allow="autoplay"></iframe>';
+        } else if (card.dataset.file) {
+          embedWrap.innerHTML = '<video src="' + card.dataset.file + '" controls autoplay></video>';
+        }
+        modal.classList.add('open');
+        document.body.style.overflow = 'hidden';
+      });
+    });
+
+    function closeModal() {
+      modal.classList.remove('open');
+      embedWrap.innerHTML = '';
+      document.body.style.overflow = '';
+    }
+
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', function(e) { if (e.target === modal) closeModal(); });
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && modal.classList.contains('open')) closeModal();
+    });
+  })();
+</script>
+
+{% endblock %}

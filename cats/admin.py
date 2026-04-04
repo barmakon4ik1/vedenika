@@ -408,3 +408,58 @@ class PageAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("name",)}
     inlines = [ContentBlockInline]
 
+# ===== GALLERY =====
+
+class GalleryPhotoInline(admin.TabularInline):
+    model = GalleryPhoto
+    extra = 3
+    fields = ("image", "title", "instagram_url", "sort_order", "is_active")
+    ordering = ("sort_order",)
+
+
+@admin.register(GalleryAlbum)
+class GalleryAlbumAdmin(TranslatableAdmin):
+    list_display  = ("id", "get_title", "category", "date", "photos_count", "is_active")
+    list_filter   = ("category", "is_active")
+    list_editable = ("is_active",)
+    ordering      = ("-date",)
+    inlines       = [GalleryPhotoInline]
+
+    def get_title(self, obj):
+        return obj.safe_translation_getter("title", any_language=True)
+    get_title.short_description = "Название"
+
+
+@admin.register(GalleryPhoto)
+class GalleryPhotoAdmin(admin.ModelAdmin):
+    list_display  = ("id", "title", "album", "sort_order", "is_active")
+    list_filter   = ("album", "is_active")
+    list_editable = ("sort_order", "is_active")
+    ordering      = ("album", "sort_order")
+
+
+# ===== VIDEO =====
+
+@admin.register(Video)
+class VideoAdmin(TranslatableAdmin):
+    list_display  = ("id", "get_title", "category", "date", "is_external", "is_active")
+    list_filter   = ("category", "is_active")
+    list_editable = ("is_active",)
+    ordering      = ("-date",)
+    readonly_fields = ("embed_url",)
+
+    fieldsets = (
+        (None, {
+            "fields": (
+                "category", "litter", "date", "sort_order", "is_active"
+            )
+        }),
+        ("Источник видео", {
+            "fields": ("video_url", "video_file", "thumbnail", "embed_url"),
+            "description": "Заполни либо ссылку на YouTube/Vimeo, либо загрузи файл."
+        }),
+    )
+
+    def get_title(self, obj):
+        return obj.safe_translation_getter("title", any_language=True)
+    get_title.short_description = "Название"

@@ -1557,3 +1557,324 @@ class CatPhoto(models.Model):
 
         if self.is_primary:
             CatPhoto.objects.filter(cat=self.cat).exclude(pk=self.pk).update(is_primary=False)
+
+
+# ============================================================
+# Добавить в models.py — новые модели для галереи и видео
+# ============================================================
+# Место: в конец файла, после класса CatPhoto
+
+
+import os
+from django.utils.text import slugify
+
+
+def upload_to_gallery(instance, filename):
+    """Фото галереи хранятся в: gallery/<album_id>/<filename>"""
+    base, ext = os.path.splitext(filename)
+    safe_name = slugify(base) or "photo"
+    return f"gallery/{instance.album_id}/{safe_name}{ext.lower()}"
+
+
+def upload_to_video_thumb(instance, filename):
+    """Превью видео хранятся в: video/thumbs/<filename>"""
+    base, ext = os.path.splitext(filename)
+    safe_name = slugify(base) or "thumb"
+    return f"video/thumbs/{safe_name}{ext.lower()}"
+
+
+def upload_to_video_file(instance, filename):
+    """Файлы видео хранятся в: video/files/<filename>"""
+    base, ext = os.path.splitext(filename)
+    safe_name = slugify(base) or "video"
+    return f"video/files/{safe_name}{ext.lower()}"
+
+
+# ============================================================
+# GALLERY ALBUM
+# ============================================================
+
+class GalleryAlbum(TranslatableModel):
+    """
+    Альбом галереи.
+    Категории:
+      - LIFE    — повседневная жизнь питомника
+      - LITTER  — общие фото помётов (котята вместе, с родителями)
+      - ART     — художественные фото
+    """
+
+    class Category(models.TextChoices):
+        LIFE   = "LIFE",   "Повседневная жизнь"
+        LITTER = "LITTER", "Помёты"
+        ART    = "ART",    "Художественные"
+
+    translations = TranslatedFields(
+        title=models.CharField(
+            max_length=200,
+            verbose_name="Название альбома"
+        ),
+        description=models.TextField(
+            blank=True,
+            verbose_name="Описание"
+        ),
+    )
+
+    category = models.CharField(
+        max_length=20,
+        choices=Category.choices,
+        default=Category.LIFE,
+        verbose_name="Категория"
+    )
+
+    cover = models.ImageField(
+        upload_to=upload_to_gallery,
+        null=True,
+        blank=True,
+        verbose_name="Обложка альбома"
+    )
+
+    date = models.DateField(
+        null=True,
+        blank=True,
+        verbose_name="Дата"
+    )
+
+    # Связь с помётом — для категории LITTER
+    litter = models.ForeignKey(
+        "Litter",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="gallery_albums",
+        verbose_name="Помёт (если альбом помёта)"
+    )
+
+    sort_order = models.PositiveIntegerField(
+        default=0,
+        verbose_name="Порядок"
+    )
+
+    is_active = models.BooleanField(
+        default=True,
+        verbose_name="Активен"
+    )
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "Альбом галереи"
+        verbose_name_plural = "Альбомы галереи"
+        ordering = ["-date", "-created_at"]
+
+    def __str__(self):
+        return self.safe_translation_getter("title", any_language=True) or f"Album #{self.pk}"
+
+    def get_cover(self):
+        """Возвращает обложку альбома или первое фото."""
+        if self.cover:
+            return self.cover
+        first = self.photos.filter(is_active=True).first()
+        return first.image if first else None
+
+    @property
+    def photos_count(self):
+        return self.photos.filter(is_active=True).count()
+
+
+# ============================================================
+# GALLERY PHOTO
+# ============================================================
+
+class GalleryPhoto(models.Model):
+    """
+    Фотография в альбоме галереи.
+    Не привязана к конкретному коту — это общие фото питомника.
+    """
+
+    album = models.ForeignKey(
+        GalleryAlbum,
+        on_delete=models.CASCADE,
+        related_name="photos",
+        verbose_name="Альбом"
+    )
+
+    image = models.ImageField(
+        upload_to=upload_to_gallery,
+        verbose_name="Фото"
+    )
+
+    title = models.CharField(
+        max_length=200,
+        blank=True,
+        verbose_name="Подпись"
+    )
+
+    # Instagram source — для отслеживания откуда фото
+    instagram_url = models.URLField(
+        blank=True,
+        verbose_name="Ссылка на пост Instagram"
+    )
+
+    sort_order = models.PositiveIntegerField(
+        default=0,
+        verbose_name="Порядок"
+    )
+
+    is_active = models.BooleanField(
+        default=True,
+        verbose_name="Активно"
+    )
+
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "Фото галереи"
+        verbose_name_plural = "Фото галереи"
+        ordering = ["sort_order", "-uploaded_at"]
+
+    def __str__(self):
+        return self.title or f"Photo #{self.pk} ({self.album})"
+
+
+# ============================================================
+# VIDEO
+# ============================================================
+
+class Video(TranslatableModel):
+    """
+    Видео питомника.
+    Поддерживает два источника:
+      - YouTube / Vimeo — через video_url
+      - Файл на сервере — через video_file
+    Используется то что заполнено (приоритет у video_url).
+    """
+
+    class Category(models.TextChoices):
+        LIFE   = "LIFE",   "Повседневная жизнь"
+        LITTER = "LITTER", "Котята и помёты"
+        OTHER  = "OTHER",  "Разное"
+
+    translations = TranslatedFields(
+        title=models.CharField(
+            max_length=200,
+            verbose_name="Название"
+        ),
+        description=models.TextField(
+            blank=True,
+            verbose_name="Описание"
+        ),
+    )
+
+    category = models.CharField(
+        max_length=20,
+        choices=Category.choices,
+        default=Category.LIFE,
+        verbose_name="Категория"
+    )
+
+    # Источник 1 — ссылка (YouTube / Vimeo)
+    video_url = models.URLField(
+        blank=True,
+        verbose_name="Ссылка на YouTube / Vimeo",
+        help_text="Например: https://www.youtube.com/watch?v=XXXXX"
+    )
+
+    # Источник 2 — файл на сервере
+    video_file = models.FileField(
+        upload_to=upload_to_video_file,
+        null=True,
+        blank=True,
+        verbose_name="Видеофайл (mp4)",
+        help_text="Только для коротких клипов до 50 МБ"
+    )
+
+    # Превью
+    thumbnail = models.ImageField(
+        upload_to=upload_to_video_thumb,
+        null=True,
+        blank=True,
+        verbose_name="Превью"
+    )
+
+    # Связь с помётом (опционально)
+    litter = models.ForeignKey(
+        "Litter",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="videos",
+        verbose_name="Помёт"
+    )
+
+    date = models.DateField(
+        null=True,
+        blank=True,
+        verbose_name="Дата съёмки"
+    )
+
+    sort_order = models.PositiveIntegerField(
+        default=0,
+        verbose_name="Порядок"
+    )
+
+    is_active = models.BooleanField(
+        default=True,
+        verbose_name="Активно"
+    )
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "Видео"
+        verbose_name_plural = "Видео"
+        ordering = ["-date", "-created_at"]
+
+    def __str__(self):
+        return self.safe_translation_getter("title", any_language=True) or f"Video #{self.pk}"
+
+    @property
+    def embed_url(self):
+        """
+        Возвращает embed-ссылку для вставки плеера.
+        Поддерживает YouTube и Vimeo.
+        """
+        if not self.video_url:
+            return None
+
+        url = self.video_url
+
+        # YouTube
+        if "youtube.com/watch" in url:
+            video_id = url.split("v=")[-1].split("&")[0]
+            return f"https://www.youtube.com/embed/{video_id}"
+        if "youtu.be/" in url:
+            video_id = url.split("youtu.be/")[-1].split("?")[0]
+            return f"https://www.youtube.com/embed/{video_id}"
+
+        # Vimeo
+        if "vimeo.com/" in url:
+            video_id = url.rstrip("/").split("/")[-1]
+            return f"https://player.vimeo.com/video/{video_id}"
+
+        return url
+
+    @property
+    def is_external(self):
+        """True если видео на YouTube/Vimeo."""
+        return bool(self.video_url)
+
+
+# ============================================================
+# МИГРАЦИЯ
+# ============================================================
+# После добавления моделей в models.py:
+#
+#   python manage.py makemigrations
+#   python manage.py migrate
+#
+# Модели появятся в таблицах:
+#   cats_galleryalbum
+#   cats_galleryalbumtranslation  (parler)
+#   cats_galleryphoto
+#   cats_video
+#   cats_videotranslation         (parler)

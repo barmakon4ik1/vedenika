@@ -53,6 +53,30 @@
                         {% trans "Помёты" %}
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if request.resolver_match.url_name == 'gallery_list' or request.resolver_match.url_name == 'gallery_album' %}active{% endif %}"
+                       href="{% url 'gallery_list' %}">
+                        {% trans "Галерея" %}
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if request.resolver_match.url_name == 'video_list' %}active{% endif %}"
+                       href="{% url 'video_list' %}">
+                        {% trans "Видео" %}
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if request.resolver_match.url_name == 'about_breed' %}active{% endif %}"
+                       href="{% url 'about_breed' %}">
+                        {% trans "О породе" %}
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if request.resolver_match.url_name == 'contacts' %}active{% endif %}"
+                       href="{% url 'contacts' %}">
+                        {% trans "Контакты" %}
+                    </a>
+                </li>
             </ul>
 
             <div class="d-flex align-items-center">
@@ -105,6 +129,10 @@
                     <a href="{% url 'home' %}">{% trans "Главная" %}</a>
                     <a href="{% url 'cat_list' %}">{% trans "Коты" %}</a>
                     <a href="{% url 'litter_list' %}">{% trans "Помёты" %}</a>
+                    <a href="{% url 'gallery_list' %}">{% trans "Галерея" %}</a>
+                    <a href="{% url 'video_list' %}">{% trans "Видео" %}</a>
+                    <a href="{% url 'about_breed' %}">{% trans "О породе" %}</a>
+                    <a href="{% url 'contacts' %}">{% trans "Контакты" %}</a>
                 </div>
             </div>
             <div class="footer-col">
