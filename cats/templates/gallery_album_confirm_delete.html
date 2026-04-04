@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Удалить альбом" %} — Vedenika{% endblock %}
+{% block content %}
+<div class="form-page-wrap" style="max-width: 560px;">
+  <div class="confirm-delete-box">
+    <div class="confirm-delete-icon">🗑️</div>
+    <h2 class="confirm-delete-title">{% trans "Удалить альбом?" %}</h2>
+    <p class="confirm-delete-desc">
+      {% trans "Вы собираетесь удалить альбом" %}
+      <strong>«{{ album.safe_translation_getter:"title,any_language=True" }}»</strong>.
+      {% trans "Все фотографии альбома будут удалены безвозвратно." %}
+    </p>
+    <div class="form-actions" style="justify-content: center;">
+      <form method="post" style="display: contents;">
+        {% csrf_token %}
+        <button type="submit" class="btn-sq btn-sq-primary" style="background: #a32d2d; border-color: #a32d2d;">
+          {% trans "Да, удалить" %}
+        </button>
+      </form>
+      <a href="{% url 'gallery_manage' %}" class="btn-sq btn-sq-outline">{% trans "Отмена" %}</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

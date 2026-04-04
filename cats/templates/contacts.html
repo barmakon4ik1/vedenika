@@ -38,6 +38,7 @@
           <div class="contact-card-arrow">→</div>
         </a>
       {% endif %}
+      <img src="{% static 'img/Vedenika-Logo2.png' %}" alt="Vedenika logo" height="400">
 
       {% if owner and owner.whatsapp %}
         <a href="https://wa.me/{{ owner.whatsapp|cut:'+' }}"

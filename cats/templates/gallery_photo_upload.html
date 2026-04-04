@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "Загрузка фото" %} — {{ album.safe_translation_getter:"title,any_language=True" }}{% endblock %}
+
+{% block content %}
+<div class="form-page-wrap">
+
+  <nav class="breadcrumb-warm">
+    <a href="{% url 'gallery_manage' %}">{% trans "Управление галереей" %}</a>
+    <span class="breadcrumb-sep">/</span>
+    <a href="{% url 'gallery_album_photos' album.pk %}">{{ album.safe_translation_getter:"title,any_language=True" }}</a>
+    <span class="breadcrumb-sep">/</span>
+    <span class="breadcrumb-current">{% trans "Загрузка фото" %}</span>
+  </nav>
+
+  <div class="page-header">
+    <div>
+      <div class="eyebrow">{{ album.safe_translation_getter:"title,any_language=True" }}</div>
+      <h1 class="page-title">{% trans "Загрузить" %} <em>{% trans "фото" %}</em></h1>
+    </div>
+    <a href="{% url 'gallery_album_photos' album.pk %}" class="btn-sq btn-sq-outline">← {% trans "К альбому" %}</a>
+  </div>
+
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <div class="form-section">
+      <div class="form-section-header">
+        <div class="form-section-title">{% trans "Выбор файлов" %}</div>
+      </div>
+
+      <!-- Drop zone -->
+      <div class="upload-dropzone" id="dropzone">
+        <div class="upload-dropzone-icon">📁</div>
+        <div class="upload-dropzone-title">{% trans "Перетащите фото сюда" %}</div>
+        <div class="upload-dropzone-sub">{% trans "или нажмите для выбора файлов" %}</div>
+        <input type="file" name="images" id="fileInput"
+               multiple accept="image/*"
+               style="display: none;">
+        <button type="button" class="btn-sq btn-sq-outline" style="margin-top: 16px;"
+                onclick="document.getElementById('fileInput').click()">
+          {% trans "Выбрать файлы" %}
+        </button>
+      </div>
+
+      <!-- Превью выбранных файлов -->
+      <div class="upload-preview" id="preview"></div>
+
+      <div class="form-field-hint" style="margin-top: 12px;">
+        {% trans "Поддерживаются: JPG, PNG, WebP. Можно выбрать несколько файлов одновременно." %}
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn-warm" id="submitBtn" disabled>
+        {% trans "Загрузить" %}
+      </button>
+      <a href="{% url 'gallery_album_photos' album.pk %}" class="btn-sq btn-sq-muted">{% trans "Отмена" %}</a>
+    </div>
+
+  </form>
+</div>
+
+<script>
+(function() {
+  var dropzone  = document.getElementById('dropzone');
+  var fileInput = document.getElementById('fileInput');
+  var preview   = document.getElementById('preview');
+  var submitBtn = document.getElementById('submitBtn');
+
+  function showPreviews(files) {
+    preview.innerHTML = '';
+    if (!files.length) { submitBtn.disabled = true; return; }
+
+    Array.from(files).forEach(function(file) {
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        var div = document.createElement('div');
+        div.className = 'upload-thumb';
+        div.innerHTML = '<img src="' + e.target.result + '" alt=""><div class="upload-thumb-name">' + file.name + '</div>';
+        preview.appendChild(div);
+      };
+      reader.readAsDataURL(file);
+    });
+    submitBtn.disabled = false;
+  }
+
+  fileInput.addEventListener('change', function() {
+    showPreviews(this.files);
+  });
+
+  // Drag-and-drop на зону
+  dropzone.addEventListener('dragover', function(e) {
+    e.preventDefault();
+    dropzone.classList.add('dragover');
+  });
+
+  dropzone.addEventListener('dragleave', function() {
+    dropzone.classList.remove('dragover');
+  });
+
+  dropzone.addEventListener('drop', function(e) {
+    e.preventDefault();
+    dropzone.classList.remove('dragover');
+    var dt = e.dataTransfer;
+    if (dt.files.length) {
+      // Присваиваем файлы input-у
+      fileInput.files = dt.files;
+      showPreviews(dt.files);
+    }
+  });
+
+  dropzone.addEventListener('click', function(e) {
+    if (e.target !== fileInput && !e.target.closest('button')) {
+      fileInput.click();
+    }
+  });
+})();
+</script>
+
+{% endblock %}

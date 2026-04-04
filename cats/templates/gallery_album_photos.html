@@ -1,0 +1,163 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "Фото альбома" %} — {{ album.safe_translation_getter:"title,any_language=True" }}{% endblock %}
+
+{% block content %}
+<div class="form-page-wrap" style="max-width: 1000px;">
+
+  <nav class="breadcrumb-warm">
+    <a href="{% url 'gallery_manage' %}">{% trans "Управление галереей" %}</a>
+    <span class="breadcrumb-sep">/</span>
+    <span class="breadcrumb-current">{{ album.safe_translation_getter:"title,any_language=True" }}</span>
+  </nav>
+
+  <div class="page-header">
+    <div>
+      <div class="eyebrow">{{ album.get_category_display }}</div>
+      <h1 class="page-title">
+        <em>{{ album.safe_translation_getter:"title,any_language=True" }}</em>
+      </h1>
+    </div>
+    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+      <a href="{% url 'gallery_photo_upload' album.pk %}" class="btn-warm">
+        + {% trans "Загрузить фото" %}
+      </a>
+      <a href="{% url 'gallery_album_edit' album.pk %}" class="btn-sq btn-sq-outline">
+        {% trans "Настройки альбома" %}
+      </a>
+      <a href="{% url 'gallery_album' album.pk %}" class="btn-sq btn-sq-outline" target="_blank">
+        {% trans "Просмотр" %} ↗
+      </a>
+    </div>
+  </div>
+
+  <!-- Статистика -->
+  <div class="manage-album-stats">
+    <div class="manage-stat">
+      <div class="manage-stat-num">{{ photos|length }}</div>
+      <div class="manage-stat-label">{% trans "фотографий" %}</div>
+    </div>
+    <div class="manage-stat">
+      <div class="manage-stat-num">{{ photos|length }}</div>
+      <div class="manage-stat-label">{% trans "активных" %}</div>
+    </div>
+    {% if album.date %}
+      <div class="manage-stat">
+        <div class="manage-stat-num">{{ album.date|date:"Y" }}</div>
+        <div class="manage-stat-label">{% trans "год" %}</div>
+      </div>
+    {% endif %}
+  </div>
+
+  {% if photos %}
+
+    <div class="manage-hint">
+      <span>💡</span>
+      {% trans "Порядок фото можно менять перетаскиванием. Изменения сохраняются автоматически." %}
+    </div>
+
+    <!-- Сетка фото с drag-and-drop -->
+    <div class="manage-photos-grid" id="photosGrid" data-album="{{ album.pk }}">
+      {% for photo in photos %}
+        <div class="manage-photo-card" data-id="{{ photo.pk }}">
+
+          <div class="manage-photo-thumb">
+            <img src="{{ photo.image.url }}" alt="{{ photo.title }}">
+            <div class="manage-photo-drag-handle" title="{% trans 'Перетащите для изменения порядка' %}">⠿</div>
+            {% if not photo.is_active %}
+              <div class="manage-photo-hidden-badge">{% trans "Скрыто" %}</div>
+            {% endif %}
+          </div>
+
+          <div class="manage-photo-info">
+            {% if photo.title %}
+              <div class="manage-photo-title">{{ photo.title }}</div>
+            {% endif %}
+            {% if photo.instagram_url %}
+              <div class="manage-photo-insta">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <rect x="2" y="2" width="20" height="20" rx="5"/>
+                  <circle cx="12" cy="12" r="4"/>
+                </svg>
+                Instagram
+              </div>
+            {% endif %}
+          </div>
+
+          <div class="manage-photo-actions">
+            <a href="{% url 'gallery_photo_edit' photo.pk %}" class="manage-photo-btn">{% trans "Изменить" %}</a>
+            <a href="{% url 'gallery_photo_delete' photo.pk %}" class="manage-photo-btn manage-photo-btn--danger">{% trans "Удалить" %}</a>
+          </div>
+
+        </div>
+      {% endfor %}
+    </div>
+
+    <script>
+    // Простой drag-and-drop для изменения порядка фото
+    (function() {
+      var grid    = document.getElementById('photosGrid');
+      var albumPk = grid ? grid.dataset.album : null;
+      if (!grid) return;
+
+      var dragging = null;
+
+      grid.querySelectorAll('.manage-photo-card').forEach(function(card) {
+        card.setAttribute('draggable', 'true');
+
+        card.addEventListener('dragstart', function() {
+          dragging = card;
+          setTimeout(function() { card.style.opacity = '0.4'; }, 0);
+        });
+
+        card.addEventListener('dragend', function() {
+          card.style.opacity = '1';
+          dragging = null;
+          saveOrder();
+        });
+
+        card.addEventListener('dragover', function(e) {
+          e.preventDefault();
+          var rect = card.getBoundingClientRect();
+          var midX = rect.left + rect.width / 2;
+          if (dragging && dragging !== card) {
+            if (e.clientX < midX) {
+              grid.insertBefore(dragging, card);
+            } else {
+              grid.insertBefore(dragging, card.nextSibling);
+            }
+          }
+        });
+      });
+
+      function saveOrder() {
+        var ids = Array.from(grid.querySelectorAll('.manage-photo-card')).map(function(c) {
+          return parseInt(c.dataset.id);
+        });
+        fetch('/gallery/' + albumPk + '/reorder/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': document.cookie.match(/csrftoken=([^;]+)/)[1]
+          },
+          body: JSON.stringify({ order: ids })
+        });
+      }
+    })();
+    </script>
+
+  {% else %}
+    <div class="empty-state">
+      <div class="empty-state-icon">📷</div>
+      <div class="empty-state-title">{% trans "В альбоме пока нет фотографий" %}</div>
+      <p class="empty-state-desc">{% trans "Загрузите первые фото." %}</p>
+      <a href="{% url 'gallery_photo_upload' album.pk %}" class="btn-warm" style="margin-top: 16px; display: inline-block;">
+        + {% trans "Загрузить фото" %}
+      </a>
+    </div>
+  {% endif %}
+
+</div>
+{% endblock %}

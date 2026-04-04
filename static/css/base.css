@@ -4359,3 +4359,399 @@ body {
 
   .home-about-title { font-size: 32px; }
 }
+
+/* ============================================================
+   GALLERY CRUD — MANAGE PAGES
+   ============================================================ */
+
+/* Album list */
+.manage-albums-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.manage-album-row {
+  display: grid;
+  grid-template-columns: 72px 1fr auto;
+  gap: 20px;
+  align-items: center;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px 20px;
+  transition: box-shadow 0.18s ease;
+}
+
+.manage-album-row:hover {
+  box-shadow: 0 4px 16px rgba(122, 92, 58, 0.09);
+}
+
+.manage-album-thumb {
+  width: 72px;
+  height: 56px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--cream);
+  flex-shrink: 0;
+}
+
+.manage-album-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.manage-album-no-thumb {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  opacity: 0.25;
+}
+
+.manage-album-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--dark);
+  margin-bottom: 6px;
+}
+
+.manage-album-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.manage-album-date,
+.manage-album-count {
+  font-size: 12px;
+  font-weight: 300;
+  color: var(--muted);
+}
+
+.manage-album-actions {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+}
+
+/* Small button modifier */
+.btn-sm {
+  padding: 6px 12px !important;
+  font-size: 12px !important;
+}
+
+/* Stats row on album photos page */
+.manage-album-stats {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.manage-stat {
+  text-align: center;
+}
+
+.manage-stat-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 28px;
+  font-weight: 500;
+  color: var(--warm-brown);
+  line-height: 1;
+}
+
+.manage-stat-label {
+  font-size: 11px;
+  color: var(--muted);
+  font-weight: 300;
+}
+
+/* Hint bar */
+.manage-hint {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--muted);
+  background: var(--cream);
+  border-radius: 10px;
+  padding: 10px 14px;
+  margin-bottom: 20px;
+}
+
+/* Photos grid (manage) */
+.manage-photos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+.manage-photo-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: grab;
+  transition: box-shadow 0.18s ease;
+}
+
+.manage-photo-card:active { cursor: grabbing; }
+
+.manage-photo-card:hover {
+  box-shadow: 0 4px 14px rgba(122, 92, 58, 0.12);
+}
+
+.manage-photo-thumb {
+  height: 130px;
+  background: var(--cream);
+  position: relative;
+  overflow: hidden;
+}
+
+.manage-photo-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.manage-photo-drag-handle {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  background: rgba(44, 32, 21, 0.55);
+  color: rgba(253, 248, 240, 0.9);
+  font-size: 14px;
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: grab;
+  backdrop-filter: blur(3px);
+}
+
+.manage-photo-hidden-badge {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  background: rgba(162, 45, 45, 0.8);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 4px;
+  letter-spacing: 0.5px;
+}
+
+.manage-photo-info {
+  padding: 8px 10px 4px;
+}
+
+.manage-photo-title {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--dark);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.manage-photo-insta {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+.manage-photo-actions {
+  display: flex;
+  gap: 4px;
+  padding: 6px 10px 10px;
+}
+
+.manage-photo-btn {
+  flex: 1;
+  text-align: center;
+  font-size: 11px;
+  font-weight: 400;
+  padding: 4px 6px;
+  border-radius: 6px;
+  text-decoration: none;
+  background: var(--cream);
+  color: var(--warm-brown);
+  border: 1px solid var(--border);
+  transition: all 0.15s ease;
+}
+
+.manage-photo-btn:hover {
+  background: var(--cream2);
+  border-color: var(--warm-tan);
+}
+
+.manage-photo-btn--danger {
+  color: #a32d2d;
+  background: rgba(162, 45, 45, 0.06);
+  border-color: rgba(162, 45, 45, 0.2);
+}
+
+.manage-photo-btn--danger:hover {
+  background: rgba(162, 45, 45, 0.12);
+  border-color: rgba(162, 45, 45, 0.4);
+}
+
+/* Current image preview */
+.manage-current-image {
+  margin-bottom: 8px;
+}
+
+/* Upload dropzone */
+.upload-dropzone {
+  border: 2px dashed var(--border);
+  border-radius: 16px;
+  background: var(--cream);
+  padding: 48px 24px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.upload-dropzone.dragover {
+  border-color: var(--warm-tan);
+  background: var(--cream2);
+}
+
+.upload-dropzone-icon {
+  font-size: 40px;
+  margin-bottom: 12px;
+  opacity: 0.5;
+}
+
+.upload-dropzone-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px;
+  font-weight: 500;
+  color: var(--dark);
+  margin-bottom: 6px;
+}
+
+.upload-dropzone-sub {
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--muted);
+}
+
+/* Upload preview thumbs */
+.upload-preview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.upload-thumb {
+  width: 100px;
+  text-align: center;
+}
+
+.upload-thumb img {
+  width: 100px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 8px;
+  display: block;
+  border: 1px solid var(--border);
+}
+
+.upload-thumb-name {
+  font-size: 10px;
+  color: var(--muted);
+  margin-top: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Photo edit layout */
+.manage-photo-edit-layout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 32px;
+  align-items: start;
+}
+
+.manage-photo-preview-box {
+  border-radius: 14px;
+  overflow: hidden;
+  background: var(--cream);
+}
+
+.manage-photo-preview-box img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Confirm delete */
+.confirm-delete-box {
+  max-width: 480px;
+  margin: 48px auto;
+  text-align: center;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 40px 32px;
+}
+
+.confirm-delete-icon {
+  font-size: 40px;
+  margin-bottom: 16px;
+}
+
+.confirm-delete-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 28px;
+  font-weight: 500;
+  color: var(--dark);
+  margin-bottom: 12px;
+}
+
+.confirm-delete-desc {
+  font-size: 14px;
+  font-weight: 300;
+  color: var(--muted);
+  line-height: 1.7;
+  margin-bottom: 28px;
+}
+
+/* Responsive manage */
+@media (max-width: 700px) {
+  .manage-album-row {
+    grid-template-columns: 56px 1fr;
+    gap: 12px;
+  }
+
+  .manage-album-actions {
+    grid-column: 1 / -1;
+  }
+
+  .manage-photos-grid {
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  }
+
+  .manage-photo-edit-layout {
+    grid-template-columns: 1fr;
+  }
+}

@@ -235,3 +235,85 @@ class CatPhotoForm(forms.ModelForm):
             photo.save()
 
         return photo
+
+
+class GalleryAlbumForm(forms.ModelForm):
+    class Meta:
+        model = GalleryAlbum
+        fields = ["category", "date", "litter", "sort_order", "is_active", "cover"]
+        widgets = {
+            "category":   forms.Select(attrs={"class": "form-control"}),
+            "date":       forms.DateInput(attrs={"class": "form-control", "type": "date"}),
+            "litter":     forms.Select(attrs={"class": "form-control"}),
+            "sort_order": forms.NumberInput(attrs={"class": "form-control", "min": 0}),
+            "cover":      forms.ClearableFileInput(attrs={"class": "form-control"}),
+            "is_active":  forms.CheckboxInput(attrs={"class": "form-check-input"}),
+        }
+
+    # Поля перевода (title и description) — добавляем вручную
+    # потому что parler не включает их автоматически в ModelForm
+    title = forms.CharField(
+        max_length=200,
+        label="Название альбома",
+        widget=forms.TextInput(attrs={"class": "form-control"})
+    )
+    description = forms.CharField(
+        required=False,
+        label="Описание",
+        widget=forms.Textarea(attrs={"class": "form-control", "rows": 3})
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["litter"].required = False
+        self.fields["date"].required = False
+        self.fields["cover"].required = False
+        self.fields["sort_order"].required = False
+
+        # Заполняем поля перевода из существующего объекта
+        if self.instance.pk:
+            self.fields["title"].initial = self.instance.safe_translation_getter(
+                "title", any_language=True
+            )
+            self.fields["description"].initial = self.instance.safe_translation_getter(
+                "description", any_language=True
+            )
+
+    def save(self, commit=True):
+        album = super().save(commit=False)
+        if commit:
+            album.save()
+            # Сохраняем перевод на текущий язык
+            album.set_current_language("ru")
+            album.title = self.cleaned_data["title"]
+            album.description = self.cleaned_data.get("description", "")
+            album.save()
+        return album
+
+
+class GalleryPhotoForm(forms.ModelForm):
+    class Meta:
+        model = GalleryPhoto
+        fields = ["image", "title", "instagram_url", "sort_order", "is_active"]
+        widgets = {
+            "image":         forms.ClearableFileInput(attrs={"class": "form-control"}),
+            "title":         forms.TextInput(attrs={"class": "form-control"}),
+            "instagram_url": forms.URLInput(attrs={"class": "form-control"}),
+            "sort_order":    forms.NumberInput(attrs={"class": "form-control", "min": 0}),
+            "is_active":     forms.CheckboxInput(attrs={"class": "form-check-input"}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["title"].required = False
+        self.fields["instagram_url"].required = False
+        self.fields["sort_order"].required = False
+
+
+# Formset для массовой загрузки фото
+GalleryPhotoFormSet = forms.modelformset_factory(
+    GalleryPhoto,
+    form=GalleryPhotoForm,
+    extra=5,       # 5 пустых форм для загрузки
+    can_delete=True,
+)

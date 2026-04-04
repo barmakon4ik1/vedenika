@@ -79,6 +79,18 @@
                 </li>
             </ul>
 
+            {% if request.user.is_staff %}
+            <ul class="navbar-nav mb-2 mb-lg-0 me-2">
+                <li class="nav-item">
+                    <a class="nav-link {% if 'manage' in request.resolver_match.url_name %}active{% endif %}"
+                       href="{% url 'gallery_manage' %}"
+                       style="font-size:12px;color:var(--muted);">
+                        ⚙ {% trans "Галерея" %}
+                    </a>
+                </li>
+            </ul>
+            {% endif %}
+
             {% get_current_language as LANGUAGE_CODE %}
             <div id="ld" style="position:relative;margin-left:12px;">
 

@@ -5,6 +5,7 @@ from django.views.generic import DetailView, ListView
 from django.contrib.admin.views.decorators import staff_member_required
 from django.utils import timezone
 from .forms import *
+from .models import *
 from django.conf import settings
 owner_id = settings.CATTERY_OWNER_PERSON_ID
 
@@ -590,3 +591,178 @@ def about_breed(request):
 
 def contacts(request):
     return render(request, "contacts.html")
+
+
+# =========================================================
+# АЛЬБОМЫ / CRUD
+# =========================================================
+# ---- Список альбомов (для управления, только staff) ----
+
+@staff_member_required
+def gallery_manage(request):
+    """Страница управления галереей для администратора."""
+    albums = GalleryAlbum.objects.prefetch_related("photos").order_by("-date", "-created_at")
+    return render(request, "gallery_manage.html", {"albums": albums})
+
+
+# ---- Создать альбом ----
+
+@staff_member_required
+def gallery_album_create(request):
+    if request.method == "POST":
+        form = GalleryAlbumForm(request.POST, request.FILES)
+        if form.is_valid():
+            album = form.save()
+            return redirect("gallery_album_photos", pk=album.pk)
+    else:
+        form = GalleryAlbumForm()
+
+    return render(request, "gallery_album_form.html", {
+        "form": form,
+        "page_title": "Создать альбом",
+        "is_edit": False,
+    })
+
+
+# ---- Редактировать альбом ----
+
+@staff_member_required
+def gallery_album_edit(request, pk):
+    album = get_object_or_404(GalleryAlbum, pk=pk)
+
+    if request.method == "POST":
+        form = GalleryAlbumForm(request.POST, request.FILES, instance=album)
+        if form.is_valid():
+            form.save()
+            return redirect("gallery_album_photos", pk=album.pk)
+    else:
+        form = GalleryAlbumForm(instance=album)
+
+    return render(request, "gallery_album_form.html", {
+        "form": form,
+        "album": album,
+        "page_title": f"Редактировать: {album.safe_translation_getter('title', any_language=True)}",
+        "is_edit": True,
+    })
+
+
+# ---- Удалить альбом ----
+
+@staff_member_required
+def gallery_album_delete(request, pk):
+    album = get_object_or_404(GalleryAlbum, pk=pk)
+    if request.method == "POST":
+        # Удаляем файлы фото
+        for photo in album.photos.all():
+            if photo.image:
+                photo.image.delete(save=False)
+        # Удаляем обложку
+        if album.cover:
+            album.cover.delete(save=False)
+        album.delete()
+        return redirect("gallery_manage")
+
+    return render(request, "gallery_album_confirm_delete.html", {"album": album})
+
+
+# ---- Фото альбома — просмотр и управление ----
+
+@staff_member_required
+def gallery_album_photos(request, pk):
+    album = get_object_or_404(GalleryAlbum, pk=pk)
+    photos = album.photos.order_by("sort_order", "-uploaded_at")
+    return render(request, "gallery_album_photos.html", {
+        "album": album,
+        "photos": photos,
+    })
+
+
+# ---- Загрузить фото в альбом ----
+
+@staff_member_required
+def gallery_photo_upload(request, album_pk):
+    album = get_object_or_404(GalleryAlbum, pk=album_pk)
+
+    if request.method == "POST":
+        files = request.FILES.getlist("images")  # множественная загрузка
+        saved = 0
+        for f in files:
+            GalleryPhoto.objects.create(
+                album=album,
+                image=f,
+                is_active=True,
+            )
+            saved += 1
+
+        if saved:
+            return redirect("gallery_album_photos", pk=album.pk)
+
+    return render(request, "gallery_photo_upload.html", {"album": album})
+
+
+# ---- Редактировать одно фото ----
+
+@staff_member_required
+def gallery_photo_edit(request, pk):
+    photo = get_object_or_404(GalleryPhoto, pk=pk)
+    album = photo.album
+
+    if request.method == "POST":
+        form = GalleryPhotoForm(request.POST, request.FILES, instance=photo)
+        if form.is_valid():
+            form.save()
+            return redirect("gallery_album_photos", pk=album.pk)
+    else:
+        form = GalleryPhotoForm(instance=photo)
+
+    return render(request, "gallery_photo_form.html", {
+        "form": form,
+        "photo": photo,
+        "album": album,
+    })
+
+
+# ---- Удалить фото ----
+
+@staff_member_required
+def gallery_photo_delete(request, pk):
+    photo = get_object_or_404(GalleryPhoto, pk=pk)
+    album_pk = photo.album_id
+
+    if request.method == "POST":
+        if photo.image:
+            photo.image.delete(save=False)
+        photo.delete()
+        return redirect("gallery_album_photos", pk=album_pk)
+
+    return render(request, "gallery_photo_confirm_delete.html", {
+        "photo": photo,
+        "album": photo.album,
+    })
+
+
+# ---- Изменить порядок фото (AJAX) ----
+
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
+import json
+
+
+@staff_member_required
+@require_POST
+def gallery_photo_reorder(request, album_pk):
+    """
+    Принимает JSON: {"order": [id1, id2, id3, ...]}
+    Обновляет sort_order для каждого фото.
+    """
+    try:
+        data = json.loads(request.body)
+        order = data.get("order", [])
+        for index, photo_id in enumerate(order):
+            GalleryPhoto.objects.filter(pk=photo_id, album_id=album_pk).update(
+                sort_order=index
+            )
+        return JsonResponse({"status": "ok"})
+    except Exception as e:
+        return JsonResponse({"status": "error", "message": str(e)}, status=400)
+
