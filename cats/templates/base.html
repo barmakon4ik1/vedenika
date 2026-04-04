@@ -79,29 +79,53 @@
                 </li>
             </ul>
 
-            <div class="d-flex align-items-center">
-                {% get_current_language as LANGUAGE_CODE %}
+            {% get_current_language as LANGUAGE_CODE %}
+            <div id="ld" style="position:relative;margin-left:12px;">
 
-                <form action="{% url 'set_language' %}" method="post" class="d-flex gap-2 lang-switcher">
-                    {% csrf_token %}
-                    <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                <!-- Текущий язык — всегда виден -->
+                <button onclick="var m=document.getElementById('lm');m.style.display=m.style.display==='block'?'none':'block';" type="button"
+                        style="background:none;border:none;padding:2px 4px;cursor:pointer;display:flex;align-items:center;gap:4px;">
+                    <img src="{% static 'img/' %}{{ LANGUAGE_CODE }}.png" alt="{{ LANGUAGE_CODE }}"
+                         style="width:22px;height:auto;display:block;">
+                    <svg style="width:10px;height:6px;color:#8c7660;flex-shrink:0;" viewBox="0 0 10 6" fill="none">
+                        <path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                    </svg>
+                </button>
 
-                    <button type="submit" name="language" value="ru" class="btn p-0 border-0 bg-transparent">
-                        <img src="{% static 'img/ru.png' %}" alt="Русский"
-                             class="lang-flag {% if LANGUAGE_CODE == 'ru' %}active{% endif %}">
-                    </button>
-
-                    <button type="submit" name="language" value="de" class="btn p-0 border-0 bg-transparent">
-                        <img src="{% static 'img/de.png' %}" alt="Deutsch"
-                             class="lang-flag {% if LANGUAGE_CODE == 'de' %}active{% endif %}">
-                    </button>
-
-                    <button type="submit" name="language" value="en" class="btn p-0 border-0 bg-transparent">
-                        <img src="{% static 'img/en.png' %}" alt="English"
-                             class="lang-flag {% if LANGUAGE_CODE == 'en' %}active{% endif %}">
-                    </button>
-                </form>
+                <!-- Выпадающее меню -->
+                <div id="lm" style="display:none;position:absolute;top:calc(100% + 6px);right:0;background:#fff;border:1px solid rgba(201,169,110,0.3);border-radius:10px;padding:6px;box-shadow:0 6px 20px rgba(44,32,21,0.12);z-index:999;min-width:120px;">
+                    <form action="{% url 'set_language' %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                        {% if LANGUAGE_CODE != 'ru' %}
+                        <button type="submit" name="language" value="ru"
+                                style="display:flex;align-items:center;gap:8px;width:100%;background:none;border:none;padding:6px 10px;border-radius:6px;cursor:pointer;font-family:Jost,sans-serif;font-size:13px;color:#2c2015;">
+                            <img src="{% static 'img/ru.png' %}" alt="RU" style="width:20px;height:auto;"> Русский
+                        </button>
+                        {% endif %}
+                        {% if LANGUAGE_CODE != 'de' %}
+                        <button type="submit" name="language" value="de"
+                                style="display:flex;align-items:center;gap:8px;width:100%;background:none;border:none;padding:6px 10px;border-radius:6px;cursor:pointer;font-family:Jost,sans-serif;font-size:13px;color:#2c2015;">
+                            <img src="{% static 'img/de.png' %}" alt="DE" style="width:20px;height:auto;"> Deutsch
+                        </button>
+                        {% endif %}
+                        {% if LANGUAGE_CODE != 'en' %}
+                        <button type="submit" name="language" value="en"
+                                style="display:flex;align-items:center;gap:8px;width:100%;background:none;border:none;padding:6px 10px;border-radius:6px;cursor:pointer;font-family:Jost,sans-serif;font-size:13px;color:#2c2015;">
+                            <img src="{% static 'img/en.png' %}" alt="EN" style="width:20px;height:auto;"> English
+                        </button>
+                        {% endif %}
+                    </form>
+                </div>
             </div>
+
+            <script>
+            document.addEventListener('click', function(e) {
+                var ld = document.getElementById('ld');
+                var lm = document.getElementById('lm');
+                if (ld && lm && !ld.contains(e.target)) lm.style.display = 'none';
+            });
+            </script>
 
         </div>
     </div>
@@ -180,6 +204,34 @@
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+(function() {
+  var trigger = document.getElementById('langTrigger');
+  var menu    = document.getElementById('langMenu');
+  var dropdown = document.getElementById('langDropdown');
+  if (!trigger) return;
+
+  trigger.addEventListener('click', function(e) {
+    e.stopPropagation();
+    var open = dropdown.classList.toggle('open');
+    trigger.setAttribute('aria-expanded', open);
+  });
+
+  document.addEventListener('click', function(e) {
+    if (!dropdown.contains(e.target)) {
+      dropdown.classList.remove('open');
+      trigger.setAttribute('aria-expanded', 'false');
+    }
+  });
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      dropdown.classList.remove('open');
+      trigger.setAttribute('aria-expanded', 'false');
+    }
+  });
+})();
+</script>
 {% block extra_js %}{% endblock %}
 </body>
 </html>

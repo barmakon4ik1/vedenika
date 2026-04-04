@@ -138,7 +138,36 @@ class CatDetailView(DetailView):
 # 🐱 Home page
 # =========================================================
 def home(request):
-    return render(request, "home.html")
+    from .models import GalleryPhoto, Cat
+    import random
+
+    # Случайные фото из активных альбомов галереи
+    photo_ids = list(
+        GalleryPhoto.objects.filter(
+            is_active=True,
+            album__is_active=True
+        ).values_list("id", flat=True)
+    )
+    random_photos = []
+    if photo_ids:
+        sample_ids = random.sample(photo_ids, min(6, len(photo_ids)))
+        random_photos = list(
+            GalleryPhoto.objects.filter(id__in=sample_ids)
+            .select_related("album")
+        )
+
+    # Несколько активных котов для витрины
+    featured_cats = list(
+        Cat.objects.filter(is_active=True, is_featured=True)
+        .select_related("cat_color", "breed")
+        .prefetch_related("photos")
+        .order_by("?")[:4]
+    )
+
+    return render(request, "home.html", {
+        "random_photos": random_photos,
+        "featured_cats": featured_cats,
+    })
 
 # =========================================================
 # 🐱 Страница котов

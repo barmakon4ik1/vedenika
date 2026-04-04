@@ -2,151 +2,156 @@
 {% load static %}
 {% load i18n %}
 
-{% block title %}Vedenika — Питомник мейн-кунов{% endblock %}
+{% block title %}Vedenika — {% trans "Мейн-куны" %}{% endblock %}
 
 {% block content %}
 
-
 <div class="home-wrap">
 
-  <!-- HERO -->
-  <section class="hero">
-    <div class="hero-text">
-      <div class="hero-eyebrow">{% trans "Питомник мейн-кунов" %} · Vedenika</div>
-      <h1 class="hero-title">
-        {% trans "Красота" %}<br>
-        <em>{% trans "в каждом коте" %}</em>
+  <!-- ===== HERO ===== -->
+  <section class="home-hero">
+    <div class="home-hero-text">
+      <div class="eyebrow">Vedenika · {% trans "Любительский питомник" %}</div>
+      <h1 class="home-hero-title">
+        {% trans "Мейн-куны" %}<br>
+        <em>{% trans "живут рядом" %}</em>
       </h1>
-      <p class="hero-desc">
-        {% trans "Разведение мейн-кунов с любовью и заботой. Здоровые котята с родословными." %}
+      <p class="home-hero-desc">
+        {% trans "Наш домашний питомник — это большая семья мейн-кунов. Мы не разводим ради выгоды, мы живём вместе с этими удивительными котами и рады делиться их историями." %}
       </p>
-      <div class="hero-actions">
-        <a href="{% url 'cat_list' %}" class="btn-warm">
-          {% trans "Познакомиться с котами" %}
+      <div class="home-hero-actions">
+        <a href="{% url 'cat_list' %}" class="btn-warm">{% trans "Познакомиться с котами" %}</a>
+        <a href="{% url 'gallery_list' %}" class="btn-ghost-warm">{% trans "Галерея" %}</a>
+      </div>
+    </div>
+
+    <div class="home-hero-mosaic">
+      {% if random_photos %}
+        {% for photo in random_photos|slice:":4" %}
+          <a href="{% url 'gallery_list' %}" class="home-mosaic-item home-mosaic-item--{{ forloop.counter }}">
+            <img src="{{ photo.image.url }}" alt="Vedenika">
+          </a>
+        {% endfor %}
+      {% else %}
+        <div class="home-mosaic-placeholder"><span>🐱</span></div>
+      {% endif %}
+    </div>
+  </section>
+
+  <!-- ===== FEATURED CATS ===== -->
+  {% if featured_cats %}
+  <section class="home-section">
+    <div class="home-section-header">
+      <div>
+        <div class="eyebrow">{% trans "Питомник" %}</div>
+        <h2 class="section-title">{% trans "Наши" %} <em>{% trans "коты" %}</em></h2>
+      </div>
+      <a href="{% url 'cat_list' %}" class="home-section-link">{% trans "Все коты" %} →</a>
+    </div>
+    <div class="home-cats-strip">
+      {% for cat in featured_cats %}
+        <a href="{% url 'cat_detail' cat.pk %}" class="home-cat-card">
+          <div class="home-cat-photo">
+            {% with img=cat.get_main_image %}
+              {% if img %}
+                <img src="{{ img.image.url }}" alt="{{ cat.registered_name }}">
+              {% else %}
+                <div class="home-cat-no-photo">🐱</div>
+              {% endif %}
+            {% endwith %}
+            <div class="home-cat-sex {% if cat.sex == 'M' %}male{% else %}female{% endif %}">
+              {% if cat.sex == "M" %}♂{% else %}♀{% endif %}
+            </div>
+          </div>
+          <div class="home-cat-name">{{ cat.registered_name }}</div>
+          {% if cat.call_name %}<div class="home-cat-callname">«{{ cat.call_name }}»</div>{% endif %}
+          {% if cat.ems_code %}<div class="home-cat-ems">{{ cat.ems_code }}</div>{% endif %}
         </a>
-        <a href="#breed" class="btn-ghost-warm">
-          {% trans "О породе" %}
-        </a>
-      </div>
-    </div>
-
-    <div class="hero-visual">
-      <div class="hero-stat-row">
-        <div class="hero-stat">
-          <div class="hero-stat-num">International Cat World</div>
-          <div class="hero-stat-label">{% trans "Зарегистрированный питомник" %}</div>
-        </div>
-        <div class="hero-stat">
-          <div class="hero-stat-num">MCO</div>
-          <div class="hero-stat-label">{% trans "EMS-код породы" %}</div>
-        </div>
-      </div>
-      <div class="hero-stat-wide">
-        <div class="hero-stat-wide-icon">🏆</div>
-        <div class="hero-stat-wide-text">
-          <strong>{% trans "Выставочные котята" %}</strong>
-          {% trans "Титулованные производители, проверенная генетика" %}
-        </div>
-      </div>
+      {% endfor %}
     </div>
   </section>
+  {% endif %}
 
-  <!-- FEATURES -->
-  <section class="features-section">
-    <div class="section-header">
-      <div class="section-eyebrow">{% trans "Почему Vedenika" %}</div>
-      <h2 class="section-title">{% trans "Наш подход к <em>разведению</em>" %}</h2>
-    </div>
-
-    <div class="features-grid">
-      <div class="feature-card">
-        <div class="feature-icon">🧬</div>
-        <div class="feature-title">{% trans "Генетика и здоровье" %}</div>
-        <p class="feature-desc">
-          {% trans "Все производители проверены на HCM, PKD и другие наследственные заболевания. Результаты тестов открыты и доступны." %}
-        </p>
-      </div>
-
-      <div class="feature-card">
-        <div class="feature-icon">📋</div>
-        <div class="feature-title">{% trans "Полные документы" %}</div>
-        <p class="feature-desc">
-          {% trans "Метрика, международная родословная FIFe, ветеринарный паспорт и договор купли-продажи для каждого котёнка." %}
-        </p>
-      </div>
-
-      <div class="feature-card">
-        <div class="feature-icon">🤝</div>
-        <div class="feature-title">{% trans "Поддержка покупателей" %}</div>
-        <p class="feature-desc">
-          {% trans "Мы сопровождаем новых владельцев: советы по уходу, питанию и социализации. Связь с питомником на всю жизнь питомца." %}
-        </p>
-      </div>
-    </div>
-  </section>
-
-  <!-- BREED INFO -->
-  <section class="breed-section" id="breed">
-    <div class="breed-text-side">
-      <div class="section-header">
-        <div class="section-eyebrow">{% trans "О породе" %}</div>
-        <h2 class="section-title">{% trans "Мейн-кун — <em>лесной кот</em>" %}</h2>
-      </div>
-      <p class="breed-body">
-        {% trans "Мейн-кун — одна из крупнейших домашних пород, родом из штата Мэн, США. Эти кошки отличаются мощным телосложением, густой шерстью с характерным «воротником» и невероятно дружелюбным характером." %}
-      </p>
-      <p class="breed-body">
-        {% trans "Несмотря на внушительные размеры, мейн-куны остаются игривыми и ласковыми на протяжении всей жизни. Их нередко сравнивают с собаками за преданность хозяину и умение понимать настроение." %}
-      </p>
-      <div class="breed-tags">
-        <span class="breed-tag">{% trans "Дружелюбный" %}</span>
-        <span class="breed-tag">{% trans "Игривый" %}</span>
-        <span class="breed-tag">{% trans "Уживчивый" %}</span>
-        <span class="breed-tag">{% trans "Умный" %}</span>
-        <span class="breed-tag">{% trans "Ласковый" %}</span>
-      </div>
-    </div>
-
-    <div class="breed-facts-side">
-      <div class="breed-fact">
-        <span class="breed-fact-label">{% trans "Вес самцов" %}</span>
-        <span class="breed-fact-value">6–10 кг</span>
-      </div>
-      <div class="breed-fact">
-        <span class="breed-fact-label">{% trans "Вес самок" %}</span>
-        <span class="breed-fact-value">4–7 кг</span>
-      </div>
-      <div class="breed-fact">
-        <span class="breed-fact-label">{% trans "Продолжительность жизни" %}</span>
-        <span class="breed-fact-value">12–15 лет</span>
-      </div>
-      <div class="breed-fact">
-        <span class="breed-fact-label">{% trans "Тип шерсти" %}</span>
-        <span class="breed-fact-value">{% trans "Полудлинная" %}</span>
-      </div>
-      <div class="breed-fact">
-        <span class="breed-fact-label">{% trans "Признание FIFe" %}</span>
-        <span class="breed-fact-value">{% trans "Полное" %}</span>
-      </div>
-      <div class="breed-fact">
-        <span class="breed-fact-label">{% trans "EMS код" %}</span>
-        <span class="breed-fact-value">MCO</span>
-      </div>
-    </div>
-  </section>
-
-  <!-- CTA -->
-  <section class="cta-banner">
-    <div>
-      <h2 class="cta-title">{% trans "Ищете <em>котёнка</em>?" %}</h2>
-      <p class="cta-desc">
-        {% trans "Познакомьтесь с нашими котами и узнайте о доступных котятах. Мы рады ответить на любые вопросы о породе и условиях приобретения." %}
-      </p>
-    </div>
-    <div>
-      <a href="{% url 'cat_list' %}" class="btn-warm">
-        {% trans "Смотреть котов" %} →
+  <!-- ===== PHOTO STRIP ===== -->
+  {% if random_photos|length > 4 %}
+  <section class="home-photo-strip">
+    {% for photo in random_photos|slice:"4:" %}
+      <a href="{% url 'gallery_list' %}" class="home-strip-photo">
+        <img src="{{ photo.image.url }}" alt="Vedenika">
       </a>
+    {% endfor %}
+  </section>
+  {% endif %}
+
+  <!-- ===== THREE PILLARS ===== -->
+  <section class="home-section">
+    <div class="home-pillars">
+      <a href="{% url 'litter_list' %}" class="home-pillar">
+        <div class="home-pillar-icon">🐾</div>
+        <div class="home-pillar-title">{% trans "Помёты" %}</div>
+        <p class="home-pillar-desc">{% trans "История наших котят — от рождения до новых домов. Фото с первых дней жизни." %}</p>
+        <div class="home-pillar-link">{% trans "Смотреть помёты" %} →</div>
+      </a>
+      <a href="{% url 'gallery_list' %}" class="home-pillar">
+        <div class="home-pillar-icon">📷</div>
+        <div class="home-pillar-title">{% trans "Галерея" %}</div>
+        <p class="home-pillar-desc">{% trans "Повседневная жизнь питомника, игры, прогулки и художественные портреты наших котов." %}</p>
+        <div class="home-pillar-link">{% trans "Открыть галерею" %} →</div>
+      </a>
+      <a href="{% url 'about_breed' %}" class="home-pillar">
+        <div class="home-pillar-icon">📖</div>
+        <div class="home-pillar-title">{% trans "О породе" %}</div>
+        <p class="home-pillar-desc">{% trans "Всё о мейн-кунах — история, характер, уход и особенности этих удивительных котов." %}</p>
+        <div class="home-pillar-link">{% trans "Читать" %} →</div>
+      </a>
+    </div>
+  </section>
+
+  <!-- ===== ABOUT US ===== -->
+  <section class="home-about">
+    <div class="home-about-text">
+      <div class="eyebrow">{% trans "О нас" %}</div>
+      <h2 class="home-about-title">
+        {% trans "Не питомник," %}<br><em>{% trans "а семья" %}</em>
+      </h2>
+      <p class="home-about-body">
+        {% trans "Мейн-куны появились в нашей жизни случайно — и навсегда. Сегодня они полноправные члены семьи: живут с нами, путешествуют, засыпают на диване и будят по утрам." %}
+      </p>
+      <p class="home-about-body">
+        {% trans "Для нас важно, чтобы каждый котёнок рос в любви, был здоров и нашёл такую же любящую семью." %}
+      </p>
+      <a href="{% url 'contacts' %}" class="btn-ghost-warm">{% trans "Написать нам" %}</a>
+    </div>
+
+    <div class="home-about-values">
+      <div class="home-value">
+        <div class="home-value-icon">❤️</div>
+        <div class="home-value-text">
+          <div class="home-value-title">{% trans "Любовь к породе" %}</div>
+          <div class="home-value-desc">{% trans "Мейн-куны — наша страсть, а не бизнес" %}</div>
+        </div>
+      </div>
+      <div class="home-value">
+        <div class="home-value-icon">🧬</div>
+        <div class="home-value-text">
+          <div class="home-value-title">{% trans "Здоровье прежде всего" %}</div>
+          <div class="home-value-desc">{% trans "Все производители проверены на HCM и SMA" %}</div>
+        </div>
+      </div>
+      <div class="home-value">
+        <div class="home-value-icon">🏠</div>
+        <div class="home-value-text">
+          <div class="home-value-title">{% trans "Домашнее воспитание" %}</div>
+          <div class="home-value-desc">{% trans "Котята растут в доме, среди людей" %}</div>
+        </div>
+      </div>
+      <div class="home-value">
+        <div class="home-value-icon">🤝</div>
+        <div class="home-value-text">
+          <div class="home-value-title">{% trans "Связь навсегда" %}</div>
+          <div class="home-value-desc">{% trans "Поддерживаем контакт с новыми семьями" %}</div>
+        </div>
+      </div>
     </div>
   </section>
 
