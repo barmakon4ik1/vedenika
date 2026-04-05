@@ -1,0 +1,62 @@
+{% comment %}=== forum_topic_form.html ==={% endcomment %}
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{{ page_title }} — Vedenika{% endblock %}
+
+{% block content %}
+<div class="form-page-wrap" style="max-width: 760px;">
+
+  <nav class="breadcrumb-warm">
+    <a href="{% url 'forum_index' %}">{% trans "Форум" %}</a>
+    <span class="breadcrumb-sep">/</span>
+    <a href="{% url 'forum_category' category.slug %}">{{ category.name }}</a>
+    <span class="breadcrumb-sep">/</span>
+    <span class="breadcrumb-current">{% trans "Новая тема" %}</span>
+  </nav>
+
+  <div class="page-header">
+    <div>
+      <div class="eyebrow">{{ category.icon }} {{ category.name }}</div>
+      <h1 class="page-title">{% trans "Новая" %} <em>{% trans "тема" %}</em></h1>
+    </div>
+    <a href="{% url 'forum_category' category.slug %}" class="btn-sq btn-sq-outline">← {% trans "Назад" %}</a>
+  </div>
+
+  <form method="post">
+    {% csrf_token %}
+
+    {% if form.non_field_errors %}
+      <div class="form-errors">
+        {% for error in form.non_field_errors %}
+          <div class="form-error-item">{{ error }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <div class="form-section">
+      <div class="form-grid">
+
+        <div class="form-field col-full">
+          <label class="form-field-label">{% trans "Заголовок" %} <span class="form-required">*</span></label>
+          {{ form.title }}
+          {% if form.title.errors %}<div class="form-field-errors">{{ form.title.errors }}</div>{% endif %}
+        </div>
+
+        <div class="form-field col-full">
+          <label class="form-field-label">{% trans "Текст" %} <span class="form-required">*</span></label>
+          {{ form.body }}
+          {% if form.body.errors %}<div class="form-field-errors">{{ form.body.errors }}</div>{% endif %}
+        </div>
+
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn-warm">{% trans "Опубликовать тему" %}</button>
+      <a href="{% url 'forum_category' category.slug %}" class="btn-sq btn-sq-muted">{% trans "Отмена" %}</a>
+    </div>
+  </form>
+
+</div>
+{% endblock %}

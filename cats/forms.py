@@ -403,3 +403,33 @@ class ProfileForm(forms.ModelForm):
             'bio':        forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
             'city':       forms.TextInput(attrs={'class': 'form-control'}),
         }
+
+
+class ForumTopicForm(forms.ModelForm):
+    class Meta:
+        model = ForumTopic
+        fields = ['title', 'body']
+        widgets = {
+            'title': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Заголовок темы'
+            }),
+            'body': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 8,
+                'placeholder': 'Текст вашего сообщения...'
+            }),
+        }
+
+
+class ForumPostForm(forms.ModelForm):
+    class Meta:
+        model = ForumPost
+        fields = ['body']
+        widgets = {
+            'body': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 5,
+                'placeholder': 'Ваш ответ...'
+            }),
+        }

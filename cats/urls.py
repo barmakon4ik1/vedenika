@@ -71,4 +71,13 @@ urlpatterns = [
     path('profile/',      views.profile_view, name='profile'),
     path('profile/edit/', views.profile_edit, name='profile_edit'),
 
+    # Форум
+    path('forum/',                                          views.forum_index,         name='forum_index'),
+    path('forum/<slug:category_slug>/',                     views.forum_category,      name='forum_category'),
+    path('forum/<slug:category_slug>/new/',                 views.forum_topic_create,  name='forum_topic_create'),
+    path('forum/<slug:category_slug>/<slug:topic_slug>/',   views.forum_topic,         name='forum_topic'),
+    path('forum/post/<int:post_pk>/edit/',                  views.forum_post_edit,     name='forum_post_edit'),
+    path('forum/post/<int:post_pk>/delete/',                views.forum_post_delete,   name='forum_post_delete'),
+    path('forum/topic/<int:topic_pk>/delete/',              views.forum_topic_delete,  name='forum_topic_delete'),
+
 ]

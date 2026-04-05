@@ -469,3 +469,30 @@ class VideoAdmin(TranslatableAdmin):
     def get_title(self, obj):
         return obj.safe_translation_getter("title", any_language=True)
     get_title.short_description = "Название"
+
+
+# ====== FORUM =======
+
+@admin.register(ForumCategory)
+class ForumCategoryAdmin(admin.ModelAdmin):
+    list_display  = ('name', 'slug', 'sort_order', 'topics_count', 'is_active')
+    list_editable = ('sort_order', 'is_active')
+    prepopulated_fields = {'slug': ('name',)}
+
+
+@admin.register(ForumTopic)
+class ForumTopicAdmin(admin.ModelAdmin):
+    list_display  = ('title', 'category', 'author', 'is_pinned', 'is_active', 'created_at')
+    list_filter   = ('category', 'is_pinned', 'is_active')
+    search_fields = ('title', 'body')
+    list_editable = ('is_pinned', 'is_active')
+    raw_id_fields = ('author',)
+
+
+@admin.register(ForumPost)
+class ForumPostAdmin(admin.ModelAdmin):
+    list_display  = ('__str__', 'author', 'is_active', 'created_at')
+    list_filter   = ('is_active',)
+    search_fields = ('body',)
+    list_editable = ('is_active',)
+    raw_id_fields = ('author', 'topic')

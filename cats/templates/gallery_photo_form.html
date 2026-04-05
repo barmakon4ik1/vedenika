@@ -10,14 +10,14 @@
   <nav class="breadcrumb-warm">
     <a href="{% url 'gallery_manage' %}">{% trans "Управление галереей" %}</a>
     <span class="breadcrumb-sep">/</span>
-    <a href="{% url 'gallery_album_photos' album.pk %}">{{ album.safe_translation_getter:"title,any_language=True" }}</a>
+    <a href="{% url 'gallery_album_photos' album.pk %}">{{ album_title }}</a>
     <span class="breadcrumb-sep">/</span>
     <span class="breadcrumb-current">{% trans "Редактировать фото" %}</span>
   </nav>
 
   <div class="page-header">
     <div>
-      <div class="eyebrow">{{ album.safe_translation_getter:"title,any_language=True" }}</div>
+      <div class="eyebrow">{{ album_title }}</div>
       <h1 class="page-title">{% trans "Редактировать" %} <em>{% trans "фото" %}</em></h1>
     </div>
     <a href="{% url 'gallery_album_photos' album.pk %}" class="btn-sq btn-sq-outline">← {% trans "К альбому" %}</a>

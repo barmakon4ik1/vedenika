@@ -1958,17 +1958,139 @@ def save_user_profile(sender, instance, **kwargs):
         instance.profile.save()
 
 
-# ============================================================
-# МИГРАЦИЯ
-# ============================================================
-# После добавления моделей в models.py:
-#
-#   python manage.py makemigrations
-#   python manage.py migrate
-#
-# Модели появятся в таблицах:
-#   cats_galleryalbum
-#   cats_galleryalbumtranslation  (parler)
-#   cats_galleryphoto
-#   cats_video
-#   cats_videotranslation         (parler)
+class ForumCategory(models.Model):
+    """
+    Раздел форума. Например: «О породе», «Помёты», «Ваши истории».
+    Создаётся вручную администратором.
+    """
+    name = models.CharField(max_length=200, verbose_name='Название')
+    slug = models.SlugField(max_length=200, unique=True)
+    description = models.TextField(blank=True, verbose_name='Описание')
+    icon = models.CharField(
+        max_length=10, blank=True,
+        verbose_name='Иконка (emoji)',
+        help_text='Например: 🐱'
+    )
+    sort_order = models.PositiveIntegerField(default=0, verbose_name='Порядок')
+    is_active = models.BooleanField(default=True, verbose_name='Активен')
+
+    class Meta:
+        verbose_name = 'Раздел форума'
+        verbose_name_plural = 'Разделы форума'
+        ordering = ['sort_order', 'name']
+
+    def __str__(self):
+        return self.name
+
+    @property
+    def topics_count(self):
+        return self.topics.filter(is_active=True).count()
+
+    @property
+    def last_post(self):
+        return ForumPost.objects.filter(
+            topic__category=self,
+            topic__is_active=True,
+            is_active=True
+        ).order_by('-created_at').first()
+
+
+class ForumTopic(models.Model):
+    """
+    Тема (тред) в разделе форума.
+    Создаётся пользователем.
+    """
+    category = models.ForeignKey(
+        ForumCategory,
+        on_delete=models.CASCADE,
+        related_name='topics',
+        verbose_name='Раздел'
+    )
+    author = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='forum_topics',
+        verbose_name='Автор'
+    )
+    title = models.CharField(max_length=300, verbose_name='Заголовок')
+    slug = models.SlugField(max_length=300, unique=True)
+    body = models.TextField(verbose_name='Текст')
+
+    is_pinned = models.BooleanField(
+        default=False,
+        verbose_name='Закреплено',
+        help_text='Закреплённые темы всегда сверху'
+    )
+    is_active = models.BooleanField(default=True, verbose_name='Активна')
+
+    views_count = models.PositiveIntegerField(default=0, verbose_name='Просмотры')
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = 'Тема форума'
+        verbose_name_plural = 'Темы форума'
+        ordering = ['-is_pinned', '-created_at']
+
+    def __str__(self):
+        return self.title
+
+    def get_absolute_url(self):
+        from django.urls import reverse
+        return reverse('forum_topic', kwargs={
+            'category_slug': self.category.slug,
+            'topic_slug': self.slug
+        })
+
+    @property
+    def posts_count(self):
+        return self.posts.filter(is_active=True).count()
+
+    @property
+    def last_post(self):
+        return self.posts.filter(is_active=True).order_by('-created_at').first()
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            from django.utils.text import slugify
+            import uuid
+            base_slug = slugify(self.title)[:280] or 'topic'
+            self.slug = f'{base_slug}-{str(uuid.uuid4())[:8]}'
+        super().save(*args, **kwargs)
+
+
+class ForumPost(models.Model):
+    """
+    Сообщение в теме форума.
+    """
+    topic = models.ForeignKey(
+        ForumTopic,
+        on_delete=models.CASCADE,
+        related_name='posts',
+        verbose_name='Тема'
+    )
+    author = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='forum_posts',
+        verbose_name='Автор'
+    )
+    body = models.TextField(verbose_name='Текст сообщения')
+
+    # Для редактирования
+    is_edited = models.BooleanField(default=False)
+    edited_at = models.DateTimeField(null=True, blank=True)
+
+    is_active = models.BooleanField(default=True, verbose_name='Активно')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = 'Сообщение форума'
+        verbose_name_plural = 'Сообщения форума'
+        ordering = ['created_at']
+
+    def __str__(self):
+        return f'{self.author} → {self.topic.title[:50]}'
+
+

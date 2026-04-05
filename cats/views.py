@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required, user_passes_test
+# from django.contrib.auth.decorators import user_passes_test
 from django.core.exceptions import PermissionDenied
 from django.views.generic import DetailView, ListView
 from django.contrib.admin.views.decorators import staff_member_required
@@ -8,6 +8,9 @@ from .forms import *
 from .models import *
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
+import json
 
 owner_id = settings.CATTERY_OWNER_PERSON_ID
 
@@ -73,31 +76,31 @@ def delete_media(request, pk):
 # 📄 DOCUMENTS
 # =========================================================
 
-@login_required
-def my_documents(request):
-    docs = Document.objects.filter(owner=request.user)
-    return render(request, "my_documents.html", {"documents": docs})
-
-
-@login_required
-def upload_document(request):
-    if request.method == "POST":
-        file_id = request.POST.get("file_id")
-        file = get_object_or_404(MediaFile, id=file_id)
-
-        if not owner_required(file, request.user):
-            raise PermissionDenied()
-
-        Document.objects.create(
-            file=file,
-            owner=request.user,
-            title=request.POST.get("title", "")
-        )
-
-        return redirect("my_documents")
-
-    media = MediaFile.objects.filter(owner=request.user)
-    return render(request, "upload_document.html", {"media": media})
+# @login_required
+# def my_documents(request):
+#     docs = Document.objects.filter(owner=request.user)
+#     return render(request, "my_documents.html", {"documents": docs})
+#
+#
+# @login_required
+# def upload_document(request):
+#     if request.method == "POST":
+#         file_id = request.POST.get("file_id")
+#         file = get_object_or_404(MediaFile, id=file_id)
+#
+#         if not owner_required(file, request.user):
+#             raise PermissionDenied()
+#
+#         Document.objects.create(
+#             file=file,
+#             owner=request.user,
+#             title=request.POST.get("title", "")
+#         )
+#
+#         return redirect("my_documents")
+#
+#     media = MediaFile.objects.filter(owner=request.user)
+#     return render(request, "upload_document.html", {"media": media})
 
 
 # =========================================================
@@ -113,9 +116,9 @@ def cat_list(request):
 # 🛠 ADMIN (если нужен вне admin)
 # =========================================================
 
-@user_passes_test(is_admin)
-def admin_dashboard(request):
-    return render(request, "admin_dashboard.html")
+# @user_passes_test(is_admin)
+# def admin_dashboard(request):
+#     return render(request, "admin_dashboard.html")
 
 
 
@@ -717,6 +720,8 @@ def gallery_photo_edit(request, pk):
     photo = get_object_or_404(GalleryPhoto, pk=pk)
     album = photo.album
 
+    album_title = album.safe_translation_getter("title", any_language=True)
+
     if request.method == "POST":
         form = GalleryPhotoForm(request.POST, request.FILES, instance=photo)
         if form.is_valid():
@@ -725,11 +730,16 @@ def gallery_photo_edit(request, pk):
     else:
         form = GalleryPhotoForm(instance=photo)
 
-    return render(request, "gallery_photo_form.html", {
-        "form": form,
-        "photo": photo,
-        "album": album,
-    })
+    return render(
+        request,
+        "gallery_photo_form.html",
+        {
+            "form": form,
+            "photo": photo,
+            "album": album,
+            "album_title": album_title,
+        },
+    )
 
 
 # ---- Удалить фото ----
@@ -752,11 +762,6 @@ def gallery_photo_delete(request, pk):
 
 
 # ---- Изменить порядок фото (AJAX) ----
-
-from django.http import JsonResponse
-from django.views.decorators.http import require_POST
-import json
-
 
 @staff_member_required
 @require_POST
@@ -792,7 +797,7 @@ def video_create(request):
     if request.method == "POST":
         form = VideoForm(request.POST, request.FILES)
         if form.is_valid():
-            video = form.save()
+            form.save()
             return redirect("video_manage")
     else:
         form = VideoForm()
@@ -864,3 +869,147 @@ def profile_edit(request):
         form = ProfileForm(instance=profile)
 
     return render(request, 'profile_edit.html', {'form': form, 'profile': profile})
+
+
+def forum_index(request):
+    """Главная страница форума — список разделов."""
+    categories = ForumCategory.objects.filter(is_active=True).prefetch_related(
+        'topics__posts'
+    )
+    return render(request, 'forum_index.html', {'categories': categories})
+
+
+def forum_category(request, category_slug):
+    """Список тем в разделе."""
+    category = get_object_or_404(ForumCategory, slug=category_slug, is_active=True)
+    topics = (
+        ForumTopic.objects
+        .filter(category=category, is_active=True)
+        .select_related('author', 'author__profile')
+        .prefetch_related('posts')
+        .order_by('-is_pinned', '-created_at')
+    )
+    return render(request, 'forum_category.html', {
+        'category': category,
+        'topics':   topics,
+    })
+
+
+def forum_topic(request, category_slug, topic_slug):
+    """Тема с постами + форма ответа."""
+    category = get_object_or_404(ForumCategory, slug=category_slug, is_active=True)
+    topic    = get_object_or_404(ForumTopic, slug=topic_slug, category=category, is_active=True)
+
+    # Считаем просмотры
+    ForumTopic.objects.filter(pk=topic.pk).update(views_count=models.F('views_count') + 1)
+
+    posts = topic.posts.filter(is_active=True).select_related(
+        'author', 'author__profile'
+    )
+
+    form = None
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            form = ForumPostForm(request.POST)
+            if form.is_valid():
+                post = form.save(commit=False)
+                post.topic  = topic
+                post.author = request.user
+                post.save()
+                return redirect(f'{topic.get_absolute_url()}#post-{post.pk}')
+        else:
+            form = ForumPostForm()
+
+    return render(request, 'forum_topic.html', {
+        'category': category,
+        'topic':    topic,
+        'posts':    posts,
+        'form':     form,
+    })
+
+
+@login_required
+def forum_topic_create(request, category_slug):
+    """Создать новую тему."""
+    category = get_object_or_404(ForumCategory, slug=category_slug, is_active=True)
+
+    if request.method == 'POST':
+        form = ForumTopicForm(request.POST)
+        if form.is_valid():
+            topic = form.save(commit=False)
+            topic.category = category
+            topic.author   = request.user
+            topic.save()
+            return redirect(topic.get_absolute_url())
+    else:
+        form = ForumTopicForm()
+
+    return render(request, 'forum_topic_form.html', {
+        'form':      form,
+        'category':  category,
+        'page_title': f'Новая тема в «{category.name}»',
+    })
+
+
+@login_required
+def forum_post_edit(request, post_pk):
+    """Редактировать своё сообщение."""
+    post = get_object_or_404(ForumPost, pk=post_pk, is_active=True)
+
+    # Только автор или staff
+    if post.author != request.user and not request.user.is_staff:
+        from django.core.exceptions import PermissionDenied
+        raise PermissionDenied
+
+    if request.method == 'POST':
+        form = ForumPostForm(request.POST, instance=post)
+        if form.is_valid():
+            p = form.save(commit=False)
+            p.is_edited = True
+            p.edited_at = timezone.now()
+            p.save()
+            return redirect(f'{post.topic.get_absolute_url()}#post-{post.pk}')
+    else:
+        form = ForumPostForm(instance=post)
+
+    return render(request, 'forum_post_edit.html', {
+        'form': form,
+        'post': post,
+    })
+
+
+@login_required
+def forum_post_delete(request, post_pk):
+    """Удалить сообщение (только staff или автор)."""
+    post = get_object_or_404(ForumPost, pk=post_pk, is_active=True)
+
+    if post.author != request.user and not request.user.is_staff:
+        from django.core.exceptions import PermissionDenied
+        raise PermissionDenied
+
+    topic_url = post.topic.get_absolute_url()
+
+    if request.method == 'POST':
+        post.is_active = False  # soft delete
+        post.save()
+        return redirect(topic_url)
+
+    return render(request, 'forum_post_confirm_delete.html', {'post': post})
+
+
+@login_required
+def forum_topic_delete(request, topic_pk):
+    """Удалить тему (только staff)."""
+    if not request.user.is_staff:
+        from django.core.exceptions import PermissionDenied
+        raise PermissionDenied
+
+    topic = get_object_or_404(ForumTopic, pk=topic_pk)
+    category_slug = topic.category.slug
+
+    if request.method == 'POST':
+        topic.is_active = False  # soft delete
+        topic.save()
+        return redirect('forum_category', category_slug=category_slug)
+
+    return render(request, 'forum_topic_confirm_delete.html', {'topic': topic})
