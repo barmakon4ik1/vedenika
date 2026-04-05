@@ -19,7 +19,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('category', models.CharField(choices=[('LIFE', 'Повседневная жизнь'), ('LITTER', 'Помёты'), ('ART', 'Художественные')], default='LIFE', max_length=20, verbose_name='Категория')),
-                ('cover', models.ImageField(blank=True, null=True, upload_to=cats.models.upload_to_gallery, verbose_name='Обложка альбома')),
+                ('cover', models.ImageField(blank=True, null=True, upload_to=cats.models.upload_to_gallery_cover, verbose_name='Обложка альбома')),
                 ('date', models.DateField(blank=True, null=True, verbose_name='Дата')),
                 ('sort_order', models.PositiveIntegerField(default=0, verbose_name='Порядок')),
                 ('is_active', models.BooleanField(default=True, verbose_name='Активен')),
@@ -37,7 +37,7 @@ class Migration(migrations.Migration):
             name='GalleryPhoto',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('image', models.ImageField(upload_to=cats.models.upload_to_gallery, verbose_name='Фото')),
+                ('image', models.ImageField(upload_to=cats.models.upload_to_gallery_photo, verbose_name='Фото')),
                 ('title', models.CharField(blank=True, max_length=200, verbose_name='Подпись')),
                 ('instagram_url', models.URLField(blank=True, verbose_name='Ссылка на пост Instagram')),
                 ('sort_order', models.PositiveIntegerField(default=0, verbose_name='Порядок')),

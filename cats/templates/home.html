@@ -38,40 +38,6 @@
     </div>
   </section>
 
-  <!-- ===== FEATURED CATS ===== -->
-  {% if featured_cats %}
-  <section class="home-section">
-    <div class="home-section-header">
-      <div>
-        <div class="eyebrow">{% trans "Питомник" %}</div>
-        <h2 class="section-title">{% trans "Наши" %} <em>{% trans "коты" %}</em></h2>
-      </div>
-      <a href="{% url 'cat_list' %}" class="home-section-link">{% trans "Все коты" %} →</a>
-    </div>
-    <div class="home-cats-strip">
-      {% for cat in featured_cats %}
-        <a href="{% url 'cat_detail' cat.pk %}" class="home-cat-card">
-          <div class="home-cat-photo">
-            {% with img=cat.get_main_image %}
-              {% if img %}
-                <img src="{{ img.image.url }}" alt="{{ cat.registered_name }}">
-              {% else %}
-                <div class="home-cat-no-photo">🐱</div>
-              {% endif %}
-            {% endwith %}
-            <div class="home-cat-sex {% if cat.sex == 'M' %}male{% else %}female{% endif %}">
-              {% if cat.sex == "M" %}♂{% else %}♀{% endif %}
-            </div>
-          </div>
-          <div class="home-cat-name">{{ cat.registered_name }}</div>
-          {% if cat.call_name %}<div class="home-cat-callname">«{{ cat.call_name }}»</div>{% endif %}
-          {% if cat.ems_code %}<div class="home-cat-ems">{{ cat.ems_code }}</div>{% endif %}
-        </a>
-      {% endfor %}
-    </div>
-  </section>
-  {% endif %}
-
   <!-- ===== PHOTO STRIP ===== -->
   {% if random_photos|length > 4 %}
   <section class="home-photo-strip">

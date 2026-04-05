@@ -44,6 +44,12 @@ urlpatterns = [
     # VIDEO
     path("video/", VideoListView.as_view(), name="video_list"),
 
+    # VIDEO CRUD (только для staff)
+    path("video/manage/", views.video_manage, name="video_manage"),
+    path("video/create/", views.video_create, name="video_create"),
+    path("video/<int:pk>/edit/", views.video_edit, name="video_edit"),
+    path("video/<int:pk>/delete/", views.video_delete, name="video_delete"),
+
     # BREED INFO
     path("about-breed/", views.about_breed, name="about_breed"),
 

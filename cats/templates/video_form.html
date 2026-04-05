@@ -1,0 +1,207 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+{% load cats_extras %}
+
+{% block title %}{{ page_title }} — Vedenika{% endblock %}
+
+{% block content %}
+<div class="form-page-wrap">
+
+  <nav class="breadcrumb-warm">
+    <a href="{% url 'video_list' %}">{% trans "Видео" %}</a>
+    <span class="breadcrumb-sep">/</span>
+    <a href="{% url 'video_manage' %}">{% trans "Управление" %}</a>
+    <span class="breadcrumb-sep">/</span>
+    <span class="breadcrumb-current">{{ page_title }}</span>
+  </nav>
+
+  <div class="page-header">
+    <div>
+      <div class="eyebrow">{% trans "Видеотека" %}</div>
+      <h1 class="page-title">
+        {% if is_edit %}{% trans "Редактировать" %}{% else %}{% trans "Добавить" %}{% endif %}
+        <em>{% trans "видео" %}</em>
+      </h1>
+    </div>
+    <a href="{% url 'video_manage' %}" class="btn-sq btn-sq-outline">← {% trans "К списку" %}</a>
+  </div>
+
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    {% if form.non_field_errors %}
+      <div class="form-errors">
+        {% for error in form.non_field_errors %}
+          <div class="form-error-item">{{ error }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <!-- НАЗВАНИЕ -->
+    <div class="form-section">
+      <div class="form-section-header">
+        <div class="form-section-title">{% trans "Название и описание" %}</div>
+      </div>
+      <div class="form-grid">
+
+        <div class="form-field col-full">
+          <label class="form-field-label">{% trans "Название" %} <span class="form-required">*</span></label>
+          {{ form.title }}
+          {% if form.title.errors %}<div class="form-field-errors">{{ form.title.errors }}</div>{% endif %}
+        </div>
+
+        <div class="form-field col-full">
+          <label class="form-field-label">{% trans "Описание" %}</label>
+          {{ form.description }}
+          {% if form.description.errors %}<div class="form-field-errors">{{ form.description.errors }}</div>{% endif %}
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ИСТОЧНИК ВИДЕО -->
+    <div class="form-section">
+      <div class="form-section-header">
+        <div class="form-section-title">{% trans "Источник видео" %}</div>
+      </div>
+
+      <div class="video-source-tabs">
+        <button type="button" class="video-source-tab active" id="tabUrl" onclick="switchTab('url')">
+          🔗 YouTube / Vimeo
+        </button>
+        <button type="button" class="video-source-tab" id="tabFile" onclick="switchTab('file')">
+          📁 {% trans "Файл" %}
+        </button>
+      </div>
+
+      <div id="sourceUrl" class="video-source-panel">
+        <div class="form-field">
+          <label class="form-field-label">{% trans "Ссылка на YouTube или Vimeo" %}</label>
+          {{ form.video_url }}
+          {% if form.video_url.errors %}<div class="form-field-errors">{{ form.video_url.errors }}</div>{% endif %}
+          <div class="form-field-hint">
+            {% trans "Пример:" %} https://www.youtube.com/watch?v=XXXXX
+            {% trans "или" %} https://vimeo.com/XXXXX
+          </div>
+        </div>
+
+        {% if is_edit and video.video_url %}
+          <div class="video-current-preview">
+            <div class="video-current-label">{% trans "Текущее видео:" %}</div>
+            {% if video.embed_url %}
+              <div class="video-embed-preview">
+                <iframe src="{{ video.embed_url }}" frameborder="0" allowfullscreen></iframe>
+              </div>
+            {% endif %}
+          </div>
+        {% endif %}
+      </div>
+
+      <div id="sourceFile" class="video-source-panel" style="display: none;">
+        <div class="form-field">
+          <label class="form-field-label">{% trans "Видеофайл (MP4)" %}</label>
+          {{ form.video_file }}
+          {% if form.video_file.errors %}<div class="form-field-errors">{{ form.video_file.errors }}</div>{% endif %}
+          <div class="form-field-hint">
+            {% trans "Только для коротких клипов до 50 МБ. Формат MP4." %}
+          </div>
+        </div>
+
+        {% if is_edit and video.video_file %}
+          <div class="video-current-preview">
+            <div class="video-current-label">{% trans "Текущий файл:" %}</div>
+            <video src="{{ video.video_file.url }}" controls style="max-width: 100%; border-radius: 10px; margin-top: 8px;"></video>
+          </div>
+        {% endif %}
+      </div>
+
+    </div>
+
+    <!-- ПРЕВЬЮ И ПАРАМЕТРЫ -->
+    <div class="form-section">
+      <div class="form-section-header">
+        <div class="form-section-title">{% trans "Превью и параметры" %}</div>
+      </div>
+      <div class="form-grid">
+
+        <div class="form-field col-full">
+          <label class="form-field-label">{% trans "Превью (обложка)" %}</label>
+          {% if is_edit and video.thumbnail %}
+            <img src="{{ video.thumbnail.url }}" alt=""
+                 style="height: 80px; border-radius: 8px; margin-bottom: 8px; display: block;">
+            <div class="form-field-hint">{% trans "Текущее превью. Загрузите новое чтобы заменить." %}</div>
+          {% endif %}
+          {{ form.thumbnail }}
+          {% if form.thumbnail.errors %}<div class="form-field-errors">{{ form.thumbnail.errors }}</div>{% endif %}
+          <div class="form-field-hint">
+            {% trans "Необязательно для YouTube — превью подтягивается автоматически." %}
+          </div>
+        </div>
+
+        <div class="form-field col-wide">
+          <label class="form-field-label">{% trans "Категория" %} <span class="form-required">*</span></label>
+          {{ form.category }}
+          {% if form.category.errors %}<div class="form-field-errors">{{ form.category.errors }}</div>{% endif %}
+        </div>
+
+        <div class="form-field col-wide">
+          <label class="form-field-label">{% trans "Дата съёмки" %}</label>
+          {{ form.date }}
+          {% if form.date.errors %}<div class="form-field-errors">{{ form.date.errors }}</div>{% endif %}
+        </div>
+
+        <div class="form-field col-wide">
+          <label class="form-field-label">{% trans "Помёт" %}</label>
+          {{ form.litter }}
+          {% if form.litter.errors %}<div class="form-field-errors">{{ form.litter.errors }}</div>{% endif %}
+        </div>
+
+        <div class="form-field col-wide">
+          <label class="form-field-label">{% trans "Порядок" %}</label>
+          {{ form.sort_order }}
+          {% if form.sort_order.errors %}<div class="form-field-errors">{{ form.sort_order.errors }}</div>{% endif %}
+        </div>
+
+      </div>
+
+      <div class="form-checkboxes" style="margin-top: 18px;">
+        <label class="form-checkbox-card">
+          {{ form.is_active }}
+          <div class="form-checkbox-body">
+            <div class="form-checkbox-title">{% trans "Активно" %}</div>
+            <div class="form-checkbox-desc">{% trans "Видео отображается в видеотеке" %}</div>
+          </div>
+        </label>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn-warm">{% trans "Сохранить" %}</button>
+      <a href="{% url 'video_manage' %}" class="btn-sq btn-sq-muted">{% trans "Отмена" %}</a>
+      {% if is_edit and video %}
+        <a href="{% url 'video_delete' video.pk %}" class="btn-sq btn-sq-muted"
+           style="margin-left: auto; color: #a32d2d;">
+          {% trans "Удалить видео" %}
+        </a>
+      {% endif %}
+    </div>
+
+  </form>
+</div>
+
+<script>
+function switchTab(tab) {
+  document.getElementById('sourceUrl').style.display  = tab === 'url'  ? 'block' : 'none';
+  document.getElementById('sourceFile').style.display = tab === 'file' ? 'block' : 'none';
+  document.getElementById('tabUrl').classList.toggle('active',  tab === 'url');
+  document.getElementById('tabFile').classList.toggle('active', tab === 'file');
+}
+
+// При загрузке — если уже есть файл, показываем вкладку файла
+{% if is_edit and video.video_file and not video.video_url %}
+switchTab('file');
+{% endif %}
+</script>
+
+{% endblock %}

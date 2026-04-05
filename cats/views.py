@@ -766,3 +766,68 @@ def gallery_photo_reorder(request, album_pk):
     except Exception as e:
         return JsonResponse({"status": "error", "message": str(e)}, status=400)
 
+
+# ---- Список видео (управление) ----
+
+@staff_member_required
+def video_manage(request):
+    videos = Video.objects.order_by("-date", "-created_at")
+    return render(request, "video_manage.html", {"videos": videos})
+
+
+# ---- Создать видео ----
+
+@staff_member_required
+def video_create(request):
+    if request.method == "POST":
+        form = VideoForm(request.POST, request.FILES)
+        if form.is_valid():
+            video = form.save()
+            return redirect("video_manage")
+    else:
+        form = VideoForm()
+
+    return render(request, "video_form.html", {
+        "form": form,
+        "page_title": "Добавить видео",
+        "is_edit": False,
+    })
+
+
+# ---- Редактировать видео ----
+
+@staff_member_required
+def video_edit(request, pk):
+    video = get_object_or_404(Video, pk=pk)
+
+    if request.method == "POST":
+        form = VideoForm(request.POST, request.FILES, instance=video)
+        if form.is_valid():
+            form.save()
+            return redirect("video_manage")
+    else:
+        form = VideoForm(instance=video)
+
+    return render(request, "video_form.html", {
+        "form": form,
+        "video": video,
+        "page_title": f"Редактировать: {video.safe_translation_getter('title', any_language=True)}",
+        "is_edit": True,
+    })
+
+
+# ---- Удалить видео ----
+
+@staff_member_required
+def video_delete(request, pk):
+    video = get_object_or_404(Video, pk=pk)
+
+    if request.method == "POST":
+        if video.video_file:
+            video.video_file.delete(save=False)
+        if video.thumbnail:
+            video.thumbnail.delete(save=False)
+        video.delete()
+        return redirect("video_manage")
+
+    return render(request, "video_confirm_delete.html", {"video": video})

@@ -1562,18 +1562,32 @@ class CatPhoto(models.Model):
 # ============================================================
 # Добавить в models.py — новые модели для галереи и видео
 # ============================================================
-# Место: в конец файла, после класса CatPhoto
 
 
-import os
-from django.utils.text import slugify
+def upload_to_gallery_cover(instance, filename):
+    """
+    Обложка альбома хранится в: gallery/album_<id>/cover/<filename>
+    instance — это GalleryAlbum, поэтому используем instance.pk
+    Если pk ещё нет (новый объект) — кладём во временную папку.
+    """
+    import os
+    from django.utils.text import slugify
+    base, ext = os.path.splitext(filename)
+    safe_name = slugify(base) or "cover"
+    pk = instance.pk or "new"
+    return f"gallery/album_{pk}/cover/{safe_name}{ext.lower()}"
 
 
-def upload_to_gallery(instance, filename):
-    """Фото галереи хранятся в: gallery/<album_id>/<filename>"""
+def upload_to_gallery_photo(instance, filename):
+    """
+    Фото галереи хранятся в: gallery/album_<album_id>/<filename>
+    instance — это GalleryPhoto, поэтому используем instance.album_id
+    """
+    import os
+    from django.utils.text import slugify
     base, ext = os.path.splitext(filename)
     safe_name = slugify(base) or "photo"
-    return f"gallery/{instance.album_id}/{safe_name}{ext.lower()}"
+    return f"gallery/album_{instance.album_id}/{safe_name}{ext.lower()}"
 
 
 def upload_to_video_thumb(instance, filename):
@@ -1627,7 +1641,7 @@ class GalleryAlbum(TranslatableModel):
     )
 
     cover = models.ImageField(
-        upload_to=upload_to_gallery,
+        upload_to=upload_to_gallery_cover,
         null=True,
         blank=True,
         verbose_name="Обложка альбома"
@@ -1699,7 +1713,7 @@ class GalleryPhoto(models.Model):
     )
 
     image = models.ImageField(
-        upload_to=upload_to_gallery,
+        upload_to=upload_to_gallery_photo,
         verbose_name="Фото"
     )
 

@@ -88,6 +88,13 @@
                         ⚙ {% trans "Галерея" %}
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if 'video_manage' in request.resolver_match.url_name %}active{% endif %}"
+                       href="{% url 'video_manage' %}"
+                       style="font-size:12px;color:var(--muted);">
+                        ⚙ {% trans "Видео" %}
+                    </a>
+                </li>
             </ul>
             {% endif %}
 

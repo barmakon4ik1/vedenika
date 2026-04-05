@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+{% load cats_extras %}
+
+{% block title %}{% trans "Управление видео" %} — Vedenika{% endblock %}
+
+{% block content %}
+<div class="form-page-wrap" style="max-width: 960px;">
+
+  <nav class="breadcrumb-warm">
+    <a href="{% url 'home' %}">{% trans "Главная" %}</a>
+    <span class="breadcrumb-sep">/</span>
+    <a href="{% url 'video_list' %}">{% trans "Видео" %}</a>
+    <span class="breadcrumb-sep">/</span>
+    <span class="breadcrumb-current">{% trans "Управление" %}</span>
+  </nav>
+
+  <div class="page-header">
+    <div>
+      <div class="eyebrow">{% trans "Администрирование" %}</div>
+      <h1 class="page-title">{% trans "Видео" %} <em>{% trans "управление" %}</em></h1>
+    </div>
+    <a href="{% url 'video_create' %}" class="btn-warm">+ {% trans "Добавить видео" %}</a>
+  </div>
+
+  {% if videos %}
+    <div class="manage-albums-list">
+      {% for video in videos %}
+        <div class="manage-album-row">
+
+          <!-- Превью -->
+          <div class="manage-album-thumb">
+            {% if video.thumbnail %}
+              <img src="{{ video.thumbnail.url }}" alt="">
+            {% elif video.embed_url and 'youtube' in video.embed_url %}
+              <div class="manage-video-yt-icon">▶</div>
+            {% else %}
+              <div class="manage-album-no-thumb">🎬</div>
+            {% endif %}
+          </div>
+
+          <!-- Инфо -->
+          <div class="manage-album-info">
+            <div class="manage-album-title">
+              {{ video|trans_title|default:"— без названия —" }}
+            </div>
+            <div class="manage-album-meta">
+              <span class="cat-tag">{{ video.get_category_display }}</span>
+              {% if video.date %}
+                <span class="manage-album-date">{{ video.date|date:"d.m.Y" }}</span>
+              {% endif %}
+              {% if video.is_external %}
+                <span class="manage-album-date">
+                  {% if "youtube" in video.video_url %}YouTube{% elif "vimeo" in video.video_url %}Vimeo{% endif %}
+                </span>
+              {% else %}
+                <span class="manage-album-date">{% trans "Файл" %}</span>
+              {% endif %}
+              {% if not video.is_active %}
+                <span class="cat-tag cat-tag--inactive">{% trans "Скрыто" %}</span>
+              {% endif %}
+            </div>
+          </div>
+
+          <!-- Действия -->
+          <div class="manage-album-actions">
+            <a href="{% url 'video_edit' video.pk %}" class="btn-sq btn-sq-outline btn-sm">
+              {% trans "Изменить" %}
+            </a>
+            <a href="{% url 'video_delete' video.pk %}" class="btn-sq btn-sq-muted btn-sm">
+              {% trans "Удалить" %}
+            </a>
+          </div>
+
+        </div>
+      {% endfor %}
+    </div>
+
+  {% else %}
+    <div class="empty-state">
+      <div class="empty-state-icon">🎬</div>
+      <div class="empty-state-title">{% trans "Видео пока нет" %}</div>
+      <p class="empty-state-desc">{% trans "Добавьте первое видео." %}</p>
+      <a href="{% url 'video_create' %}" class="btn-warm" style="margin-top: 16px; display: inline-block;">
+        + {% trans "Добавить видео" %}
+      </a>
+    </div>
+  {% endif %}
+
+</div>
+{% endblock %}

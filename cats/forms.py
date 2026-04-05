@@ -317,3 +317,76 @@ GalleryPhotoFormSet = forms.modelformset_factory(
     extra=5,       # 5 пустых форм для загрузки
     can_delete=True,
 )
+
+
+class VideoForm(forms.ModelForm):
+
+    # Поля перевода
+    title = forms.CharField(
+        max_length=200,
+        label="Название",
+        widget=forms.TextInput(attrs={"class": "form-control"})
+    )
+    description = forms.CharField(
+        required=False,
+        label="Описание",
+        widget=forms.Textarea(attrs={"class": "form-control", "rows": 3})
+    )
+
+    class Meta:
+        model = Video
+        fields = [
+            "category", "litter", "date",
+            "video_url", "video_file", "thumbnail",
+            "sort_order", "is_active",
+        ]
+        widgets = {
+            "category":   forms.Select(attrs={"class": "form-control"}),
+            "litter":     forms.Select(attrs={"class": "form-control"}),
+            "date":       forms.DateInput(attrs={"class": "form-control", "type": "date"}),
+            "video_url":  forms.URLInput(attrs={"class": "form-control",
+                                                "placeholder": "https://www.youtube.com/watch?v=..."}),
+            "video_file": forms.ClearableFileInput(attrs={"class": "form-control"}),
+            "thumbnail":  forms.ClearableFileInput(attrs={"class": "form-control"}),
+            "sort_order": forms.NumberInput(attrs={"class": "form-control", "min": 0}),
+            "is_active":  forms.CheckboxInput(attrs={"class": "form-check-input"}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["litter"].required = False
+        self.fields["date"].required = False
+        self.fields["video_url"].required = False
+        self.fields["video_file"].required = False
+        self.fields["thumbnail"].required = False
+        self.fields["sort_order"].required = False
+
+        if self.instance.pk:
+            self.fields["title"].initial = self.instance.safe_translation_getter(
+                "title", any_language=True
+            )
+            self.fields["description"].initial = self.instance.safe_translation_getter(
+                "description", any_language=True
+            )
+
+    def clean(self):
+        cleaned = super().clean()
+        video_url  = cleaned.get("video_url")
+        video_file = cleaned.get("video_file")
+        # Проверяем: хотя бы один источник должен быть задан
+        # (только при создании — при редактировании файл может остаться)
+        if not self.instance.pk and not video_url and not video_file:
+            raise forms.ValidationError(
+                "Укажите ссылку на YouTube/Vimeo или загрузите видеофайл."
+            )
+        return cleaned
+
+    def save(self, commit=True):
+        video = super().save(commit=False)
+        if commit:
+            video.save()
+            video.set_current_language("ru")
+            video.title = self.cleaned_data["title"]
+            video.description = self.cleaned_data.get("description", "")
+            video.save()
+        return video

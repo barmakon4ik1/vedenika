@@ -1,8 +1,9 @@
 {% extends "base.html" %}
 {% load static %}
 {% load i18n %}
+{% load cats_extras %}
 
-{% block title %}{% trans "Фото альбома" %} — {{ album.safe_translation_getter:"title,any_language=True" }}{% endblock %}
+{% block title %}{% trans "Фото альбома" %} — {{ album|trans_title }}{% endblock %}
 
 {% block content %}
 <div class="form-page-wrap" style="max-width: 1000px;">
@@ -10,14 +11,14 @@
   <nav class="breadcrumb-warm">
     <a href="{% url 'gallery_manage' %}">{% trans "Управление галереей" %}</a>
     <span class="breadcrumb-sep">/</span>
-    <span class="breadcrumb-current">{{ album.safe_translation_getter:"title,any_language=True" }}</span>
+    <span class="breadcrumb-current">{{ album|trans_title }}</span>
   </nav>
 
   <div class="page-header">
     <div>
       <div class="eyebrow">{{ album.get_category_display }}</div>
       <h1 class="page-title">
-        <em>{{ album.safe_translation_getter:"title,any_language=True" }}</em>
+        <em>{{ album|trans_title }}</em>
       </h1>
     </div>
     <div style="display: flex; gap: 8px; flex-wrap: wrap;">

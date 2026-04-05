@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 {% load i18n %}
+{% load cats_extras %}
 
 {% block title %}{% trans "Управление галереей" %} — Vedenika{% endblock %}
 
@@ -44,7 +45,7 @@
           <!-- Инфо -->
           <div class="manage-album-info">
             <div class="manage-album-title">
-              {{ album.safe_translation_getter:"title,any_language=True"|default:"— без названия —" }}
+              {{ album|trans_title|default:"— без названия —" }}
             </div>
             <div class="manage-album-meta">
               <span class="cat-tag">{{ album.get_category_display }}</span>
