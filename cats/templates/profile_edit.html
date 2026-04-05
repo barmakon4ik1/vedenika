@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "Редактировать профиль" %} — Vedenika{% endblock %}
+
+{% block content %}
+<div class="form-page-wrap" style="max-width: 700px;">
+
+  <nav class="breadcrumb-warm">
+    <a href="{% url 'profile' %}">{% trans "Профиль" %}</a>
+    <span class="breadcrumb-sep">/</span>
+    <span class="breadcrumb-current">{% trans "Редактировать" %}</span>
+  </nav>
+
+  <div class="page-header">
+    <div>
+      <div class="eyebrow">Vedenika</div>
+      <h1 class="page-title">{% trans "Редактировать" %} <em>{% trans "профиль" %}</em></h1>
+    </div>
+    <a href="{% url 'profile' %}" class="btn-sq btn-sq-outline">← {% trans "К профилю" %}</a>
+  </div>
+
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <div class="form-section">
+      <div class="form-section-header">
+        <div class="form-section-title">{% trans "Личные данные" %}</div>
+      </div>
+      <div class="form-grid">
+
+        <div class="form-field col-wide">
+          <label class="form-field-label">{% trans "Имя" %}</label>
+          {{ form.first_name }}
+          {% if form.first_name.errors %}<div class="form-field-errors">{{ form.first_name.errors }}</div>{% endif %}
+        </div>
+
+        <div class="form-field col-wide">
+          <label class="form-field-label">{% trans "Фамилия" %}</label>
+          {{ form.last_name }}
+          {% if form.last_name.errors %}<div class="form-field-errors">{{ form.last_name.errors }}</div>{% endif %}
+        </div>
+
+        <div class="form-field col-wide">
+          <label class="form-field-label">{% trans "Город" %}</label>
+          {{ form.city }}
+          {% if form.city.errors %}<div class="form-field-errors">{{ form.city.errors }}</div>{% endif %}
+        </div>
+
+        <div class="form-field col-full">
+          <label class="form-field-label">{% trans "О себе" %}</label>
+          {{ form.bio }}
+          {% if form.bio.errors %}<div class="form-field-errors">{{ form.bio.errors }}</div>{% endif %}
+        </div>
+
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="form-section-header">
+        <div class="form-section-title">{% trans "Аватар" %}</div>
+      </div>
+      <div class="form-grid">
+        <div class="form-field col-full">
+          {% if profile.avatar %}
+            <img src="{{ profile.avatar.url }}" alt=""
+                 style="width:80px;height:80px;border-radius:50%;object-fit:cover;margin-bottom:10px;display:block;border:2px solid var(--border);">
+            <div class="form-field-hint">{% trans "Загрузите новый чтобы заменить." %}</div>
+          {% endif %}
+          {{ form.avatar }}
+          {% if form.avatar.errors %}<div class="form-field-errors">{{ form.avatar.errors }}</div>{% endif %}
+        </div>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn-warm">{% trans "Сохранить" %}</button>
+      <a href="{% url 'profile' %}" class="btn-sq btn-sq-muted">{% trans "Отмена" %}</a>
+    </div>
+
+  </form>
+</div>
+{% endblock %}

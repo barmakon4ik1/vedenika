@@ -27,7 +27,7 @@
 
     <div class="home-hero-mosaic">
       {% if random_photos %}
-        {% for photo in random_photos|slice:":4" %}
+        {% for photo in random_photos|slice:":3" %}
           <a href="{% url 'gallery_list' %}" class="home-mosaic-item home-mosaic-item--{{ forloop.counter }}">
             <img src="{{ photo.image.url }}" alt="Vedenika">
           </a>
@@ -37,17 +37,6 @@
       {% endif %}
     </div>
   </section>
-
-  <!-- ===== PHOTO STRIP ===== -->
-  {% if random_photos|length > 4 %}
-  <section class="home-photo-strip">
-    {% for photo in random_photos|slice:"4:" %}
-      <a href="{% url 'gallery_list' %}" class="home-strip-photo">
-        <img src="{{ photo.image.url }}" alt="Vedenika">
-      </a>
-    {% endfor %}
-  </section>
-  {% endif %}
 
   <!-- ===== THREE PILLARS ===== -->
   <section class="home-section">

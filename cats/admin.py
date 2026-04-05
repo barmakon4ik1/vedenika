@@ -4,10 +4,16 @@ from parler.admin import TranslatableAdmin, TranslatableTabularInline
 
 from .models import *
 
+@admin.register(UserProfile)
+class UserProfileAdmin(admin.ModelAdmin):
+    list_display  = ('user', 'display_name', 'city', 'created_at')
+    search_fields = ('user__email', 'first_name', 'last_name')
+    raw_id_fields = ('user',)
 
 # =========================
 # Общие helpers
 # =========================
+
 
 class TranslatableAdminMixin:
     def get_translated(self, obj, field):

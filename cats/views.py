@@ -7,6 +7,8 @@ from django.utils import timezone
 from .forms import *
 from .models import *
 from django.conf import settings
+from django.contrib.auth.decorators import login_required
+
 owner_id = settings.CATTERY_OWNER_PERSON_ID
 
 User = get_user_model()
@@ -683,6 +685,8 @@ def gallery_album_photos(request, pk):
 def gallery_photo_upload(request, album_pk):
     album = get_object_or_404(GalleryAlbum, pk=album_pk)
 
+    album_title = album.safe_translation_getter("title", any_language=True)
+
     if request.method == "POST":
         files = request.FILES.getlist("images")  # множественная загрузка
         saved = 0
@@ -697,8 +701,14 @@ def gallery_photo_upload(request, album_pk):
         if saved:
             return redirect("gallery_album_photos", pk=album.pk)
 
-    return render(request, "gallery_photo_upload.html", {"album": album})
-
+    return render(
+        request,
+        "gallery_photo_upload.html",
+        {
+            "album": album,
+            "album_title": album_title,  # 👉 передаём в шаблон
+        },
+    )
 
 # ---- Редактировать одно фото ----
 
@@ -831,3 +841,26 @@ def video_delete(request, pk):
         return redirect("video_manage")
 
     return render(request, "video_confirm_delete.html", {"video": video})
+
+
+@login_required
+def profile_view(request):
+    """Страница профиля текущего пользователя."""
+    profile, _ = UserProfile.objects.get_or_create(user=request.user)
+    return render(request, 'profile.html', {'profile': profile})
+
+
+@login_required
+def profile_edit(request):
+    """Редактирование профиля."""
+    profile, _ = UserProfile.objects.get_or_create(user=request.user)
+
+    if request.method == 'POST':
+        form = ProfileForm(request.POST, request.FILES, instance=profile)
+        if form.is_valid():
+            form.save()
+            return redirect('profile')
+    else:
+        form = ProfileForm(instance=profile)
+
+    return render(request, 'profile_edit.html', {'form': form, 'profile': profile})

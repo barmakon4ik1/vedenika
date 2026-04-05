@@ -67,4 +67,8 @@ urlpatterns = [
     path("gallery/photo/<int:pk>/delete/", views.gallery_photo_delete, name="gallery_photo_delete"),
     path("gallery/<int:album_pk>/reorder/", views.gallery_photo_reorder, name="gallery_photo_reorder"),
 
+    # Авторизация
+    path('profile/',      views.profile_view, name='profile'),
+    path('profile/edit/', views.profile_edit, name='profile_edit'),
+
 ]

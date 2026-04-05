@@ -390,3 +390,16 @@ class VideoForm(forms.ModelForm):
             video.description = self.cleaned_data.get("description", "")
             video.save()
         return video
+
+
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = ['first_name', 'last_name', 'avatar', 'bio', 'city']
+        widgets = {
+            'first_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'last_name':  forms.TextInput(attrs={'class': 'form-control'}),
+            'avatar':     forms.ClearableFileInput(attrs={'class': 'form-control'}),
+            'bio':        forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'city':       forms.TextInput(attrs={'class': 'form-control'}),
+        }

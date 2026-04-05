@@ -44,6 +44,11 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    'django.contrib.sites',  # обязательно для allauth
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
     "parler",
     "cats.apps.CatsConfig",
 ]
@@ -54,6 +59,7 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+    'allauth.account.middleware.AccountMiddleware',
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
@@ -63,7 +69,7 @@ ROOT_URLCONF = "vedenika.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [os.path.join(BASE_DIR, 'templates')],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -167,3 +173,45 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 MEDIA_ROOT = r"F:\YandexDisk\MyDocu\Katze\cats"
 MEDIA_URL = "/media/"
+
+SITE_ID = 1
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+# allauth настройки
+ACCOUNT_LOGIN_METHODS = {'email'}          # вход по email, не username
+# ACCOUNT_EMAIL_REQUIRED = True # они ещё работают, но будут удалены в будущих версиях
+# ACCOUNT_USERNAME_REQUIRED = False # они ещё работают, но будут удалены в будущих версиях
+ACCOUNT_EMAIL_VERIFICATION = 'optional'    # 'mandatory' если хотите верификацию
+ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*']
+
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+ACCOUNT_LOGOUT_ON_GET = True               # выход без подтверждения
+
+# Google OAuth
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'APP': {
+            'client_id': 'YOUR_GOOGLE_CLIENT_ID',      # из Google Console
+            'secret':    'YOUR_GOOGLE_CLIENT_SECRET',  # из Google Console
+            'key':       ''
+        },
+        'SCOPE': ['profile', 'email'],
+        'AUTH_PARAMS': {'access_type': 'online'},
+    }
+}
+
+# Email бэкенд (для разработки — в консоль)
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# Для продакшна заменить на SMTP:
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
+# EMAIL_HOST_USER = 'your@email.com'
+# EMAIL_HOST_PASSWORD = 'your_password'
+# DEFAULT_FROM_EMAIL = 'Vedenika <your@email.com>'

@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "Мой профиль" %} — Vedenika{% endblock %}
+
+{% block content %}
+<div class="form-page-wrap" style="max-width: 700px;">
+
+  <div class="page-header">
+    <div>
+      <div class="eyebrow">Vedenika</div>
+      <h1 class="page-title">{% trans "Мой" %} <em>{% trans "профиль" %}</em></h1>
+    </div>
+    <a href="{% url 'profile_edit' %}" class="btn-sq btn-sq-outline">{% trans "Редактировать" %}</a>
+  </div>
+
+  <div class="profile-card">
+
+    <!-- Аватар и имя -->
+    <div class="profile-header">
+      <div class="profile-avatar">
+        {% if profile.avatar %}
+          <img src="{{ profile.avatar.url }}" alt="{{ profile.display_name }}">
+        {% else %}
+          <div class="profile-avatar-placeholder">
+            {{ profile.display_name|first|upper }}
+          </div>
+        {% endif %}
+      </div>
+      <div class="profile-header-info">
+        <div class="profile-name">{{ profile.display_name }}</div>
+        <div class="profile-email">{{ request.user.email }}</div>
+        {% if profile.city %}
+          <div class="profile-city">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
+              <circle cx="12" cy="9" r="2.5"/>
+            </svg>
+            {{ profile.city }}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+    {% if profile.bio %}
+      <div class="profile-bio">{{ profile.bio }}</div>
+    {% endif %}
+
+    <!-- Управление аккаунтом -->
+    <div class="profile-actions">
+      <a href="{% url 'account_change_password' %}" class="btn-sq btn-sq-outline btn-sm">
+        {% trans "Сменить пароль" %}
+      </a>
+      <a href="{% url 'account_logout' %}" class="btn-sq btn-sq-muted btn-sm">
+        {% trans "Выйти" %}
+      </a>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

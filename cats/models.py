@@ -11,6 +11,8 @@ from django.utils.translation import get_language
 from django.conf import settings
 import os
 from django.utils.text import slugify
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 User = get_user_model()
 
@@ -1876,6 +1878,84 @@ class Video(TranslatableModel):
     def is_external(self):
         """True если видео на YouTube/Vimeo."""
         return bool(self.video_url)
+
+
+class UserProfile(models.Model):
+    """
+    Расширенный профиль пользователя.
+    Связан с User через OneToOne.
+    Создаётся автоматически при регистрации через сигнал.
+    """
+
+    user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        related_name='profile'
+    )
+
+    first_name = models.CharField(
+        max_length=100,
+        blank=True,
+        verbose_name='Имя'
+    )
+
+    last_name = models.CharField(
+        max_length=100,
+        blank=True,
+        verbose_name='Фамилия'
+    )
+
+    avatar = models.ImageField(
+        upload_to='avatars/',
+        null=True,
+        blank=True,
+        verbose_name='Аватар'
+    )
+
+    bio = models.TextField(
+        blank=True,
+        verbose_name='О себе'
+    )
+
+    city = models.CharField(
+        max_length=100,
+        blank=True,
+        verbose_name='Город'
+    )
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = 'Профиль пользователя'
+        verbose_name_plural = 'Профили пользователей'
+
+    def __str__(self):
+        return f'Профиль: {self.user.email}'
+
+    @property
+    def display_name(self):
+        if self.first_name:
+            return f'{self.first_name} {self.last_name}'.strip()
+        return self.user.email.split('@')[0]
+
+    @property
+    def avatar_url(self):
+        if self.avatar:
+            return self.avatar.url
+        return None
+
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    """Создаёт профиль при регистрации нового пользователя."""
+    if created:
+        UserProfile.objects.get_or_create(user=instance)
+
+
+@receiver(post_save, sender=User)
+def save_user_profile(sender, instance, **kwargs):
+    """Сохраняет профиль при сохранении пользователя."""
+    if hasattr(instance, 'profile'):
+        instance.profile.save()
 
 
 # ============================================================
