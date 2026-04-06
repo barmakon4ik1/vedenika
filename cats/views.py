@@ -1013,3 +1013,7 @@ def forum_topic_delete(request, topic_pk):
         return redirect('forum_category', category_slug=category_slug)
 
     return render(request, 'forum_topic_confirm_delete.html', {'topic': topic})
+
+
+def forum_rules(request):
+    return render(request, 'forum_rules.html')

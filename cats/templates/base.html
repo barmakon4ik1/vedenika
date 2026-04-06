@@ -1,8 +1,9 @@
 {% load static %}
 {% load i18n %}
+{% get_current_language as CURRENT_LANGUAGE %}
 
 <!DOCTYPE html>
-<html lang="{{ LANGUAGE_CODE|default:'ru' }}">
+<html lang="{{ CURRENT_LANGUAGE }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -123,13 +124,12 @@
                 {% endif %}
             </div>
 
-            {% get_current_language as LANGUAGE_CODE %}
             <div id="ld" style="position:relative;margin-left:12px;">
 
                 <!-- Текущий язык — всегда виден -->
                 <button onclick="var m=document.getElementById('lm');m.style.display=m.style.display==='block'?'none':'block';" type="button"
                         style="background:none;border:none;padding:2px 4px;cursor:pointer;display:flex;align-items:center;gap:4px;">
-                    <img src="{% static 'img/' %}{{ LANGUAGE_CODE }}.png" alt="{{ LANGUAGE_CODE }}"
+                    <img src="{% static 'img/' %}{{ CURRENT_LANGUAGE }}.png" alt="{{ CURRENT_LANGUAGE }}"
                          style="width:22px;height:auto;display:block;">
                     <svg style="width:10px;height:6px;color:#8c7660;flex-shrink:0;" viewBox="0 0 10 6" fill="none">
                         <path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
@@ -141,19 +141,19 @@
                     <form action="{% url 'set_language' %}" method="post">
                         {% csrf_token %}
                         <input type="hidden" name="next" value="{{ request.get_full_path }}">
-                        {% if LANGUAGE_CODE != 'ru' %}
+                        {% if CURRENT_LANGUAGE != 'ru' %}
                         <button type="submit" name="language" value="ru"
                                 style="display:flex;align-items:center;gap:8px;width:100%;background:none;border:none;padding:6px 10px;border-radius:6px;cursor:pointer;font-family:Jost,sans-serif;font-size:13px;color:#2c2015;">
                             <img src="{% static 'img/ru.png' %}" alt="RU" style="width:20px;height:auto;"> Русский
                         </button>
                         {% endif %}
-                        {% if LANGUAGE_CODE != 'de' %}
+                        {% if CURRENT_LANGUAGE != 'de' %}
                         <button type="submit" name="language" value="de"
                                 style="display:flex;align-items:center;gap:8px;width:100%;background:none;border:none;padding:6px 10px;border-radius:6px;cursor:pointer;font-family:Jost,sans-serif;font-size:13px;color:#2c2015;">
                             <img src="{% static 'img/de.png' %}" alt="DE" style="width:20px;height:auto;"> Deutsch
                         </button>
                         {% endif %}
-                        {% if LANGUAGE_CODE != 'en' %}
+                        {% if CURRENT_LANGUAGE != 'en' %}
                         <button type="submit" name="language" value="en"
                                 style="display:flex;align-items:center;gap:8px;width:100%;background:none;border:none;padding:6px 10px;border-radius:6px;cursor:pointer;font-family:Jost,sans-serif;font-size:13px;color:#2c2015;">
                             <img src="{% static 'img/en.png' %}" alt="EN" style="width:20px;height:auto;"> English

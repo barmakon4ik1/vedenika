@@ -73,6 +73,7 @@ urlpatterns = [
 
     # Форум
     path('forum/',                                          views.forum_index,         name='forum_index'),
+    path('forum/rules/', views.forum_rules, name='forum_rules'),
     path('forum/<slug:category_slug>/',                     views.forum_category,      name='forum_category'),
     path('forum/<slug:category_slug>/new/',                 views.forum_topic_create,  name='forum_topic_create'),
     path('forum/<slug:category_slug>/<slug:topic_slug>/',   views.forum_topic,         name='forum_topic'),

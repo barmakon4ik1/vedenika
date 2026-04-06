@@ -5553,3 +5553,124 @@ body {
   .forum-reply-form { flex-direction: column; }
   .forum-reply-avatar { display: none; }
 }
+
+/* ============================================================
+   FORUM RULES PAGE
+   ============================================================ */
+
+.rules-intro {
+  font-size: 15px;
+  font-weight: 300;
+  color: var(--muted);
+  line-height: 1.8;
+  background: var(--cream);
+  border-radius: 14px;
+  padding: 20px 24px;
+  margin-bottom: 28px;
+}
+
+.rules-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 32px;
+}
+
+.rule-card {
+  display: flex;
+  gap: 18px;
+  align-items: flex-start;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--border);
+  border-radius: 0 14px 14px 0;
+  padding: 20px 22px;
+}
+
+.rule-card--green  { border-left-color: rgba(15,110,86,0.5); }
+.rule-card--blue   { border-left-color: rgba(55,138,221,0.5); }
+.rule-card--red    { border-left-color: rgba(162,45,45,0.5); }
+.rule-card--tan    { border-left-color: var(--warm-tan); }
+
+.rule-icon {
+  font-size: 24px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.rule-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--dark);
+  margin-bottom: 8px;
+}
+
+.rule-desc {
+  font-size: 14px;
+  font-weight: 300;
+  color: var(--muted);
+  line-height: 1.75;
+  margin: 0 0 8px;
+}
+
+.rule-list {
+  margin: 8px 0 0 0;
+  padding-left: 18px;
+}
+
+.rule-list li {
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.rules-footer {
+  background: var(--cream2);
+  border-radius: 14px;
+  padding: 18px 22px;
+  font-size: 14px;
+  font-weight: 300;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.rules-footer a {
+  color: var(--warm-brown);
+  text-decoration: none;
+  font-weight: 400;
+  border-bottom: 1px solid rgba(201,169,110,0.4);
+}
+
+/* Rules banner on forum index */
+.forum-rules-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(201,169,110,0.1);
+  border: 1px solid rgba(201,169,110,0.25);
+  border-radius: 12px;
+  padding: 12px 18px;
+  margin-bottom: 24px;
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.forum-rules-banner-icon {
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.forum-rules-banner-text a {
+  color: var(--warm-brown);
+  font-weight: 500;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(201,169,110,0.4);
+}
+
+.forum-rules-banner-text a:hover {
+  color: var(--dark);
+}

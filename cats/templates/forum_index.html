@@ -14,6 +14,16 @@
     </div>
   </div>
 
+  <!-- Баннер правил -->
+  <div class="forum-rules-banner">
+    <div class="forum-rules-banner-icon">📋</div>
+    <div class="forum-rules-banner-text">
+      {% trans "Общаясь на форуме, вы соглашаетесь с" %}
+      <a href="{% url 'forum_rules' %}">{% trans "правилами форума" %}</a>.
+      {% trans "Политика, межнациональная рознь и оскорбления запрещены." %}
+    </div>
+  </div>
+
   <div class="forum-categories">
     {% for category in categories %}
       <a href="{% url 'forum_category' category.slug %}" class="forum-category-card">

@@ -3,31 +3,1990 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-30 13:45+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"POT-Creation-Date: 2026-04-06 10:28+0200\n"
+"PO-Revision-Date: 2026-04-06 11:30+0200\n"
+"Last-Translator: OpenAI Assistant\n"
+"Language-Team: German <de@li.org>\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-#: .\vedenika\settings.py:137
-msgid "Русский"
-msgstr ""
+#: .\cats\templates\about_breed.html:5
+msgid "О породе мейн-кун"
+msgstr "Über die Rasse Maine Coon"
 
-#: .\vedenika\settings.py:138
-msgid "Deutsch"
-msgstr ""
+#: .\cats\templates\about_breed.html:13 .\cats\templates\cat_detail.html:144
+#: .\cats\templates\cat_form.html:110 .\cats\templates\cat_list.html:28
+#: .\cats\templates\cat_list.html:113 .\cats\templates\cat_list.html:204
+msgid "Порода"
+msgstr "Rasse"
 
-#: .\vedenika\settings.py:139
-msgid "English"
-msgstr ""
+#: .\cats\templates\about_breed.html:15
+msgid "Мейн-кун"
+msgstr "Maine Coon"
 
+#: .\cats\templates\about_breed.html:15
+msgid "лесной великан"
+msgstr "sanfter Waldgigant"
+
+#: .\cats\templates\about_breed.html:18
+msgid ""
+"Одна из крупнейших домашних пород мира. Величественный, умный, преданный — и "
+"при этом невероятно нежный."
+msgstr ""
+"Eine der größten Hauskatzenrassen der Welt. Majestätisch, intelligent, treu "
+"– und dabei unglaublich sanft."
+
+#: .\cats\templates\about_breed.html:25
+msgid "История"
+msgstr "Geschichte"
+
+#: .\cats\templates\about_breed.html:26
+msgid "Откуда родом мейн-кун?"
+msgstr "Woher stammt die Maine Coon?"
+
+#: .\cats\templates\about_breed.html:28
+msgid ""
+"Мейн-кун родом из американского штата Мэн — отсюда и название. Точное "
+"происхождение породы окутано легендами: одни говорят о помеси домашних кошек "
+"с енотами (отсюда bushy хвост), другие — о корабельных кошках викингов. "
+"Современные генетические исследования указывают на родство с норвежской "
+"лесной кошкой."
+msgstr ""
+"Die Maine Coon stammt aus dem US-Bundesstaat Maine – daher ihr Name. Der "
+"genaue Ursprung der Rasse ist von Legenden umgeben: Manche sprechen von "
+"einer Kreuzung zwischen Hauskatzen und Waschbären (daher der buschige "
+"Schwanz), andere von Schiffskatzen der Wikinger. Moderne genetische "
+"Untersuchungen weisen auf eine Verwandtschaft mit der Norwegischen "
+"Waldkatze hin."
+
+#: .\cats\templates\about_breed.html:31
+msgid ""
+"В XIX веке мейн-куны участвовали в первых американских кошачьих выставках и "
+"долгое время оставались самой популярной породой в США. После упадка в "
+"середине XX века порода пережила возрождение, и сегодня мейн-кун входит в "
+"тройку самых популярных пород мира."
+msgstr ""
+"Im 19. Jahrhundert nahmen Maine Coons an den ersten amerikanischen "
+"Katzenausstellungen teil und blieben lange Zeit die beliebteste Rasse in "
+"den USA. Nach einem Rückgang in der Mitte des 20. Jahrhunderts erlebte die "
+"Rasse eine Wiederbelebung, und heute gehört die Maine Coon zu den drei "
+"beliebtesten Katzenrassen der Welt."
+
+#: .\cats\templates\about_breed.html:36
+msgid "Страна происхождения"
+msgstr "Herkunftsland"
+
+#: .\cats\templates\about_breed.html:37
+msgid "США, штат Мэн"
+msgstr "USA, Bundesstaat Maine"
+
+#: .\cats\templates\about_breed.html:40
+msgid "Признание FIFe"
+msgstr "Anerkennung durch FIFe"
+
+#: .\cats\templates\about_breed.html:48
+msgid "Группа FIFe"
+msgstr "FIFe-Gruppe"
+
+#: .\cats\templates\about_breed.html:57
+msgid "Внешность"
+msgstr "Aussehen"
+
+#: .\cats\templates\about_breed.html:58
+msgid "Большой, но изящный"
+msgstr "Groß, aber elegant"
+
+#: .\cats\templates\about_breed.html:60
+msgid ""
+"Мейн-кун — одна из самых крупных домашних пород. Самцы весят от 6 до 10 кг, "
+"самки немного меньше — 4–7 кг. Тело мускулистое и прямоугольное, с широкой "
+"грудью. Голова крупная, с высокими скулами и характерными кисточками на ушах "
+"— как у рыси."
+msgstr ""
+"Die Maine Coon ist eine der größten Hauskatzenrassen. Kater wiegen zwischen "
+"6 und 10 kg, Katzen etwas weniger – 4 bis 7 kg. Der Körper ist muskulös und "
+"rechteckig, mit breiter Brust. Der Kopf ist groß, mit hohen Wangenknochen "
+"und den typischen Ohrpinseln – wie bei einem Luchs."
+
+#: .\cats\templates\about_breed.html:63
+msgid ""
+"Шерсть полудлинная, шелковистая, с более густым «воротником» вокруг шеи и "
+"пышным хвостом. Окрасов существует более 75 вариантов по стандарту EMS — от "
+"классических табби до дымчатых и серебристых."
+msgstr ""
+"Das Fell ist halblang und seidig, mit dichterer Halskrause und einem "
+"buschigen Schwanz. Nach dem EMS-Standard gibt es mehr als 75 Farbvarianten "
+"– von klassischen Tabby-Zeichnungen bis hin zu Smoke- und Silbervarianten."
+
+#: .\cats\templates\about_breed.html:70
+msgid "максимальный вес самца"
+msgstr "maximales Gewicht eines Katers"
+
+#: .\cats\templates\about_breed.html:74
+msgid "длина с хвостом"
+msgstr "Länge mit Schwanz"
+
+#: .\cats\templates\about_breed.html:80
+msgid "вариантов окраса по EMS"
+msgstr "Farbvarianten nach EMS"
+
+#: .\cats\templates\about_breed.html:84
+msgid "до полного созревания"
+msgstr "bis zur vollen Ausreifung"
+
+#: .\cats\templates\about_breed.html:92
+msgid "Характер"
+msgstr "Charakter"
+
+#: .\cats\templates\about_breed.html:94
+msgid "Собака в теле кошки"
+msgstr "Ein Hund im Körper einer Katze"
+
+#: .\cats\templates\about_breed.html:100
+msgid "Преданность"
+msgstr "Treue"
+
+#: .\cats\templates\about_breed.html:102
+msgid ""
+"Мейн-куны следуют за хозяином по пятам, встречают у двери и участвуют во "
+"всех домашних делах. Их сравнивают с собаками за привязанность к семье."
+msgstr ""
+"Maine Coons folgen ihrem Menschen auf Schritt und Tritt, begrüßen ihn an "
+"der Tür und möchten an allem teilnehmen, was im Haus geschieht. Wegen ihrer "
+"engen Bindung an die Familie werden sie oft mit Hunden verglichen."
+
+#: .\cats\templates\about_breed.html:107
+msgid "Интеллект"
+msgstr "Intelligenz"
+
+#: .\cats\templates\about_breed.html:109
+msgid ""
+"Они легко учатся командам, открывают двери и краны, любят игры с логикой. "
+"Некоторые мейн-куны поддаются обучению поводку."
+msgstr ""
+"Sie lernen Kommandos leicht, öffnen Türen und Wasserhähne und lieben "
+"Denkspiele. Manche Maine Coons lassen sich sogar an die Leine gewöhnen."
+
+#: .\cats\templates\about_breed.html:114
+msgid "Игривость"
+msgstr "Verspieltheit"
+
+#: .\cats\templates\about_breed.html:116
+msgid ""
+"Несмотря на внушительные размеры, мейн-куны остаются котятами душой на "
+"протяжении всей жизни. Им нужны игрушки, высокие когтеточки и пространство "
+"для прыжков."
+msgstr ""
+"Trotz ihrer beeindruckenden Größe bleiben Maine Coons ein Leben lang im "
+"Herzen Kätzchen. Sie brauchen Spielzeug, hohe Kratzbäume und Platz zum "
+"Springen."
+
+#: .\cats\templates\about_breed.html:121
+msgid "Уживчивость"
+msgstr "Verträglichkeit"
+
+#: .\cats\templates\about_breed.html:123
+msgid ""
+"Порода прекрасно уживается с детьми и другими животными. Мейн-куны редко "
+"агрессивны — они предпочитают уйти, а не конфликтовать."
+msgstr ""
+"Die Rasse kommt hervorragend mit Kindern und anderen Tieren zurecht. Maine "
+"Coons sind selten aggressiv – sie gehen lieber weg, als Konflikte zu suchen."
+
+#: .\cats\templates\about_breed.html:128
+msgid "Общительность"
+msgstr "Geselligkeit"
+
+#: .\cats\templates\about_breed.html:130
+msgid ""
+"У мейн-кунов необычный голос — мягкое трели-мурлыкание. Они любят "
+"«разговаривать» с хозяином, но не надоедливы."
+msgstr ""
+"Maine Coons haben eine ungewöhnliche Stimme – ein sanftes Trillern und "
+"Schnurren. Sie „unterhalten“ sich gern mit ihrem Menschen, ohne dabei "
+"aufdringlich zu sein."
+
+#: .\cats\templates\about_breed.html:135
+msgid "Любовь к воде"
+msgstr "Liebe zum Wasser"
+
+#: .\cats\templates\about_breed.html:137
+msgid ""
+"Многие мейн-куны обожают воду — плескаются в мисках, заходят в душ. Это "
+"наследие от предков-корабельных кошек."
+msgstr ""
+"Viele Maine Coons lieben Wasser – sie planschen in Näpfen und gehen sogar "
+"mit unter die Dusche. Das gilt als Erbe ihrer Vorfahren, der Schiffskatzen."
+
+#: .\cats\templates\about_breed.html:145
+msgid "Уход"
+msgstr "Pflege"
+
+#: .\cats\templates\about_breed.html:147
+msgid "Что нужно мейн-куну?"
+msgstr "Was braucht eine Maine Coon?"
+
+#: .\cats\templates\about_breed.html:153
+msgid "Шерсть"
+msgstr "Fell"
+
+#: .\cats\templates\about_breed.html:155
+msgid ""
+"Расчёсывание 2–3 раза в неделю. Шерсть мейн-куна почти не сваливается в "
+"колтуны — это одно из преимуществ породы. В период линьки — ежедневно."
+msgstr ""
+"2–3 Mal pro Woche kämmen. Das Fell der Maine Coon verfilzt kaum – das ist "
+"einer der Vorteile dieser Rasse. Während des Fellwechsels täglich."
+
+#: .\cats\templates\about_breed.html:160
+msgid "Питание"
+msgstr "Ernährung"
+
+#: .\cats\templates\about_breed.html:162
+msgid ""
+"Высокобелковый рацион с учётом крупного размера. Влажный корм, сырое питание "
+"или качественный сухой корм премиум-класса. Важно не перекармливать — "
+"склонность к ожирению есть."
+msgstr ""
+"Eine proteinreiche Ernährung, abgestimmt auf die große Körpergröße. "
+"Nassfutter, Rohfütterung oder hochwertiges Trockenfutter in "
+"Premiumqualität. Wichtig ist, nicht zu überfüttern – eine Neigung zu "
+"Übergewicht ist vorhanden."
+
+#: .\cats\templates\about_breed.html:167
+msgid "Активность"
+msgstr "Aktivität"
+
+#: .\cats\templates\about_breed.html:169
+msgid ""
+"Нужны высокие когтеточки, игровые комплексы и ежедневные игры. Мейн-кун — "
+"активная порода, скука приводит к деструктивному поведению."
+msgstr ""
+"Hohe Kratzbäume, Kletterlandschaften und tägliches Spielen sind wichtig. "
+"Die Maine Coon ist eine aktive Rasse; Langeweile kann zu destruktivem "
+"Verhalten führen."
+
+#: .\cats\templates\about_breed.html:174
+msgid "Здоровье"
+msgstr "Gesundheit"
+
+#: .\cats\templates\about_breed.html:176
+msgid ""
+"Обязательный скрининг на HCM (гипертрофическая кардиомиопатия) и SMA. "
+"Добросовестные заводчики тестируют всех производителей. Средняя "
+"продолжительность жизни — 12–15 лет."
+msgstr ""
+"Ein Screening auf HCM (hypertrophe Kardiomyopathie) und SMA ist "
+"unerlässlich. Verantwortungsbewusste Züchter testen alle Zuchttiere. Die "
+"durchschnittliche Lebenserwartung beträgt 12–15 Jahre."
+
+#: .\cats\templates\about_breed.html:185
+msgid "Хотите познакомиться с нашими <em>котами</em>?"
+msgstr "Möchten Sie unsere <em>Katzen</em> kennenlernen?"
+
+#: .\cats\templates\about_breed.html:187
+msgid "Посмотрите на наших мейн-кунов — каждый со своим характером и историей."
+msgstr ""
+"Schauen Sie sich unsere Maine Coons an – jede mit ihrem eigenen Charakter "
+"und ihrer eigenen Geschichte."
+
+#: .\cats\templates\about_breed.html:191
+msgid "Наши коты"
+msgstr "Unsere Katzen"
+
+#: .\cats\templates\about_breed.html:192 .\cats\templates\home.html:78
+msgid "Написать нам"
+msgstr "Uns schreiben"
+
+#: .\cats\templates\base.html:41 .\cats\templates\base.html:197
+#: .\cats\templates\cat_detail.html:14 .\cats\templates\cat_form.html:13
+#: .\cats\templates\cat_gallery.html:14 .\cats\templates\cat_upload.html:13
+#: .\cats\templates\color_form.html:13 .\cats\templates\gallery_album.html:14
+#: .\cats\templates\gallery_album_form.html:11
+#: .\cats\templates\gallery_manage.html:12 .\cats\templates\impressum.html:12
+#: .\cats\templates\litter_detail.html:14 .\cats\templates\video_manage.html:12
+msgid "Главная"
+msgstr "Startseite"
+
+#: .\cats\templates\base.html:47 .\cats\templates\base.html:198
+#: .\cats\templates\cat_detail.html:16 .\cats\templates\cat_form.html:15
+#: .\cats\templates\cat_gallery.html:16 .\cats\templates\cat_list.html:5
+#: .\cats\templates\cat_upload.html:15 .\cats\templates\color_form.html:15
+#: .\cats\templates\litter_detail.html:137
 msgid "Коты"
 msgstr "Katzen"
+
+#: .\cats\templates\base.html:53 .\cats\templates\base.html:199
+#: .\cats\templates\gallery_list.html:31 .\cats\templates\gallery_list.html:71
+#: .\cats\templates\home.html:46 .\cats\templates\litter_detail.html:16
+#: .\cats\templates\litter_list.html:5
+msgid "Помёты"
+msgstr "Würfe"
+
+#: .\cats\templates\base.html:59 .\cats\templates\base.html:94
+#: .\cats\templates\base.html:200 .\cats\templates\cat_detail.html:48
+#: .\cats\templates\cat_detail.html:244 .\cats\templates\cat_gallery.html:5
+#: .\cats\templates\cat_gallery.html:20 .\cats\templates\cat_upload.html:19
+#: .\cats\templates\gallery_album.html:16
+#: .\cats\templates\gallery_album_form.html:13
+#: .\cats\templates\gallery_album_form.html:22
+#: .\cats\templates\gallery_list.html:5 .\cats\templates\gallery_manage.html:14
+#: .\cats\templates\gallery_manage.html:22 .\cats\templates\home.html:24
+#: .\cats\templates\home.html:52
+msgid "Галерея"
+msgstr "Galerie"
+
+#: .\cats\templates\base.html:65 .\cats\templates\base.html:101
+#: .\cats\templates\base.html:201 .\cats\templates\video_form.html:12
+#: .\cats\templates\video_list.html:5 .\cats\templates\video_list.html:15
+#: .\cats\templates\video_manage.html:14 .\cats\templates\video_manage.html:22
+msgid "Видео"
+msgstr "Videos"
+
+#: .\cats\templates\base.html:71 .\cats\templates\base.html:202
+#: .\cats\templates\home.html:58
+msgid "О породе"
+msgstr "Über die Rasse"
+
+#: .\cats\templates\base.html:77 .\cats\templates\base.html:203
+#: .\cats\templates\contacts.html:5 .\cats\templates\forum_rules.html:102
+msgid "Контакты"
+msgstr "Kontakt"
+
+#: .\cats\templates\base.html:83 .\cats\templates\forum_category.html:5
+#: .\cats\templates\forum_category.html:11
+#: .\cats\templates\forum_category.html:18 .\cats\templates\forum_index.html:5
+#: .\cats\templates\forum_index.html:13
+#: .\cats\templates\forum_post_edit.html:17
+#: .\cats\templates\forum_rules.html:11 .\cats\templates\forum_rules.html:18
+#: .\cats\templates\forum_topic.html:11
+#: .\cats\templates\forum_topic_form.html:12
+msgid "Форум"
+msgstr "Forum"
+
+#: .\cats\templates\base.html:119 .\cats\templates\profile.html:56
+msgid "Выйти"
+msgstr "Abmelden"
+
+#: .\cats\templates\base.html:121 .\templates\account\login.html:6
+#: .\templates\account\login.html:14 .\templates\account\login.html:71
+#: .\templates\account\signup.html:16
+msgid "Войти"
+msgstr "Anmelden"
+
+#: .\cats\templates\base.html:122 .\templates\account\signup.html:5
+#: .\templates\account\signup.html:13
+msgid "Регистрация"
+msgstr "Registrierung"
+
+#: .\cats\templates\base.html:191
+msgid "Питомник мейн-кунов"
+msgstr "Maine-Coon-Zucht"
+
+#: .\cats\templates\base.html:195
+msgid "Навигация"
+msgstr "Navigation"
+
+#: .\cats\templates\base.html:207
+msgid "Соцсети"
+msgstr "Soziale Netzwerke"
+
+#: .\cats\templates\cat_detail.html:32 .\cats\templates\home.html:54
+msgid "Открыть галерею"
+msgstr "Galerie öffnen"
+
+#: .\cats\templates\cat_detail.html:36
+msgid "Фото пока нет"
+msgstr "Noch kein Foto vorhanden"
+
+#: .\cats\templates\cat_detail.html:45 .\cats\templates\cat_gallery.html:36
+msgid "Добавить фото"
+msgstr "Foto hinzufügen"
+
+#: .\cats\templates\cat_detail.html:58
+msgid "Фотографии"
+msgstr "Fotos"
+
+#: .\cats\templates\cat_detail.html:60
+msgid "Все фото"
+msgstr "Alle Fotos"
+
+#: .\cats\templates\cat_detail.html:82 .\cats\templates\cat_list.html:43
+#: .\cats\templates\cat_list.html:99 .\cats\templates\cat_list.html:190
+msgid "Кот"
+msgstr "Kater"
+
+#: .\cats\templates\cat_detail.html:84 .\cats\templates\cat_list.html:44
+#: .\cats\templates\cat_list.html:101 .\cats\templates\cat_list.html:192
+msgid "Кошка"
+msgstr "Katze"
+
+#: .\cats\templates\cat_detail.html:110 .\cats\templates\cat_detail.html:122
+#: .\cats\templates\cat_form.html:120 .\cats\templates\cat_list.html:49
+msgid "Окрас"
+msgstr "Farbe"
+
+#: .\cats\templates\cat_detail.html:115 .\cats\templates\forum_topic.html:94
+#: .\cats\templates\gallery_album_photos.html:91
+#: .\cats\templates\gallery_manage.html:71
+#: .\cats\templates\video_manage.html:69
+msgid "Изменить"
+msgstr "Bearbeiten"
+
+#: .\cats\templates\cat_detail.html:123
+msgid "Не задан"
+msgstr "Nicht angegeben"
+
+#: .\cats\templates\cat_detail.html:126 .\cats\templates\color_form.html:27
+#: .\cats\templates\video_form.html:23
+msgid "Добавить"
+msgstr "Hinzufügen"
+
+#: .\cats\templates\cat_detail.html:133
+msgid "Основное"
+msgstr "Allgemein"
+
+#: .\cats\templates\cat_detail.html:137 .\cats\templates\cat_form.html:80
+#: .\cats\templates\litter_detail.html:102
+msgid "Дата рождения"
+msgstr "Geburtsdatum"
+
+#: .\cats\templates\cat_detail.html:149 .\cats\templates\cat_form.html:203
+msgid "Номер родословной"
+msgstr "Ahnentafelnummer"
+
+#: .\cats\templates\cat_detail.html:156
+msgid "Микрочип"
+msgstr "Mikrochip"
+
+#: .\cats\templates\cat_detail.html:167 .\cats\templates\cat_form.html:137
+msgid "Происхождение"
+msgstr "Herkunft"
+
+#: .\cats\templates\cat_detail.html:171 .\cats\templates\cat_list.html:118
+#: .\cats\templates\cat_list.html:209 .\cats\templates\litter_detail.html:121
+msgid "Питомник"
+msgstr "Zuchtstätte"
+
+#: .\cats\templates\cat_detail.html:178 .\cats\templates\cat_form.html:183
+#: .\cats\templates\gallery_album.html:28 .\cats\templates\litter_detail.html:6
+#: .\cats\templates\litter_detail.html:18
+#: .\cats\templates\litter_detail.html:29 .\cats\templates\video_form.html:155
+msgid "Помёт"
+msgstr "Wurf"
+
+#: .\cats\templates\cat_detail.html:185 .\cats\templates\cat_form.html:163
+msgid "Отец"
+msgstr "Vater"
+
+#: .\cats\templates\cat_detail.html:194 .\cats\templates\cat_form.html:173
+msgid "Мать"
+msgstr "Mutter"
+
+#: .\cats\templates\cat_detail.html:207 .\cats\templates\cat_form.html:245
+msgid "Статус"
+msgstr "Status"
+
+#: .\cats\templates\cat_detail.html:212 .\cats\templates\cat_form.html:260
+msgid "Допущен к разведению"
+msgstr "Zur Zucht zugelassen"
+
+#: .\cats\templates\cat_detail.html:218 .\cats\templates\cat_form.html:268
+msgid "На витрине"
+msgstr "Öffentlich sichtbar"
+
+#: .\cats\templates\cat_detail.html:224
+msgid "Неактивен"
+msgstr "Inaktiv"
+
+#: .\cats\templates\cat_detail.html:230
+msgid "Дата гибели"
+msgstr "Sterbedatum"
+
+#: .\cats\templates\cat_detail.html:241
+msgid "Редактировать кота"
+msgstr "Katze bearbeiten"
+
+#: .\cats\templates\cat_detail.html:247 .\cats\templates\gallery_manage.html:65
+msgid "Фото"
+msgstr "Foto"
+
+#: .\cats\templates\cat_form.html:23 .\cats\templates\cat_list.html:15
+#: .\cats\templates\gallery_list.html:14 .\cats\templates\litter_list.html:14
+#: .\cats\templates\video_list.html:14
+msgid "Питомник Vedenika"
+msgstr "Zuchtstätte Vedenika"
+
+#: .\cats\templates\cat_form.html:26
+#: .\cats\templates\gallery_album_form.html:28
+#: .\cats\templates\video_form.html:27
+msgid "К списку"
+msgstr "Zurück zur Liste"
+
+#: .\cats\templates\cat_form.html:44
+msgid "Основная информация"
+msgstr "Grundinformationen"
+
+#: .\cats\templates\cat_form.html:50
+msgid "Официальное имя"
+msgstr "Offizieller Name"
+
+#: .\cats\templates\cat_form.html:60
+msgid "Домашнее имя"
+msgstr "Rufname"
+
+#: .\cats\templates\cat_form.html:70 .\cats\templates\cat_list.html:40
+msgid "Пол"
+msgstr "Geschlecht"
+
+#: .\cats\templates\cat_form.html:90
+msgid "Дата смерти"
+msgstr "Todesdatum"
+
+#: .\cats\templates\cat_form.html:104
+msgid "Порода и окрас"
+msgstr "Rasse und Farbe"
+
+#: .\cats\templates\cat_form.html:127
+msgid "Выберите из справочника или задайте окрас вручную после сохранения."
+msgstr ""
+"Wählen Sie aus dem Verzeichnis oder geben Sie die Farbe nach dem Speichern "
+"manuell ein."
+
+#: .\cats\templates\cat_form.html:143
+msgid "Питомник рождения"
+msgstr "Geburtszuchtstätte"
+
+#: .\cats\templates\cat_form.html:153
+msgid "Владелец"
+msgstr "Besitzer"
+
+#: .\cats\templates\cat_form.html:197
+msgid "Документы"
+msgstr "Dokumente"
+
+#: .\cats\templates\cat_form.html:213
+msgid "Номер микрочипа"
+msgstr "Mikrochipnummer"
+
+#: .\cats\templates\cat_form.html:227 .\cats\templates\color_form.html:91
+msgid "Примечание"
+msgstr "Notiz"
+
+#: .\cats\templates\cat_form.html:232
+msgid "Внутреннее примечание"
+msgstr "Interne Notiz"
+
+#: .\cats\templates\cat_form.html:252 .\cats\templates\color_form.html:105
+#: .\cats\templates\gallery_album_form.html:114
+msgid "Активен"
+msgstr "Aktiv"
+
+#: .\cats\templates\cat_form.html:253
+msgid "Кот отображается в системе"
+msgstr "Die Katze wird im System angezeigt"
+
+#: .\cats\templates\cat_form.html:261
+msgid "Используется в племенной программе"
+msgstr "Wird im Zuchtprogramm verwendet"
+
+#: .\cats\templates\cat_form.html:269
+msgid "Показывать на публичной странице котов"
+msgstr "Auf der öffentlichen Katzenseite anzeigen"
+
+#: .\cats\templates\cat_form.html:278 .\cats\templates\forum_post_edit.html:33
+#: .\cats\templates\gallery_album_form.html:122
+#: .\cats\templates\gallery_photo_form.html:82
+#: .\cats\templates\profile_edit.html:78 .\cats\templates\video_form.html:180
+msgid "Сохранить"
+msgstr "Speichern"
+
+#: .\cats\templates\cat_form.html:279 .\cats\templates\cat_upload.html:139
+#: .\cats\templates\color_form.html:115
+#: .\cats\templates\forum_post_confirm_delete.html:17
+#: .\cats\templates\forum_post_edit.html:34
+#: .\cats\templates\forum_topic_confirm_delete.html:20
+#: .\cats\templates\forum_topic_form.html:58
+#: .\cats\templates\gallery_album_confirm_delete.html:21
+#: .\cats\templates\gallery_album_form.html:123
+#: .\cats\templates\gallery_photo_confirm_delete.html:25
+#: .\cats\templates\gallery_photo_form.html:83
+#: .\cats\templates\gallery_photo_upload.html:60
+#: .\cats\templates\profile_edit.html:79
+#: .\cats\templates\video_confirm_delete.html:36
+#: .\cats\templates\video_form.html:181
+msgid "Отмена"
+msgstr "Abbrechen"
+
+#: .\cats\templates\cat_form.html:281
+msgid "К карточке кота"
+msgstr "Zur Katzenseite"
+
+#: .\cats\templates\cat_gallery.html:27
+msgid "Фото<em>галерея</em>"
+msgstr "Foto<em>galerie</em>"
+
+#: .\cats\templates\cat_gallery.html:32 .\cats\templates\color_form.html:31
+msgid "К карточке"
+msgstr "Zur Karte"
+
+#: .\cats\templates\cat_gallery.html:51
+msgid "Главное"
+msgstr "Hauptfoto"
+
+#: .\cats\templates\cat_gallery.html:62
+msgid "Главным"
+msgstr "Als Hauptfoto"
+
+#: .\cats\templates\cat_gallery.html:67 .\cats\templates\cat_upload.html:120
+msgid "Главное фото"
+msgstr "Hauptfoto"
+
+#: .\cats\templates\cat_gallery.html:72
+msgid "Удалить это фото?"
+msgstr "Dieses Foto löschen?"
+
+#: .\cats\templates\cat_gallery.html:150
+msgid "Фотографий пока нет"
+msgstr "Noch keine Fotos vorhanden"
+
+#: .\cats\templates\cat_gallery.html:152
+msgid "Для этого кота ещё не добавлено ни одной фотографии."
+msgstr "Für diese Katze wurde noch kein Foto hinzugefügt."
+
+#: .\cats\templates\cat_gallery.html:156
+msgid "Добавить первое фото"
+msgstr "Erstes Foto hinzufügen"
+
+#: .\cats\templates\cat_list.html:16
+msgid "Наши <em>коты</em>"
+msgstr "Unsere <em>Katzen</em>"
+
+#: .\cats\templates\cat_list.html:19
+msgid "Добавить кота"
+msgstr "Katze hinzufügen"
+
+#: .\cats\templates\cat_list.html:30
+msgid "Все породы"
+msgstr "Alle Rassen"
+
+#: .\cats\templates\cat_list.html:42 .\cats\templates\cat_list.html:51
+msgid "Любой"
+msgstr "Beliebig"
+
+#: .\cats\templates\cat_list.html:61
+msgid "Найти"
+msgstr "Suchen"
+
+#: .\cats\templates\cat_list.html:63
+msgid "Сбросить"
+msgstr "Zurücksetzen"
+
+#: .\cats\templates\cat_list.html:74
+msgid "Найдено"
+msgstr "Gefunden"
+
+#: .\cats\templates\cat_list.html:93 .\cats\templates\cat_list.html:184
+msgid "Нет фото"
+msgstr "Kein Foto"
+
+#: .\cats\templates\cat_list.html:132
+msgid "Разведение"
+msgstr "Zucht"
+
+#: .\cats\templates\cat_list.html:135 .\cats\templates\cat_list.html:223
+#: .\cats\templates\litter_kitten_card.html:41
+msgid "Родословная"
+msgstr "Ahnentafel"
+
+#: .\cats\templates\cat_list.html:148
+msgid "Коты не найдены"
+msgstr "Keine Katzen gefunden"
+
+#: .\cats\templates\cat_list.html:151
+msgid "Попробуйте изменить или сбросить фильтры."
+msgstr "Versuchen Sie, die Filter zu ändern oder zurückzusetzen."
+
+#: .\cats\templates\cat_list.html:153
+msgid "Пока ни одного кота не добавлено."
+msgstr "Bisher wurde noch keine Katze hinzugefügt."
+
+#: .\cats\templates\cat_list.html:158
+msgid "Сбросить фильтры"
+msgstr "Filter zurücksetzen"
+
+#: .\cats\templates\cat_list.html:167
+msgid "Ранее в питомнике"
+msgstr "Früher in der Zuchtstätte"
+
+#: .\cats\templates\cat_upload.html:5 .\cats\templates\cat_upload.html:21
+#: .\cats\templates\gallery_photo_upload.html:5
+#: .\cats\templates\gallery_photo_upload.html:15
+msgid "Загрузка фото"
+msgstr "Foto-Upload"
+
+#: .\cats\templates\cat_upload.html:28 .\cats\templates\gallery_manage.html:68
+#: .\cats\templates\gallery_photo_upload.html:21
+#: .\cats\templates\gallery_photo_upload.html:58
+msgid "Загрузить"
+msgstr "Hochladen"
+
+#: .\cats\templates\cat_upload.html:28 .\cats\templates\gallery_manage.html:55
+#: .\cats\templates\gallery_photo_form.html:21
+#: .\cats\templates\gallery_photo_upload.html:21
+msgid "фото"
+msgstr "Foto"
+
+#: .\cats\templates\cat_upload.html:30
+msgid "К галерее"
+msgstr "Zur Galerie"
+
+#: .\cats\templates\cat_upload.html:47 .\cats\templates\video_form.html:74
+#: .\cats\templates\video_manage.html:58
+msgid "Файл"
+msgstr "Datei"
+
+#: .\cats\templates\cat_upload.html:53
+msgid "Изображение"
+msgstr "Bild"
+
+#: .\cats\templates\cat_upload.html:59
+msgid "Форматы: JPG, PNG, WebP. Рекомендуемое соотношение сторон 4:5."
+msgstr "Formate: JPG, PNG, WebP. Empfohlenes Seitenverhältnis: 4:5."
+
+#: .\cats\templates\cat_upload.html:68 .\cats\templates\cat_upload.html:84
+#: .\cats\templates\gallery_album_form.html:56
+#: .\cats\templates\video_form.html:55
+msgid "Описание"
+msgstr "Beschreibung"
+
+#: .\cats\templates\cat_upload.html:74
+msgid "Название фото"
+msgstr "Fototitel"
+
+#: .\cats\templates\cat_upload.html:98
+msgid "Настройки"
+msgstr "Einstellungen"
+
+#: .\cats\templates\cat_upload.html:104
+#: .\cats\templates\gallery_album_form.html:90
+msgid "Порядок сортировки"
+msgstr "Sortierreihenfolge"
+
+#: .\cats\templates\cat_upload.html:110
+msgid "Меньшее число — выше в галерее."
+msgstr "Kleinere Zahl – weiter oben in der Galerie."
+
+#: .\cats\templates\cat_upload.html:121
+msgid "Отображается на карточке кота"
+msgstr "Wird auf der Katzenseite angezeigt"
+
+#: .\cats\templates\cat_upload.html:128
+#: .\cats\templates\gallery_photo_form.html:74
+#: .\cats\templates\video_form.html:172
+msgid "Активно"
+msgstr "Aktiv"
+
+#: .\cats\templates\cat_upload.html:129
+#: .\cats\templates\gallery_photo_form.html:75
+msgid "Фото показывается в галерее"
+msgstr "Das Foto wird in der Galerie angezeigt"
+
+#: .\cats\templates\cat_upload.html:138
+#: .\cats\templates\gallery_album_photos.html:26
+#: .\cats\templates\gallery_album_photos.html:158
+msgid "Загрузить фото"
+msgstr "Foto hochladen"
+
+#: .\cats\templates\color_form.html:27 .\cats\templates\forum_post_edit.html:12
+#: .\cats\templates\forum_post_edit.html:18
+#: .\cats\templates\gallery_album_form.html:24
+#: .\cats\templates\gallery_photo_form.html:21 .\cats\templates\profile.html:15
+#: .\cats\templates\profile_edit.html:13 .\cats\templates\profile_edit.html:19
+#: .\cats\templates\video_form.html:23
+msgid "Редактировать"
+msgstr "Bearbeiten"
+
+#: .\cats\templates\color_form.html:28
+msgid "окрас"
+msgstr "Farbe"
+
+#: .\cats\templates\color_form.html:49
+msgid "Текущий окрас"
+msgstr "Aktuelle Farbe"
+
+#: .\cats\templates\color_form.html:58
+msgid "Компоненты окраса EMS"
+msgstr "EMS-Farbkomponenten"
+
+#: .\cats\templates\color_form.html:64
+msgid ""
+"Название окраса и EMS-код формируются автоматически из выбранных компонентов "
+"в соответствии со стандартом FIFe."
+msgstr ""
+"Der Farbname und der EMS-Code werden automatisch aus den ausgewählten "
+"Komponenten gemäß dem FIFe-Standard gebildet."
+
+#: .\cats\templates\color_form.html:70
+msgid "Компоненты"
+msgstr "Komponenten"
+
+#: .\cats\templates\color_form.html:77
+msgid "Удерживайте Ctrl (или Cmd на Mac) для выбора нескольких компонентов."
+msgstr ""
+"Halten Sie Ctrl (oder auf dem Mac Cmd) gedrückt, um mehrere Komponenten "
+"auszuwählen."
+
+#: .\cats\templates\color_form.html:85
+msgid "Дополнительно"
+msgstr "Zusätzlich"
+
+#: .\cats\templates\color_form.html:106
+msgid "Окрас доступен для выбора"
+msgstr "Farbe ist auswählbar"
+
+#: .\cats\templates\color_form.html:114
+msgid "Сохранить окрас"
+msgstr "Farbe speichern"
+
+#: .\cats\templates\contacts.html:14
+msgid "Свяжитесь"
+msgstr "Nehmen Sie"
+
+#: .\cats\templates\contacts.html:14
+msgid "с нами"
+msgstr "Kontakt mit uns auf"
+
+#: .\cats\templates\contacts.html:16
+msgid ""
+"Если у вас есть вопросы о породе, наших котах или помётах — мы всегда рады "
+"ответить."
+msgstr ""
+"Wenn Sie Fragen zur Rasse, zu unseren Katzen oder Würfen haben, antworten "
+"wir Ihnen gern."
+
+#: .\cats\templates\contacts.html:36
+msgid "Ответим в течение дня"
+msgstr "Antwort innerhalb eines Tages"
+
+#: .\cats\templates\contacts.html:54
+msgid "Быстрый ответ"
+msgstr "Schnelle Antwort"
+
+#: .\cats\templates\contacts.html:73
+msgid "Фото и новости питомника"
+msgstr "Fotos und Neuigkeiten aus der Zuchtstätte"
+
+#: .\cats\templates\contacts.html:90
+msgid "Страница питомника"
+msgstr "Seite der Zuchtstätte"
+
+#: .\cats\templates\contacts.html:102
+msgid "О питомнике"
+msgstr "Über die Zuchtstätte"
+
+#: .\cats\templates\contacts.html:104
+msgid ""
+"Vedenika — любительский питомник мейн-кунов, основанный из любви к этой "
+"удивительной породе."
+msgstr ""
+"Vedenika ist eine liebevoll geführte Maine-Coon-Zucht, entstanden aus Liebe "
+"zu dieser wunderbaren Rasse."
+
+#: .\cats\templates\contacts.html:119
+msgid "Как мы отвечаем"
+msgstr "Wie wir antworten"
+
+#: .\cats\templates\contacts.html:122
+msgid "На каком языке?"
+msgstr "In welcher Sprache?"
+
+#: .\cats\templates\contacts.html:123
+msgid "По-русски, auf Deutsch или in English — как удобно."
+msgstr "Auf Russisch, auf Deutsch oder auf Englisch – ganz wie es Ihnen passt."
+
+#: .\cats\templates\contacts.html:126
+msgid "Как быстро?"
+msgstr "Wie schnell?"
+
+#: .\cats\templates\contacts.html:127
+msgid "Обычно в течение дня, иногда быстрее через WhatsApp."
+msgstr "Meist innerhalb eines Tages, manchmal schneller per WhatsApp."
+
+#: .\cats\templates\contacts.html:130
+msgid "О чём писать?"
+msgstr "Worüber kann man schreiben?"
+
+#: .\cats\templates\contacts.html:131
+msgid ""
+"О породе, наших котах, помётах или просто пообщаться — всё приветствуется."
+msgstr ""
+"Über die Rasse, unsere Katzen, Würfe oder einfach für einen netten "
+"Austausch – alles ist willkommen."
+
+#: .\cats\templates\forum_category.html:26
+#: .\cats\templates\forum_topic_form.html:16
+msgid "Новая тема"
+msgstr "Neues Thema"
+
+#: .\cats\templates\forum_category.html:30
+msgid "Войдите чтобы писать"
+msgstr "Melden Sie sich an, um zu schreiben"
+
+#: .\cats\templates\forum_category.html:49
+#: .\cats\templates\forum_category.html:68 .\cats\templates\forum_index.html:50
+msgid "назад"
+msgstr "zurück"
+
+#: .\cats\templates\forum_category.html:56 .\cats\templates\forum_topic.html:62
+msgid "ответов"
+msgstr "Antworten"
+
+#: .\cats\templates\forum_category.html:60 .\cats\templates\forum_topic.html:28
+msgid "просмотров"
+msgstr "Aufrufe"
+
+#: .\cats\templates\forum_category.html:80
+msgid "Тем пока нет"
+msgstr "Noch keine Themen"
+
+#: .\cats\templates\forum_category.html:81
+msgid "Будьте первым!"
+msgstr "Seien Sie der Erste!"
+
+#: .\cats\templates\forum_category.html:84
+msgid "Создать тему"
+msgstr "Thema erstellen"
+
+#: .\cats\templates\forum_index.html:21
+msgid "Общаясь на форуме, вы соглашаетесь с"
+msgstr "Mit der Nutzung des Forums stimmen Sie den"
+
+#: .\cats\templates\forum_index.html:22
+msgid "правилами форума"
+msgstr "Forenregeln"
+
+#: .\cats\templates\forum_index.html:23
+msgid "Политика, межнациональная рознь и оскорбления запрещены."
+msgstr "Politik, ethnische Feindseligkeit und Beleidigungen sind verboten."
+
+#: .\cats\templates\forum_index.html:43
+msgid "тем"
+msgstr "Themen"
+
+#: .\cats\templates\forum_index.html:48
+msgid "Последнее"
+msgstr "Letzter Beitrag"
+
+#: .\cats\templates\forum_index.html:60
+msgid "Форум пока пуст"
+msgstr "Das Forum ist noch leer"
+
+#: .\cats\templates\forum_index.html:61
+msgid "Разделы появятся здесь после настройки."
+msgstr "Die Bereiche erscheinen hier nach der Einrichtung."
+
+#: .\cats\templates\forum_post_confirm_delete.html:3
+msgid "Удалить сообщение"
+msgstr "Beitrag löschen"
+
+#: .\cats\templates\forum_post_confirm_delete.html:8
+msgid "Удалить сообщение?"
+msgstr "Beitrag löschen?"
+
+#: .\cats\templates\forum_post_confirm_delete.html:14
+#: .\cats\templates\forum_topic.html:97
+#: .\cats\templates\forum_topic_confirm_delete.html:17
+#: .\cats\templates\gallery_album_photos.html:92
+#: .\cats\templates\gallery_manage.html:74
+#: .\cats\templates\video_manage.html:72
+msgid "Удалить"
+msgstr "Löschen"
+
+#: .\cats\templates\forum_post_edit.html:4
+msgid "Редактировать сообщение"
+msgstr "Beitrag bearbeiten"
+
+#: .\cats\templates\forum_post_edit.html:18
+msgid "сообщение"
+msgstr "Beitrag"
+
+#: .\cats\templates\forum_post_edit.html:20
+msgid "К теме"
+msgstr "Zum Thema"
+
+#: .\cats\templates\forum_post_edit.html:27
+msgid "Текст сообщения"
+msgstr "Beitragstext"
+
+#: .\cats\templates\forum_rules.html:5
+msgid "Правила форума"
+msgstr "Forenregeln"
+
+#: .\cats\templates\forum_rules.html:13 .\cats\templates\forum_rules.html:19
+msgid "Правила"
+msgstr "Regeln"
+
+#: .\cats\templates\forum_rules.html:19
+msgid "форума"
+msgstr "des Forums"
+
+#: .\cats\templates\forum_rules.html:21
+msgid "К форуму"
+msgstr "Zum Forum"
+
+#: .\cats\templates\forum_rules.html:25
+msgid ""
+"Vedenika — место для людей, которые любят мейн-кунов. Здесь мы делимся "
+"опытом, фотографиями и историями о наших котах. Чтобы общение оставалось "
+"приятным для всех, просим соблюдать несколько простых правил."
+msgstr ""
+"Vedenika ist ein Ort für Menschen, die Maine Coons lieben. Hier teilen wir "
+"Erfahrungen, Fotos und Geschichten über unsere Katzen. Damit der Austausch "
+"für alle angenehm bleibt, bitten wir darum, einige einfache Regeln zu "
+"beachten."
+
+#: .\cats\templates\forum_rules.html:33
+msgid "Тема — кошки и всё что с ними связано"
+msgstr "Thema – Katzen und alles, was mit ihnen zu tun hat"
+
+#: .\cats\templates\forum_rules.html:35
+msgid ""
+"Форум посвящён мейн-кунам и породистым кошкам. Здесь обсуждаем уход, "
+"здоровье, питание, воспитание, помёты и просто делимся радостью от жизни с "
+"нашими питомцами."
+msgstr ""
+"Das Forum ist Maine Coons und Rassekatzen gewidmet. Hier sprechen wir über "
+"Pflege, Gesundheit, Ernährung, Erziehung, Würfe und teilen einfach die "
+"Freude am Leben mit unseren Tieren."
+
+#: .\cats\templates\forum_rules.html:43
+msgid "Уважение к участникам"
+msgstr "Respekt gegenüber den Teilnehmern"
+
+#: .\cats\templates\forum_rules.html:45
+msgid ""
+"Относитесь к другим участникам так, как хотели бы, чтобы относились к вам. "
+"Разные точки зрения на уход за кошками — это нормально. Споры разрешены, "
+"грубость и оскорбления — нет."
+msgstr ""
+"Behandeln Sie andere Teilnehmer so, wie Sie selbst behandelt werden "
+"möchten. Unterschiedliche Ansichten zur Katzenhaltung sind normal. "
+"Diskussionen sind erlaubt, Unhöflichkeit und Beleidigungen nicht."
+
+#: .\cats\templates\forum_rules.html:53
+msgid "Что запрещено"
+msgstr "Was verboten ist"
+
+#: .\cats\templates\forum_rules.html:55
+msgid "На форуме категорически запрещены:"
+msgstr "Im Forum sind strikt verboten:"
+
+#: .\cats\templates\forum_rules.html:58
+msgid "Политические дискуссии любого характера"
+msgstr "Politische Diskussionen jeglicher Art"
+
+#: .\cats\templates\forum_rules.html:59
+msgid "Межнациональная рознь и любые формы дискриминации"
+msgstr "Ethnische Feindseligkeit und jede Form von Diskriminierung"
+
+#: .\cats\templates\forum_rules.html:60
+msgid "Оскорбления, угрозы, травля участников"
+msgstr "Beleidigungen, Drohungen und Mobbing gegenüber Teilnehmern"
+
+#: .\cats\templates\forum_rules.html:61
+msgid "Реклама и спам"
+msgstr "Werbung und Spam"
+
+#: .\cats\templates\forum_rules.html:62
+msgid "Контент для взрослых"
+msgstr "Erwachseneninhalte"
+
+#: .\cats\templates\forum_rules.html:63
+msgid "Пропаганда жестокого обращения с животными"
+msgstr "Verherrlichung von Tierquälerei"
+
+#: .\cats\templates\forum_rules.html:71
+msgid "Культура общения"
+msgstr "Kommunikationskultur"
+
+#: .\cats\templates\forum_rules.html:73
+msgid ""
+"Пишите грамотно, по существу. Не флудите и не дублируйте сообщения. Если "
+"хотите поделиться фото — используйте галерею. Критикуйте идеи, а не людей."
+msgstr ""
+"Schreiben Sie verständlich und sachlich. Bitte kein Flooding und keine "
+"doppelten Beiträge. Wenn Sie Fotos teilen möchten, nutzen Sie die Galerie. "
+"Kritisieren Sie Ideen, nicht Menschen."
+
+#: .\cats\templates\forum_rules.html:81
+msgid "Языки общения"
+msgstr "Sprachen im Forum"
+
+#: .\cats\templates\forum_rules.html:83
+msgid ""
+"Форум многоязычный. Пишите на русском, немецком или английском — все три "
+"языка приветствуются. Другие участники постараются вас понять."
+msgstr ""
+"Das Forum ist mehrsprachig. Schreiben Sie auf Russisch, Deutsch oder "
+"Englisch – alle drei Sprachen sind willkommen. Andere Teilnehmer werden "
+"versuchen, Sie zu verstehen."
+
+#: .\cats\templates\forum_rules.html:91
+msgid "Модерация"
+msgstr "Moderation"
+
+#: .\cats\templates\forum_rules.html:93
+msgid ""
+"Администратор оставляет за собой право удалять сообщения и темы, нарушающие "
+"правила, без предупреждения. При систематических нарушениях аккаунт может "
+"быть заблокирован. Если вы заметили нарушение — напишите нам через страницу "
+"контактов."
+msgstr ""
+"Der Administrator behält sich das Recht vor, Beiträge und Themen, die gegen "
+"die Regeln verstoßen, ohne Vorwarnung zu löschen. Bei wiederholten "
+"Verstößen kann ein Konto gesperrt werden. Wenn Sie einen Verstoß bemerken, "
+"schreiben Sie uns bitte über die Kontaktseite."
+
+#: .\cats\templates\forum_rules.html:101
+msgid ""
+"Спасибо что делаете этот форум приятным местом для общения. Если есть "
+"вопросы — пишите нам."
+msgstr ""
+"Danke, dass Sie dieses Forum zu einem angenehmen Ort für den Austausch "
+"machen. Wenn Sie Fragen haben, schreiben Sie uns."
+
+#: .\cats\templates\forum_topic.html:34
+#: .\cats\templates\forum_topic_confirm_delete.html:3
+msgid "Удалить тему"
+msgstr "Thema löschen"
+
+#: .\cats\templates\forum_topic.html:83
+msgid "изменено"
+msgstr "bearbeitet"
+
+#: .\cats\templates\forum_topic.html:111
+msgid "Ваш ответ"
+msgstr "Ihre Antwort"
+
+#: .\cats\templates\forum_topic.html:130
+msgid "Отправить"
+msgstr "Senden"
+
+#: .\cats\templates\forum_topic.html:137
+msgid "Чтобы ответить"
+msgstr "Um zu antworten,"
+
+#: .\cats\templates\forum_topic.html:138
+msgid "войдите"
+msgstr "melden Sie sich an"
+
+#: .\cats\templates\forum_topic.html:139 .\cats\templates\video_form.html:85
+msgid "или"
+msgstr "oder"
+
+#: .\cats\templates\forum_topic.html:140
+msgid "зарегистрируйтесь"
+msgstr "registrieren Sie sich"
+
+#: .\cats\templates\forum_topic_confirm_delete.html:8
+msgid "Удалить тему?"
+msgstr "Thema löschen?"
+
+#: .\cats\templates\forum_topic_confirm_delete.html:11
+msgid "Все сообщения темы будут скрыты."
+msgstr "Alle Beiträge des Themas werden ausgeblendet."
+
+#: .\cats\templates\forum_topic_form.html:22
+msgid "Новая"
+msgstr "Neues"
+
+#: .\cats\templates\forum_topic_form.html:22
+msgid "тема"
+msgstr "Thema"
+
+#: .\cats\templates\forum_topic_form.html:24
+msgid "Назад"
+msgstr "Zurück"
+
+#: .\cats\templates\forum_topic_form.html:42
+msgid "Заголовок"
+msgstr "Titel"
+
+#: .\cats\templates\forum_topic_form.html:48
+msgid "Текст"
+msgstr "Text"
+
+#: .\cats\templates\forum_topic_form.html:57
+msgid "Опубликовать тему"
+msgstr "Thema veröffentlichen"
+
+#: .\cats\templates\gallery_album.html:27 .\cats\templates\gallery_list.html:27
+#: .\cats\templates\gallery_list.html:58 .\cats\templates\video_list.html:31
+msgid "Повседневная жизнь"
+msgstr "Alltag"
+
+#: .\cats\templates\gallery_album.html:29 .\cats\templates\gallery_list.html:35
+#: .\cats\templates\gallery_list.html:84
+msgid "Художественные"
+msgstr "Künstlerische Fotos"
+
+#: .\cats\templates\gallery_album.html:43
+msgid "Все альбомы"
+msgstr "Alle Alben"
+
+#: .\cats\templates\gallery_album.html:52
+msgid "Фотографий"
+msgstr "Fotos"
+
+#: .\cats\templates\gallery_album.html:153
+#: .\cats\templates\gallery_album_photos.html:155
+msgid "В альбоме пока нет фотографий"
+msgstr "In diesem Album gibt es noch keine Fotos"
+
+#: .\cats\templates\gallery_album.html:154
+msgid "Скоро здесь появятся фото."
+msgstr "Bald erscheinen hier Fotos."
+
+#: .\cats\templates\gallery_album_confirm_delete.html:3
+msgid "Удалить альбом"
+msgstr "Album löschen"
+
+#: .\cats\templates\gallery_album_confirm_delete.html:8
+msgid "Удалить альбом?"
+msgstr "Album löschen?"
+
+#: .\cats\templates\gallery_album_confirm_delete.html:10
+msgid "Вы собираетесь удалить альбом"
+msgstr "Sie sind dabei, das Album zu löschen"
+
+#: .\cats\templates\gallery_album_confirm_delete.html:12
+msgid "Все фотографии альбома будут удалены безвозвратно."
+msgstr "Alle Fotos des Albums werden unwiderruflich gelöscht."
+
+#: .\cats\templates\gallery_album_confirm_delete.html:18
+#: .\cats\templates\gallery_photo_confirm_delete.html:22
+#: .\cats\templates\video_confirm_delete.html:33
+msgid "Да, удалить"
+msgstr "Ja, löschen"
+
+#: .\cats\templates\gallery_album_form.html:15
+#: .\cats\templates\gallery_manage.html:16 .\cats\templates\video_form.html:14
+#: .\cats\templates\video_manage.html:16
+msgid "Управление"
+msgstr "Verwaltung"
+
+#: .\cats\templates\gallery_album_form.html:24
+msgid "Создать"
+msgstr "Erstellen"
+
+#: .\cats\templates\gallery_album_form.html:25
+msgid "альбом"
+msgstr "Album"
+
+#: .\cats\templates\gallery_album_form.html:45
+#: .\cats\templates\video_form.html:44
+msgid "Название и описание"
+msgstr "Titel und Beschreibung"
+
+#: .\cats\templates\gallery_album_form.html:50
+msgid "Название альбома"
+msgstr "Albentitel"
+
+#: .\cats\templates\gallery_album_form.html:67
+msgid "Параметры"
+msgstr "Parameter"
+
+#: .\cats\templates\gallery_album_form.html:72
+#: .\cats\templates\video_form.html:143
+msgid "Категория"
+msgstr "Kategorie"
+
+#: .\cats\templates\gallery_album_form.html:78
+msgid "Дата"
+msgstr "Datum"
+
+#: .\cats\templates\gallery_album_form.html:84
+msgid "Помёт (для категории «Помёты»)"
+msgstr "Wurf (für die Kategorie „Würfe“)"
+
+#: .\cats\templates\gallery_album_form.html:96
+msgid "Обложка альбома"
+msgstr "Albumcover"
+
+#: .\cats\templates\gallery_album_form.html:100
+msgid "Текущая обложка. Загрузите новую чтобы заменить."
+msgstr "Aktuelles Cover. Laden Sie ein neues hoch, um es zu ersetzen."
+
+#: .\cats\templates\gallery_album_form.html:105
+msgid "Если не задана — будет использовано первое фото альбома."
+msgstr "Wenn kein Cover festgelegt ist, wird das erste Foto des Albums verwendet."
+
+#: .\cats\templates\gallery_album_form.html:115
+msgid "Альбом отображается в галерее"
+msgstr "Das Album wird in der Galerie angezeigt"
+
+#: .\cats\templates\gallery_album_form.html:126
+msgid "Фотографии альбома"
+msgstr "Fotos des Albums"
+
+#: .\cats\templates\gallery_album_photos.html:6
+msgid "Фото альбома"
+msgstr "Albumfoto"
+
+#: .\cats\templates\gallery_album_photos.html:12
+#: .\cats\templates\gallery_manage.html:6
+#: .\cats\templates\gallery_photo_form.html:11
+#: .\cats\templates\gallery_photo_upload.html:11
+msgid "Управление галереей"
+msgstr "Galerieverwaltung"
+
+#: .\cats\templates\gallery_album_photos.html:29
+msgid "Настройки альбома"
+msgstr "Albumeinstellungen"
+
+#: .\cats\templates\gallery_album_photos.html:32
+msgid "Просмотр"
+msgstr "Ansicht"
+
+#: .\cats\templates\gallery_album_photos.html:41
+msgid "фотографий"
+msgstr "Fotos"
+
+#: .\cats\templates\gallery_album_photos.html:45
+msgid "активных"
+msgstr "aktive"
+
+#: .\cats\templates\gallery_album_photos.html:50
+msgid "год"
+msgstr "Jahr"
+
+#: .\cats\templates\gallery_album_photos.html:59
+msgid ""
+"Порядок фото можно менять перетаскиванием. Изменения сохраняются "
+"автоматически."
+msgstr ""
+"Die Reihenfolge der Fotos kann per Drag-and-drop geändert werden. Die "
+"Änderungen werden automatisch gespeichert."
+
+#: .\cats\templates\gallery_album_photos.html:69
+msgid "Перетащите для изменения порядка"
+msgstr "Zum Ändern der Reihenfolge ziehen"
+
+#: .\cats\templates\gallery_album_photos.html:71
+#: .\cats\templates\video_manage.html:61
+msgid "Скрыто"
+msgstr "Ausgeblendet"
+
+#: .\cats\templates\gallery_album_photos.html:156
+msgid "Загрузите первые фото."
+msgstr "Laden Sie die ersten Fotos hoch."
+
+#: .\cats\templates\gallery_albums_grid.html:12
+#: .\cats\templates\gallery_manage.html:85
+msgid "Альбомов пока нет"
+msgstr "Noch keine Alben"
+
+#: .\cats\templates\gallery_list.html:15
+msgid "Наша"
+msgstr "Unsere"
+
+#: .\cats\templates\gallery_list.html:15
+msgid "галерея"
+msgstr "Galerie"
+
+#: .\cats\templates\gallery_list.html:23
+msgid "Все"
+msgstr "Alle"
+
+#: .\cats\templates\gallery_list.html:97
+msgid "Альбомы пока не добавлены"
+msgstr "Es wurden noch keine Alben hinzugefügt"
+
+#: .\cats\templates\gallery_list.html:98
+msgid "Скоро здесь появятся фотографии."
+msgstr "Bald erscheinen hier Fotos."
+
+#: .\cats\templates\gallery_manage.html:21
+#: .\cats\templates\video_manage.html:21
+msgid "Администрирование"
+msgstr "Administration"
+
+#: .\cats\templates\gallery_manage.html:22
+#: .\cats\templates\video_manage.html:22
+msgid "управление"
+msgstr "Verwaltung"
+
+#: .\cats\templates\gallery_manage.html:25
+#: .\cats\templates\gallery_manage.html:88
+msgid "Создать альбом"
+msgstr "Album erstellen"
+
+#: .\cats\templates\gallery_manage.html:57
+msgid "Скрыт"
+msgstr "Ausgeblendet"
+
+#: .\cats\templates\gallery_manage.html:86
+msgid "Создайте первый альбом."
+msgstr "Erstellen Sie das erste Album."
+
+#: .\cats\templates\gallery_photo_confirm_delete.html:3
+#: .\cats\templates\gallery_photo_form.html:85
+msgid "Удалить фото"
+msgstr "Foto löschen"
+
+#: .\cats\templates\gallery_photo_confirm_delete.html:11
+msgid "Удалить фото?"
+msgstr "Foto löschen?"
+
+#: .\cats\templates\gallery_photo_confirm_delete.html:16
+msgid "фото будет удалено безвозвратно."
+msgstr "Das Foto wird unwiderruflich gelöscht."
+
+#: .\cats\templates\gallery_photo_form.html:5
+#: .\cats\templates\gallery_photo_form.html:15
+msgid "Редактировать фото"
+msgstr "Foto bearbeiten"
+
+#: .\cats\templates\gallery_photo_form.html:23
+#: .\cats\templates\gallery_photo_upload.html:23
+msgid "К альбому"
+msgstr "Zum Album"
+
+#: .\cats\templates\gallery_photo_form.html:40
+msgid "Данные фото"
+msgstr "Fotodaten"
+
+#: .\cats\templates\gallery_photo_form.html:45
+msgid "Заменить изображение"
+msgstr "Bild ersetzen"
+
+#: .\cats\templates\gallery_photo_form.html:48
+msgid "Оставьте пустым чтобы сохранить текущее фото."
+msgstr "Leer lassen, um das aktuelle Foto beizubehalten."
+
+#: .\cats\templates\gallery_photo_form.html:52
+msgid "Подпись"
+msgstr "Bildunterschrift"
+
+#: .\cats\templates\gallery_photo_form.html:58
+msgid "Ссылка Instagram"
+msgstr "Instagram-Link"
+
+#: .\cats\templates\gallery_photo_form.html:64
+#: .\cats\templates\video_form.html:161
+msgid "Порядок"
+msgstr "Reihenfolge"
+
+#: .\cats\templates\gallery_photo_upload.html:31
+msgid "Выбор файлов"
+msgstr "Dateiauswahl"
+
+#: .\cats\templates\gallery_photo_upload.html:37
+msgid "Перетащите фото сюда"
+msgstr "Ziehen Sie Fotos hierher"
+
+#: .\cats\templates\gallery_photo_upload.html:38
+msgid "или нажмите для выбора файлов"
+msgstr "oder klicken Sie, um Dateien auszuwählen"
+
+#: .\cats\templates\gallery_photo_upload.html:44
+msgid "Выбрать файлы"
+msgstr "Dateien auswählen"
+
+#: .\cats\templates\gallery_photo_upload.html:52
+msgid ""
+"Поддерживаются: JPG, PNG, WebP. Можно выбрать несколько файлов одновременно."
+msgstr ""
+"Unterstützt werden JPG, PNG und WebP. Es können mehrere Dateien "
+"gleichzeitig ausgewählt werden."
+
+#: .\cats\templates\home.html:5 .\cats\templates\home.html:16
+msgid "Мейн-куны"
+msgstr "Maine Coons"
+
+#: .\cats\templates\home.html:14
+msgid "Любительский питомник"
+msgstr "Hobbyzucht"
+
+#: .\cats\templates\home.html:17
+msgid "живут рядом"
+msgstr "leben an unserer Seite"
+
+#: .\cats\templates\home.html:20
+msgid ""
+"Наш домашний питомник — это большая семья мейн-кунов. Мы не разводим ради "
+"выгоды, мы живём вместе с этими удивительными котами и рады делиться их "
+"историями."
+msgstr ""
+"Unsere kleine Hauszucht ist eine große Maine-Coon-Familie. Wir züchten "
+"nicht aus Gewinnstreben, sondern leben mit diesen wunderbaren Katzen "
+"zusammen und teilen gern ihre Geschichten."
+
+#: .\cats\templates\home.html:23
+msgid "Познакомиться с котами"
+msgstr "Unsere Katzen kennenlernen"
+
+#: .\cats\templates\home.html:47
+msgid ""
+"История наших котят — от рождения до новых домов. Фото с первых дней жизни."
+msgstr ""
+"Die Geschichte unserer Kätzchen – von der Geburt bis in ihr neues Zuhause. "
+"Fotos aus den ersten Lebenstagen."
+
+#: .\cats\templates\home.html:48
+msgid "Смотреть помёты"
+msgstr "Würfe ansehen"
+
+#: .\cats\templates\home.html:53
+msgid ""
+"Повседневная жизнь питомника, игры, прогулки и художественные портреты наших "
+"котов."
+msgstr ""
+"Alltag in unserer Zuchtstätte, Spiele, Spaziergänge und künstlerische "
+"Porträts unserer Katzen."
+
+#: .\cats\templates\home.html:59
+msgid ""
+"Всё о мейн-кунах — история, характер, уход и особенности этих удивительных "
+"котов."
+msgstr ""
+"Alles über Maine Coons – Geschichte, Charakter, Pflege und die besonderen "
+"Eigenschaften dieser wunderbaren Katzen."
+
+#: .\cats\templates\home.html:60
+msgid "Читать"
+msgstr "Lesen"
+
+#: .\cats\templates\home.html:68
+msgid "О нас"
+msgstr "Über uns"
+
+#: .\cats\templates\home.html:70
+msgid "Не питомник,"
+msgstr "Nicht nur eine Zuchtstätte,"
+
+#: .\cats\templates\home.html:70
+msgid "а семья"
+msgstr "sondern eine Familie"
+
+#: .\cats\templates\home.html:73
+msgid ""
+"Мейн-куны появились в нашей жизни случайно — и навсегда. Сегодня они "
+"полноправные члены семьи: живут с нами, путешествуют, засыпают на диване и "
+"будят по утрам."
+msgstr ""
+"Maine Coons kamen eher zufällig in unser Leben – und blieben für immer. "
+"Heute sind sie vollwertige Familienmitglieder: Sie leben mit uns, reisen "
+"mit uns, schlafen auf dem Sofa ein und wecken uns am Morgen."
+
+#: .\cats\templates\home.html:76
+msgid ""
+"Для нас важно, чтобы каждый котёнок рос в любви, был здоров и нашёл такую же "
+"любящую семью."
+msgstr ""
+"Für uns ist wichtig, dass jedes Kätzchen in Liebe aufwächst, gesund ist und "
+"eine ebenso liebevolle Familie findet."
+
+#: .\cats\templates\home.html:85
+msgid "Любовь к породе"
+msgstr "Liebe zur Rasse"
+
+#: .\cats\templates\home.html:86
+msgid "Мейн-куны — наша страсть, а не бизнес"
+msgstr "Maine Coons sind unsere Leidenschaft, kein Geschäft"
+
+#: .\cats\templates\home.html:92
+msgid "Здоровье прежде всего"
+msgstr "Gesundheit an erster Stelle"
+
+#: .\cats\templates\home.html:93
+msgid "Все производители проверены на HCM и SMA"
+msgstr "Alle Zuchttiere sind auf HCM und SMA getestet"
+
+#: .\cats\templates\home.html:99
+msgid "Домашнее воспитание"
+msgstr "Aufwachsen im Familienumfeld"
+
+#: .\cats\templates\home.html:100
+msgid "Котята растут в доме, среди людей"
+msgstr "Die Kätzchen wachsen im Haus, mitten unter Menschen, auf"
+
+#: .\cats\templates\home.html:106
+msgid "Связь навсегда"
+msgstr "Für immer verbunden"
+
+#: .\cats\templates\home.html:107
+msgid "Поддерживаем контакт с новыми семьями"
+msgstr "Wir bleiben mit den neuen Familien in Kontakt"
+
+#: .\cats\templates\impressum.html:19
+msgid "Правовая информация"
+msgstr "Rechtliche Informationen"
+
+#: .\cats\templates\impressum.html:33
+msgid "Privatperson / Частное лицо"
+msgstr "Privatperson"
+
+#: .\cats\templates\impressum.html:37
+msgid "Standort / Местонахождение"
+msgstr "Standort"
+
+#: .\cats\templates\impressum.html:48
+msgid "Kontakt / Контакт"
+msgstr "Kontakt"
+
+#: .\cats\templates\impressum.html:58
+msgid "Полный почтовый адрес предоставляется по запросу по электронной почте."
+msgstr "Die vollständige Postanschrift wird auf Anfrage per E-Mail mitgeteilt."
+
+#: .\cats\templates\impressum.html:63
+msgid "Данные не найдены"
+msgstr "Keine Daten gefunden"
+
+#: .\cats\templates\impressum.html:74
+msgid ""
+"Данный сайт является частным некоммерческим проектом любителей породы мейн-"
+"кун. Никакая коммерческая деятельность на сайте не ведётся."
+msgstr ""
+"Diese Website ist ein privates, nicht kommerzielles Projekt von Liebhabern "
+"der Maine-Coon-Rasse. Über diese Website wird keine kommerzielle Tätigkeit "
+"ausgeübt."
+
+#: .\cats\templates\litter_detail.html:25
+msgid "Активный помёт"
+msgstr "Aktiver Wurf"
+
+#: .\cats\templates\litter_detail.html:25
+msgid "Помёт завершён"
+msgstr "Wurf abgeschlossen"
+
+#: .\cats\templates\litter_detail.html:32
+msgid "Все помёты"
+msgstr "Alle Würfe"
+
+#: .\cats\templates\litter_detail.html:50 .\cats\templates\litter_list.html:51
+msgid "Мама"
+msgstr "Mutter"
+
+#: .\cats\templates\litter_detail.html:74 .\cats\templates\litter_list.html:65
+msgid "Папа"
+msgstr "Vater"
+
+#: .\cats\templates\litter_detail.html:88
+msgid "котят всего"
+msgstr "Kätzchen insgesamt"
+
+#: .\cats\templates\litter_detail.html:92 .\cats\templates\litter_list.html:103
+msgid "котов"
+msgstr "Kater"
+
+#: .\cats\templates\litter_detail.html:96 .\cats\templates\litter_list.html:107
+msgid "кошек"
+msgstr "Katzen"
+
+#: .\cats\templates\litter_detail.html:108
+msgid "Возраст"
+msgstr "Alter"
+
+#: .\cats\templates\litter_detail.html:111
+msgid "нед."
+msgstr "Wo."
+
+#: .\cats\templates\litter_detail.html:113
+msgid "мес."
+msgstr "Mon."
+
+#: .\cats\templates\litter_detail.html:153
+msgid "Кошки"
+msgstr "Katzen"
+
+#: .\cats\templates\litter_kitten_card.html:44
+msgid "Уехал"
+msgstr "Ausgezogen"
+
+#: .\cats\templates\litter_list.html:15
+msgid "Наши"
+msgstr "Unsere"
+
+#: .\cats\templates\litter_list.html:15
+msgid "помёты"
+msgstr "Würfe"
+
+#: .\cats\templates\litter_list.html:31
+msgid "Активный"
+msgstr "Aktiv"
+
+#: .\cats\templates\litter_list.html:33
+msgid "Завершён"
+msgstr "Abgeschlossen"
+
+#: .\cats\templates\litter_list.html:99
+msgid "котят"
+msgstr "Kätzchen"
+
+#: .\cats\templates\litter_list.html:111
+msgid "Подробнее"
+msgstr "Mehr erfahren"
+
+#: .\cats\templates\litter_list.html:120
+msgid "Помётов пока нет"
+msgstr "Noch keine Würfe"
+
+#: .\cats\templates\litter_list.html:121
+msgid "Информация о помётах появится здесь."
+msgstr "Informationen zu den Würfen erscheinen hier."
+
+#: .\cats\templates\profile.html:5
+msgid "Мой профиль"
+msgstr "Mein Profil"
+
+#: .\cats\templates\profile.html:13
+msgid "Мой"
+msgstr "Mein"
+
+#: .\cats\templates\profile.html:13 .\cats\templates\profile_edit.html:19
+msgid "профиль"
+msgstr "Profil"
+
+#: .\cats\templates\profile.html:53
+msgid "Сменить пароль"
+msgstr "Passwort ändern"
+
+#: .\cats\templates\profile_edit.html:5
+msgid "Редактировать профиль"
+msgstr "Profil bearbeiten"
+
+#: .\cats\templates\profile_edit.html:11
+msgid "Профиль"
+msgstr "Profil"
+
+#: .\cats\templates\profile_edit.html:21
+msgid "К профилю"
+msgstr "Zum Profil"
+
+#: .\cats\templates\profile_edit.html:29
+msgid "Личные данные"
+msgstr "Persönliche Daten"
+
+#: .\cats\templates\profile_edit.html:34
+msgid "Имя"
+msgstr "Vorname"
+
+#: .\cats\templates\profile_edit.html:40
+msgid "Фамилия"
+msgstr "Nachname"
+
+#: .\cats\templates\profile_edit.html:46
+msgid "Город"
+msgstr "Stadt"
+
+#: .\cats\templates\profile_edit.html:52
+msgid "О себе"
+msgstr "Über mich"
+
+#: .\cats\templates\profile_edit.html:62
+msgid "Аватар"
+msgstr "Avatar"
+
+#: .\cats\templates\profile_edit.html:69
+msgid "Загрузите новый чтобы заменить."
+msgstr "Laden Sie ein neues hoch, um es zu ersetzen."
+
+#: .\cats\templates\video_confirm_delete.html:5
+#: .\cats\templates\video_form.html:185
+msgid "Удалить видео"
+msgstr "Video löschen"
+
+#: .\cats\templates\video_confirm_delete.html:18
+msgid "Удалить видео?"
+msgstr "Video löschen?"
+
+#: .\cats\templates\video_confirm_delete.html:22
+msgid "Видеофайл будет удалён с сервера безвозвратно."
+msgstr "Die Videodatei wird unwiderruflich vom Server gelöscht."
+
+#: .\cats\templates\video_confirm_delete.html:24
+msgid "Запись о видео будет удалена. Файл на YouTube/Vimeo останется."
+msgstr "Der Videoeintrag wird gelöscht. Die Datei auf YouTube/Vimeo bleibt erhalten."
+
+#: .\cats\templates\video_form.html:21
+msgid "Видеотека"
+msgstr "Videothek"
+
+#: .\cats\templates\video_form.html:24
+msgid "видео"
+msgstr "Video"
+
+#: .\cats\templates\video_form.html:49
+msgid "Название"
+msgstr "Titel"
+
+#: .\cats\templates\video_form.html:66
+msgid "Источник видео"
+msgstr "Videoquelle"
+
+#: .\cats\templates\video_form.html:80
+msgid "Ссылка на YouTube или Vimeo"
+msgstr "Link zu YouTube oder Vimeo"
+
+#: .\cats\templates\video_form.html:84
+msgid "Пример:"
+msgstr "Beispiel:"
+
+#: .\cats\templates\video_form.html:91
+msgid "Текущее видео:"
+msgstr "Aktuelles Video:"
+
+#: .\cats\templates\video_form.html:103
+msgid "Видеофайл (MP4)"
+msgstr "Videodatei (MP4)"
+
+#: .\cats\templates\video_form.html:107
+msgid "Только для коротких клипов до 50 МБ. Формат MP4."
+msgstr "Nur für kurze Clips bis 50 MB. Format MP4."
+
+#: .\cats\templates\video_form.html:113
+msgid "Текущий файл:"
+msgstr "Aktuelle Datei:"
+
+#: .\cats\templates\video_form.html:124
+msgid "Превью и параметры"
+msgstr "Vorschau und Einstellungen"
+
+#: .\cats\templates\video_form.html:129
+msgid "Превью (обложка)"
+msgstr "Vorschau (Cover)"
+
+#: .\cats\templates\video_form.html:133
+msgid "Текущее превью. Загрузите новое чтобы заменить."
+msgstr "Aktuelle Vorschau. Laden Sie eine neue hoch, um sie zu ersetzen."
+
+#: .\cats\templates\video_form.html:138
+msgid "Необязательно для YouTube — превью подтягивается автоматически."
+msgstr "Für YouTube nicht erforderlich – die Vorschau wird automatisch übernommen."
+
+#: .\cats\templates\video_form.html:149
+msgid "Дата съёмки"
+msgstr "Aufnahmedatum"
+
+#: .\cats\templates\video_form.html:173
+msgid "Видео отображается в видеотеке"
+msgstr "Das Video wird in der Videothek angezeigt"
+
+#: .\cats\templates\video_list.html:15
+msgid "тека"
+msgstr "thek"
+
+#: .\cats\templates\video_list.html:22
+msgid "Видео пока не добавлены"
+msgstr "Noch keine Videos hinzugefügt"
+
+#: .\cats\templates\video_list.html:23
+msgid "Скоро здесь появятся видео из жизни питомника."
+msgstr "Bald erscheinen hier Videos aus dem Leben unserer Zuchtstätte."
+
+#: .\cats\templates\video_list.html:44
+msgid "Котята и помёты"
+msgstr "Kätzchen und Würfe"
+
+#: .\cats\templates\video_list.html:57
+msgid "Разное"
+msgstr "Verschiedenes"
+
+#: .\cats\templates\video_manage.html:6
+msgid "Управление видео"
+msgstr "Videoverwaltung"
+
+#: .\cats\templates\video_manage.html:24 .\cats\templates\video_manage.html:86
+msgid "Добавить видео"
+msgstr "Video hinzufügen"
+
+#: .\cats\templates\video_manage.html:83
+msgid "Видео пока нет"
+msgstr "Noch keine Videos"
+
+#: .\cats\templates\video_manage.html:84
+msgid "Добавьте первое видео."
+msgstr "Fügen Sie das erste Video hinzu."
+
+#: .\templates\account\login.html:16
+msgid "Нет аккаунта?"
+msgstr "Noch kein Konto?"
+
+#: .\templates\account\login.html:17 .\templates\account\signup.html:76
+msgid "Зарегистрироваться"
+msgstr "Registrieren"
+
+#: .\templates\account\login.html:29
+msgid "Войти через Google"
+msgstr "Mit Google anmelden"
+
+#: .\templates\account\login.html:33 .\templates\account\signup.html:32
+msgid "или через email"
+msgstr "oder per E-Mail"
+
+#: .\templates\account\login.html:60 .\templates\account\signup.html:59
+msgid "Пароль"
+msgstr "Passwort"
+
+#: .\templates\account\login.html:61
+msgid "Забыли пароль?"
+msgstr "Passwort vergessen?"
+
+#: .\templates\account\password_reset.html:10
+#: .\templates\account\password_reset.html:17
+msgid "Сброс пароля"
+msgstr "Passwort zurücksetzen"
+
+#: .\templates\account\password_reset.html:18
+msgid "Укажите email — пришлём ссылку для восстановления."
+msgstr ""
+"Geben Sie Ihre E-Mail-Adresse an – wir senden Ihnen einen Link zum "
+"Zurücksetzen."
+
+#: .\templates\account\password_reset.html:29
+msgid "Отправить письмо"
+msgstr "E-Mail senden"
+
+#: .\templates\account\password_reset.html:33
+msgid "Вернуться ко входу"
+msgstr "Zurück zur Anmeldung"
+
+#: .\templates\account\signup.html:15
+msgid "Уже есть аккаунт?"
+msgstr "Haben Sie bereits ein Konto?"
+
+#: .\templates\account\signup.html:28
+msgid "Зарегистрироваться через Google"
+msgstr "Mit Google registrieren"
+
+#: .\templates\account\signup.html:62
+msgid "Минимум 8 символов."
+msgstr "Mindestens 8 Zeichen."
+
+#: .\templates\account\signup.html:66
+msgid "Повторите пароль"
+msgstr "Passwort wiederholen"
+
+#: .\templates\account\signup.html:73
+msgid "Регистрируясь, вы соглашаетесь с правилами сайта."
+msgstr "Mit der Registrierung stimmen Sie den Regeln der Website zu."
+
+#: .\vedenika\settings.py:145
+msgid "Русский"
+msgstr "Russisch"
+
+#: .\vedenika\settings.py:146
+msgid "Deutsch"
+msgstr "Deutsch"
+
+#: .\vedenika\settings.py:147
+msgid "English"
+msgstr "Englisch"

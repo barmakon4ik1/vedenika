@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 from pathlib import Path
+from decouple import config, Csv
 from django.utils.translation import gettext_lazy as _
 import os
 
@@ -22,18 +23,13 @@ LOCALE_PATHS = [
     os.path.join(BASE_DIR, "locale"),
 ]
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
+# --- СЕКРЕТНЫЕ ---
+SECRET_KEY = config('SECRET_KEY')
+DEBUG      = config('DEBUG', default=False, cast=bool)
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='127.0.0.1', cast=Csv())
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-^a)#$*&cb-z(z@6x(qds6myjsaky#2=mlwez0&^#r#m(z(+#)$"
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
-
-CATTERY_OWNER_PERSON_ID = 1
+# --- ПИТОМНИК ---
+CATTERY_OWNER_PERSON_ID = config('CATTERY_OWNER_PERSON_ID', default=1, cast=int)
 
 # Application definition
 
@@ -108,6 +104,24 @@ DATABASES = {
         "NAME": str(DB_PATH),
     }
 }
+# DATABASES = {
+#     'default': {
+#         'ENGINE': config('DB_ENGINE', default='django.db.backends.sqlite3'),
+#         'NAME':   BASE_DIR / config('DB_NAME', default='db.sqlite3'),
+#     }
+# }
+# Когда перейдёшь на PostgreSQL — заменить на:
+# DATABASES = {
+#     'default': {
+#         'ENGINE':   'django.db.backends.postgresql',
+#         'NAME':     config('DB_NAME'),
+#         'USER':     config('DB_USER'),
+#         'PASSWORD': config('DB_PASSWORD'),
+#         'HOST':     config('DB_HOST', default='localhost'),
+#         'PORT':     config('DB_PORT', default='5432'),
+#     }
+# }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
@@ -137,21 +151,21 @@ TIME_ZONE = "Europe/Berlin"
 
 USE_I18N = True
 
-USE_L10N = True
+# USE_L10N = True
 
 USE_TZ = True
 
 LANGUAGES = [
+    ("en", _("English")),
     ("ru", _("Русский")),
     ("de", _("Deutsch")),
-    ("en", _("English")),
 ]
 
 PARLER_LANGUAGES = {
     None: (
+        {'code': 'en'},
         {'code': 'ru'},
         {'code': 'de'},
-        {'code': 'en'},
     ),
     'default': {
         'fallbacks': ['en'],   # если нет перевода
@@ -162,7 +176,10 @@ PARLER_LANGUAGES = {
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
-STATIC_URL = "/static/"
+# Статика
+STATIC_URL  = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # для collectstatic на сервере
+
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
@@ -170,9 +187,11 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-
-MEDIA_ROOT = r"F:\YandexDisk\MyDocu\Katze\cats"
-MEDIA_URL = "/media/"
+# --- МЕДИАФАЙЛЫ ---
+MEDIA_URL  = config('MEDIA_URL', default='/media/')
+MEDIA_ROOT = config('MEDIA_ROOT', default=r"F:\YandexDisk\MyDocu\Katze\cats")
+# MEDIA_ROOT = r"F:\YandexDisk\MyDocu\Katze\cats"
+# MEDIA_URL = "/media/"
 
 SITE_ID = 1
 
@@ -205,13 +224,25 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 
-# Email бэкенд (для разработки — в консоль)
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-# Для продакшна заменить на SMTP:
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# EMAIL_HOST = 'smtp.gmail.com'
-# EMAIL_PORT = 587
-# EMAIL_USE_TLS = True
-# EMAIL_HOST_USER = 'your@email.com'
-# EMAIL_HOST_PASSWORD = 'your_password'
-# DEFAULT_FROM_EMAIL = 'Vedenika <your@email.com>'
+# --- EMAIL ---
+EMAIL_BACKEND     = 'django.core.mail.backends.console.EmailBackend' if DEBUG else 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST        = config('EMAIL_HOST', default='smtp.gmail.com')
+EMAIL_PORT        = config('EMAIL_PORT', default=587, cast=int)
+EMAIL_USE_TLS     = config('EMAIL_USE_TLS', default=True, cast=bool)
+EMAIL_HOST_USER   = config('EMAIL_HOST_USER', default='')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
+DEFAULT_FROM_EMAIL  = config('EMAIL_HOST_USER', default='noreply@vedenika.de')
+
+# --- GOOGLE OAUTH ---
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'APP': {
+            'client_id': config('GOOGLE_CLIENT_ID', default=''),
+            'secret':    config('GOOGLE_CLIENT_SECRET', default=''),
+            'key':       ''
+        },
+        'SCOPE': ['profile', 'email'],
+        'AUTH_PARAMS': {'access_type': 'online'},
+    }
+}
+
