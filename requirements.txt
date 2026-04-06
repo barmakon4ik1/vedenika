@@ -1,8 +1,29 @@
-djangorestframework
-django-parler
-asgiref
-Django
-sqlparse
-tzdata
-pillow
-django-filter
+# ============================================================
+# requirements.txt — зависимости проекта Vedenika
+# Положить в корень проекта рядом с manage.py
+# ============================================================
+
+# Django core
+Django>=5.0,<6.1
+
+# Переводы parler
+django-parler>=2.3
+
+# Авторизация
+django-allauth>=0.61
+
+# Переменные окружения
+python-decouple>=3.8
+
+# Изображения
+Pillow>=10.0
+
+# База данных (для продакшна)
+psycopg2-binary>=2.9
+
+# Хранилище файлов (R2/S3)
+boto3>=1.34
+django-storages>=1.14
+
+# WSGI сервер (для продакшна)
+gunicorn>=21.0
