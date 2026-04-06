@@ -99,17 +99,12 @@ if DB_PATH is None:
 
 # Настройка Django
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": str(DB_PATH),
+    'default': {
+        'ENGINE': config('DB_ENGINE', default='django.db.backends.sqlite3'),
+        'NAME': config('DB_NAME', default=os.path.join(BASE_DIR, 'db.sqlite3')),
     }
 }
-# DATABASES = {
-#     'default': {
-#         'ENGINE': config('DB_ENGINE', default='django.db.backends.sqlite3'),
-#         'NAME':   BASE_DIR / config('DB_NAME', default='db.sqlite3'),
-#     }
-# }
+
 # Когда перейдёшь на PostgreSQL — заменить на:
 # DATABASES = {
 #     'default': {
@@ -189,7 +184,8 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # --- МЕДИАФАЙЛЫ ---
 MEDIA_URL  = config('MEDIA_URL', default='/media/')
-MEDIA_ROOT = config('MEDIA_ROOT', default=r"F:\YandexDisk\MyDocu\Katze\cats")
+MEDIA_ROOT = config('MEDIA_ROOT', default=os.path.join(BASE_DIR, 'media'))
+# MEDIA_ROOT = config('MEDIA_ROOT', default=r"F:\YandexDisk\MyDocu\Katze\cats")
 # MEDIA_ROOT = r"F:\YandexDisk\MyDocu\Katze\cats"
 # MEDIA_URL = "/media/"
 
@@ -245,4 +241,14 @@ SOCIALACCOUNT_PROVIDERS = {
         'AUTH_PARAMS': {'access_type': 'online'},
     }
 }
+
+
+CSRF_TRUSTED_ORIGINS = config(
+    'CSRF_TRUSTED_ORIGINS',
+    default='https://vedenika.de,https://www.vedenika.de',
+    cast=Csv()
+)
+
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+USE_X_FORWARDED_HOST = True
 
