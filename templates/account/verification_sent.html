@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Подтвердите email" %} — Vedenika{% endblock %}
+
+{% block content %}
+<div class="form-page-wrap" style="max-width: 480px; text-align: center;">
+  <div style="font-size: 48px; margin-bottom: 16px;">✉️</div>
+  <h1 class="page-title">{% trans "Подтвердите" %} <em>{% trans "email" %}</em></h1>
+  <p style="font-size:14px; color: var(--muted,#888); margin: 16px 0 8px;">
+    {% blocktrans %}
+      Мы отправили письмо с ссылкой для подтверждения на ваш адрес.
+      Перейдите по ссылке в письме, чтобы завершить регистрацию.
+    {% endblocktrans %}
+  </p>
+  <p style="font-size:13px; color: var(--muted,#aaa); margin-bottom: 28px;">
+    {% trans "Не получили письмо? Проверьте папку «Спам»." %}
+  </p>
+  <a href="{% url 'account_login' %}" class="btn-sq btn-sq-outline">{% trans "На страницу входа" %}</a>
+</div>
+{% endblock %}

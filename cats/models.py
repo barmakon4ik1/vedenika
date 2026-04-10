@@ -1706,6 +1706,19 @@ class GalleryPhoto(models.Model):
     Фотография в альбоме галереи.
     Не привязана к конкретному коту — это общие фото питомника.
     """
+    # translations = TranslatedFields(
+    #     title=models.CharField(
+    #         max_length=200,
+    #         blank=True,
+    #         verbose_name="Подпись"
+    #     ),
+    # )
+
+    title = models.CharField(
+        max_length=200,
+        blank=True,
+        verbose_name="Подпись"
+    )
 
     album = models.ForeignKey(
         GalleryAlbum,
@@ -1717,12 +1730,6 @@ class GalleryPhoto(models.Model):
     image = models.ImageField(
         upload_to=upload_to_gallery_photo,
         verbose_name="Фото"
-    )
-
-    title = models.CharField(
-        max_length=200,
-        blank=True,
-        verbose_name="Подпись"
     )
 
     # Instagram source — для отслеживания откуда фото
@@ -1749,8 +1756,7 @@ class GalleryPhoto(models.Model):
         ordering = ["sort_order", "-uploaded_at"]
 
     def __str__(self):
-        return self.title or f"Photo #{self.pk} ({self.album})"
-
+        return self.safe_translation_getter("title", any_language=True) or f"Photo #{self.pk} ({self.album})"
 
 # ============================================================
 # VIDEO

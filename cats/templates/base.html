@@ -291,5 +291,25 @@
 })();
 </script>
 {% block extra_js %}{% endblock %}
+<script>
+function togglePwd(inputId, iconId) {
+  var input = document.getElementById(inputId);
+  var icon  = document.getElementById(iconId);
+  if (!input) return;
+
+  if (input.type === 'password') {
+    input.type = 'text';
+    // Иконка "глаз зачёркнутый" — пароль виден
+    icon.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94"/>' +
+      '<path d="M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19"/>' +
+      '<line x1="1" y1="1" x2="23" y2="23"/>';
+  } else {
+    input.type = 'password';
+    // Иконка "глаз открытый" — пароль скрыт
+    icon.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>' +
+      '<circle cx="12" cy="12" r="3"/>';
+  }
+}
+</script>
 </body>
 </html>

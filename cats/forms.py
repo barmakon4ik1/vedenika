@@ -1,6 +1,7 @@
 from django import forms
 from .models import *
 from .ems import validate_components
+from parler.forms import TranslatableModelForm
 
 
 class CatForm(forms.ModelForm):
@@ -237,7 +238,7 @@ class CatPhotoForm(forms.ModelForm):
         return photo
 
 
-class GalleryAlbumForm(forms.ModelForm):
+class GalleryAlbumForm(TranslatableModelForm):
     class Meta:
         model = GalleryAlbum
         fields = ["category", "date", "litter", "sort_order", "is_active", "cover"]
@@ -319,7 +320,7 @@ GalleryPhotoFormSet = forms.modelformset_factory(
 )
 
 
-class VideoForm(forms.ModelForm):
+class VideoForm(TranslatableModelForm):
 
     # Поля перевода
     title = forms.CharField(

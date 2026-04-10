@@ -5674,3 +5674,26 @@ body {
 .forum-rules-banner-text a:hover {
   color: var(--dark);
 }
+
+/* Разделитель "или" между Google и формой входа */
+.auth-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 20px 0;
+  color: var(--muted, #aaa);
+  font-size: 13px;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border, rgba(201,169,110,0.25));
+}
+
+/* Секция с социальными кнопками */
+.social-login-section {
+  margin-bottom: 4px;
+}
