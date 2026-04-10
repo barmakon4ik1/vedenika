@@ -52,7 +52,7 @@
         <span class="forum-post-author">{{ topic.author.profile.display_name }}</span>
         <span class="forum-post-time">{{ topic.created_at|date:"d.m.Y H:i" }}</span>
       </div>
-      <div class="forum-post-body">{{ topic.body|linebreaks }}</div>
+      <div class="forum-post-body">{{ topic.body|urlize|linebreaks }}</div>
     </div>
   </div>
 
@@ -84,7 +84,7 @@
             {% endif %}
           </div>
 
-          <div class="forum-post-body">{{ post.body|linebreaks }}</div>
+          <div class="forum-post-body">{{ post.body|urlize|linebreaks }}</div>
 
           <!-- Действия с постом -->
           {% if request.user.is_authenticated %}
