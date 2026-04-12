@@ -123,13 +123,9 @@
             <div class="navbar-auth">
                 {% if request.user.is_authenticated %}
                     <a href="{% url 'profile' %}" class="navbar-user">
-                        {% if request.user.profile.avatar %}
-                            <img src="{{ request.user.profile.avatar.url }}" alt="" class="navbar-user-avatar">
-                        {% else %}
-                            <div class="navbar-user-initials">
-                                {{ request.user.profile.display_name|first|upper }}
-                            </div>
-                        {% endif %}
+                        <div class="navbar-user-initials">
+                            {{ request.user.username|first|upper }}
+                        </div>
                     </a>
                     <a href="{% url 'account_logout' %}" class="navbar-auth-link">{% trans "Выйти" %}</a>
                 {% else %}

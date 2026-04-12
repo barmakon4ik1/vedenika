@@ -85,18 +85,6 @@ WSGI_APPLICATION = "vedenika.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
-# Возможные пути к базе на разных машинах
-POSSIBLE_PATHS = [
-    Path("D:/Meine Daten/YandexDisk/MyDocu/Katze/db.sqlite3"),
-    Path("F:/YandexDisk/MyDocu/Katze/db.sqlite3"),
-]
-
-# Ищем существующий путь
-DB_PATH = next((p for p in POSSIBLE_PATHS if p.exists()), None)
-
-if DB_PATH is None:
-    raise FileNotFoundError("SQLite DB not found in known locations")
-
 # Настройка Django
 DATABASES = {
     'default': {
@@ -183,13 +171,10 @@ STATICFILES_DIRS = [
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # --- МЕДИАФАЙЛЫ ---
-MEDIA_URL  = config('MEDIA_URL', default='/media/')
+MEDIA_URL = config('MEDIA_URL', default='/media/')
 MEDIA_ROOT = config('MEDIA_ROOT', default=os.path.join(BASE_DIR, 'media'))
-# MEDIA_ROOT = config('MEDIA_ROOT', default=r"F:\YandexDisk\MyDocu\Katze\cats")
-# MEDIA_ROOT = r"F:\YandexDisk\MyDocu\Katze\cats"
-# MEDIA_URL = "/media/"
 
-SITE_ID = 1
+SITE_ID = 2
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
@@ -219,11 +204,6 @@ DEFAULT_FROM_EMAIL  = config('EMAIL_HOST_USER', default='contact@vedenika.de')
 # --- GOOGLE OAUTH ---
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
-        'APP': {
-            'client_id': config('GOOGLE_CLIENT_ID', default=''),
-            'secret':    config('GOOGLE_CLIENT_SECRET', default=''),
-            'key':       ''
-        },
         'SCOPE': ['profile', 'email'],
         'AUTH_PARAMS': {'access_type': 'online'},
     }
