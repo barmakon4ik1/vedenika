@@ -1,10 +1,9 @@
 {% extends "base.html" %}
-{% load i18n %}
 
-{% block title %}Vedenika | {% trans "Maine Coon Zucht in Pforzheim und Umgebung" %}{% endblock %}
-{% block meta_description %}{% trans "Vedenika ist eine liebevolle Maine-Coon-Cattery für Familien aus Pforzheim und Umgebung. Lernen Sie unsere Katzen kennen, entdecken Sie Würfe und stöbern Sie durch die Galerie." %}{% endblock %}
-{% block og_title_inner %}Vedenika | {% trans "Maine Coon Zucht in Pforzheim und Umgebung" %}{% endblock %}
-{% block og_description %}{% trans "Liebevoll aufgezogene Maine Coons, aktuelle Würfe, Galerie und Kontakt für Interessenten aus Pforzheim und Umgebung." %}{% endblock %}
+{% block title %}Vedenika | Maine Coon Cattery in Pforzheim{% endblock %}
+{% block meta_description %}Vedenika ist eine Maine-Coon-Cattery in Pforzheim und Umgebung. Lernen Sie unsere Katzen kennen, entdecken Sie Bilder aus dem Alltag und nehmen Sie Kontakt auf.{% endblock %}
+{% block og_title_inner %}Vedenika | Maine Coon Cattery in Pforzheim{% endblock %}
+{% block og_description %}Maine Coons mit Charakter, Galerie und persönlicher Kontakt für Interessenten aus Pforzheim und Umgebung.{% endblock %}
 
 {% block structured_data %}
 <script type="application/ld+json">
@@ -13,180 +12,123 @@
   "@type": "LocalBusiness",
   "name": "Vedenika",
   "url": "{{ request.build_absolute_uri }}",
-  "description": "{% trans 'Maine-Coon-Cattery mit liebevoller Aufzucht im Familienalltag.' %}",
-  "areaServed": ["Pforzheim", "Enzkreis", "Karlsruhe", "Stuttgart"],
-  "sameAs": [
-    {% if owner and owner.instagram %}"{{ owner.instagram }}"{% endif %}
-    {% if owner and owner.facebook %}{% if owner.instagram %}, {% endif %}"{{ owner.facebook }}"{% endif %}
-    {% if owner and owner.tiktok %}{% if owner.instagram or owner.facebook %}, {% endif %}"{{ owner.tiktok }}"{% endif %}
-  ]
+  "areaServed": ["Pforzheim", "Enzkreis", "Karlsruhe", "Stuttgart"]
 }
 </script>
 {% endblock %}
 
 {% block content %}
-<section class="hero-section">
-    <div class="container hero-section__grid">
-        <div class="hero-copy">
-            <div class="eyebrow">Vedenika · {% trans "Maine-Coon Cattery" %}</div>
-            <h1>{% trans "Maine Coons mit Charakter, Ruhe und großem Herzen" %}</h1>
-            <p class="hero-lead">
-                {% trans "Willkommen bei Vedenika – einer familiären Maine-Coon-Cattery für Menschen, die nicht einfach nur eine Katze suchen, sondern ein echtes Familienmitglied." %}
-            </p>
-            <p class="hero-text">
-                {% trans "Unsere Katzen leben mit uns im Alltag. Genau das prägt auch unsere Kitten: sie wachsen mit Nähe, Ruhe, Gewohnheiten des Familienlebens und viel Aufmerksamkeit auf." %}
-            </p>
-            <div class="hero-actions">
-                <a href="{% url 'cat_list' %}" class="button button--dark">{% trans "Unsere Katzen ansehen" %}</a>
-                <a href="{% url 'gallery_list' %}" class="button button--light">{% trans "Galerie öffnen" %}</a>
-            </div>
-            <ul class="hero-highlights">
-                <li>{% trans "Familiennahe Aufzucht" %}</li>
-                <li>{% trans "Maine Coon in Pforzheim und Umgebung" %}</li>
-                <li>{% trans "Persönlicher Kontakt statt anonymer Vermittlung" %}</li>
-            </ul>
-        </div>
-
-        <div class="hero-visual">
-            {% if random_photos %}
-                <div class="hero-collage">
-                    {% for photo in random_photos|slice:":4" %}
-                        <figure class="hero-collage__item {% cycle 'item-large' 'item-small' 'item-small' 'item-wide' %}">
-                            <img src="{{ photo.image.url }}" alt="{{ photo.title|default:_('Maine Coon aus der Galerie') }}" loading="lazy">
-                        </figure>
-                    {% endfor %}
-                </div>
-            {% else %}
-                <div class="hero-placeholder">
-                    <div class="hero-placeholder__title">Vedenika</div>
-                    <p>{% trans "Hier erscheinen zufällige Fotos aus Ihrer Galerie." %}</p>
-                </div>
-            {% endif %}
-        </div>
-    </div>
-</section>
-
-<section class="section section--soft">
+<section class="hero-shell">
     <div class="container">
-        <div class="section-heading section-heading--center">
-            <div class="eyebrow">{% trans "Warum Vedenika" %}</div>
-            <h2>{% trans "Nicht laut, nicht überladen – sondern warm, klar und einladend" %}</h2>
-            <p>
-                {% trans "Wir möchten, dass Besucher sofort spüren, wie unsere Katzen leben: ruhig, gepflegt, menschenbezogen und mit viel Platz für Persönlichkeit." %}
-            </p>
-        </div>
-
-        <div class="value-grid">
-            <article class="value-card">
-                <h3>{% trans "Familienalltag" %}</h3>
-                <p>{% trans "Unsere Kitten wachsen im Haus auf, mit alltäglichen Geräuschen, Routinen und engem Kontakt zu Menschen." %}</p>
-            </article>
-            <article class="value-card">
-                <h3>{% trans "Gesundheit und Verantwortung" %}</h3>
-                <p>{% trans "Gesundheit, Entwicklung und Charakter stehen für uns an erster Stelle – nicht reine Anzahl oder Geschwindigkeit." %}</p>
-            </article>
-            <article class="value-card">
-                <h3>{% trans "Beratung mit Ruhe" %}</h3>
-                <p>{% trans "Wir möchten, dass die neue Familie und das Kitten wirklich zueinander passen. Deshalb nehmen wir uns Zeit für Fragen." %}</p>
-            </article>
-        </div>
-    </div>
-</section>
-
-<section class="section">
-    <div class="container">
-        <div class="section-heading">
-            <div class="eyebrow">{% trans "Schneller Einstieg" %}</div>
-            <h2>{% trans "Finden Sie direkt den Bereich, der Sie interessiert" %}</h2>
-        </div>
-
-        <div class="quick-links-grid">
-            <a href="{% url 'cat_list' %}" class="quick-link-card">
-                <span class="quick-link-card__title">{% trans "Unsere Katzen" %}</span>
-                <span class="quick-link-card__text">{% trans "Lernen Sie unsere aktiven Zuchtkatzen und ihre Charaktere kennen." %}</span>
-                <span class="quick-link-card__cta">{% trans "Zu den Katzen" %} →</span>
-            </a>
-            <a href="{% url 'litter_list' %}" class="quick-link-card">
-                <span class="quick-link-card__title">{% trans "Würfe" %}</span>
-                <span class="quick-link-card__text">{% trans "Entdecken Sie aktuelle und vergangene Würfe mit Bildern und Entwicklung." %}</span>
-                <span class="quick-link-card__cta">{% trans "Würfe ansehen" %} →</span>
-            </a>
-            <a href="{% url 'gallery_list' %}" class="quick-link-card">
-                <span class="quick-link-card__title">{% trans "Galerie" %}</span>
-                <span class="quick-link-card__text">{% trans "Alltag, Porträts und besondere Momente aus dem Leben unserer Maine Coons." %}</span>
-                <span class="quick-link-card__cta">{% trans "Zur Galerie" %} →</span>
-            </a>
-            <a href="{% url 'contacts' %}" class="quick-link-card">
-                <span class="quick-link-card__title">{% trans "Kontakt" %}</span>
-                <span class="quick-link-card__text">{% trans "Schreiben Sie uns, wenn Sie sich für ein Kitten oder unsere Cattery interessieren." %}</span>
-                <span class="quick-link-card__cta">{% trans "Kontakt aufnehmen" %} →</span>
-            </a>
-        </div>
-    </div>
-</section>
-
-<section class="section section--accent">
-    <div class="container">
-        <div class="section-heading">
-            <div class="eyebrow">{% trans "Vitrine" %}</div>
-            <h2>{% trans "Ein erster Blick auf unsere Katzen" %}</h2>
-            <p>{% trans "Die Seite soll Lust machen, genauer hinzuschauen. Deshalb zeigen wir hier bewusst nur eine kleine Auswahl." %}</p>
-        </div>
-
-        {% if featured_cats %}
-            <div class="cats-grid">
-                {% for cat in featured_cats %}
-                    <article class="cat-card">
-                        <a href="{% url 'cat_detail' cat.pk %}" class="cat-card__image-link">
-                            <div class="cat-card__image-wrap">
-                                {% with main_image=cat.get_main_image %}
-                                    {% if main_image %}
-                                        <img src="{{ main_image.url }}" alt="{{ cat.registered_name }}" class="cat-card__image cat-card__image--contain" loading="lazy">
-                                    {% else %}
-                                        {% for photo in cat.photos.all|slice:":1" %}
-                                            <img src="{{ photo.image.url }}" alt="{{ cat.registered_name }}" class="cat-card__image cat-card__image--contain" loading="lazy">
-                                        {% empty %}
-                                            <div class="cat-card__placeholder">{{ cat.registered_name|slice:":1" }}</div>
-                                        {% endfor %}
-                                    {% endif %}
-                                {% endwith %}
-                            </div>
+        <div class="hero-card">
+            <div class="hero-media">
+                {% if random_photos %}
+                    {% with first_photo=random_photos|first %}
+                        <a href="{% url 'gallery_list' %}" class="hero-media__link" aria-label="Galerie öffnen">
+                            <img src="{{ first_photo.image.url }}"
+                                 alt="{{ first_photo.title|default:'Maine Coon aus der Galerie' }}"
+                                 class="hero-media__image"
+                                 loading="eager">
                         </a>
-                        <div class="cat-card__body">
-                            <div class="cat-card__meta">{% trans "Maine Coon" %}</div>
-                            <h3>{{ cat.registered_name }}</h3>
-                            {% if cat.cat_color %}
-                                <p class="cat-card__text">{{ cat.cat_color }}</p>
-                            {% endif %}
-                            <a href="{% url 'cat_detail' cat.pk %}" class="text-link text-link--strong">{% trans "Mehr erfahren" %} →</a>
-                        </div>
-                    </article>
-                {% endfor %}
+                    {% endwith %}
+                {% else %}
+                    <div class="hero-media__placeholder">
+                        <span>Vedenika</span>
+                    </div>
+                {% endif %}
             </div>
-        {% else %}
-            <div class="empty-box">
-                <p>{% trans "Sobald markierte Katzen vorhanden sind, erscheinen sie hier automatisch." %}</p>
-            </div>
-        {% endif %}
-    </div>
-</section>
 
-<section class="section">
-    <div class="container about-strip">
-        <div class="about-strip__content">
-            <div class="eyebrow">{% trans "Über uns" %}</div>
-            <h2>{% trans "Eine Cattery, die Nähe zeigen darf" %}</h2>
-            <p>
-                {% trans "Menschen, die zu uns kommen, sollen nicht das Gefühl haben, einen Katalog durchzublättern. Sie sollen sehen, wie unsere Katzen schauen, liegen, spielen und Teil unseres Lebens sind." %}
-            </p>
-            <p>
-                {% trans "Genau diese Atmosphäre möchten wir auch auf dem neuen Website-Design sichtbar machen: hochwertig, zeitgemäß und gleichzeitig persönlich." %}
-            </p>
-            <div class="hero-actions">
-                <a href="{% url 'breed_info' %}" class="button button--light">{% trans "Mehr über die Rasse" %}</a>
-                <a href="{% url 'contacts' %}" class="button button--dark">{% trans "Nach einem Kitten fragen" %}</a>
+            <div class="hero-copy compact-copy">
+                <div class="eyebrow">Vedenika · Maine Coon Cattery</div>
+                <h1>Maine Coons mit Charakter.</h1>
+                <p class="hero-lead">
+                    Liebevoll aufgezogen, ruhig im Wesen und nah am Familienalltag.
+                </p>
+                <div class="hero-actions">
+                    <a href="{% url 'cat_list' %}" class="button button--accent">Unsere Katzen</a>
+                    <a href="{% url 'gallery_list' %}" class="button button--ghost">Galerie</a>
+                    <a href="{% url 'contacts' %}" class="button button--dark">Kontakt</a>
+                </div>
             </div>
         </div>
     </div>
 </section>
+
+<section class="section section--tight">
+    <div class="container">
+        <div class="mini-gallery-grid">
+            {% if random_photos %}
+                {% for photo in random_photos|slice:"1:3" %}
+                    <a href="{% url 'gallery_list' %}" class="mini-gallery-card">
+                        <span class="mini-gallery-card__image-wrap">
+                            <img src="{{ photo.image.url }}" alt="{{ photo.title|default:'Galeriebild' }}" class="mini-gallery-card__image" loading="lazy">
+                        </span>
+                        <span class="mini-gallery-card__caption">Mehr Bilder ansehen</span>
+                    </a>
+                {% endfor %}
+            {% endif %}
+
+            <article class="mini-text-card">
+                <h2>Ein kurzer erster Eindruck.</h2>
+                <p>
+                    Kein langes Suchen, keine überladene Startseite. Erst sehen, dann entdecken.
+                </p>
+            </article>
+        </div>
+    </div>
+</section>
+
+<section class="section section--soft section--compact">
+    <div class="container">
+        <div class="section-heading section-heading--center narrow-heading">
+            <div class="eyebrow">Vedenika</div>
+            <h2>Wenig Text. Klare Wege. Schöne Bilder.</h2>
+            <p>So soll sich die Seite anfühlen: ruhig, modern und leicht zu bedienen – besonders auf dem Handy.</p>
+        </div>
+
+        <div class="quick-links-grid quick-links-grid--3">
+            <a href="{% url 'cat_list' %}" class="quick-link-card interactive-card">
+                <span class="quick-link-card__title">Katzen</span>
+                <span class="quick-link-card__text">Lernen Sie unsere Maine Coons kennen.</span>
+                <span class="quick-link-card__cta">Jetzt ansehen →</span>
+            </a>
+            <a href="{% url 'gallery_list' %}" class="quick-link-card interactive-card">
+                <span class="quick-link-card__title">Galerie</span>
+                <span class="quick-link-card__text">Bilder aus dem Alltag, Porträts und kleine Momente.</span>
+                <span class="quick-link-card__cta">Zur Galerie →</span>
+            </a>
+            <a href="{% url 'contacts' %}" class="quick-link-card interactive-card">
+                <span class="quick-link-card__title">Kontakt</span>
+                <span class="quick-link-card__text">Fragen Sie in Ruhe nach einem Kitten oder einer Verpaarung.</span>
+                <span class="quick-link-card__cta">Kontakt aufnehmen →</span>
+            </a>
+        </div>
+    </div>
+</section>
+
+{% if featured_cats %}
+<section class="section section--compact">
+    <div class="container">
+        <div class="section-heading">
+            <div class="eyebrow">Ausgewählte Katzen</div>
+            <h2>Ein kleiner Blick in unsere Vitrine.</h2>
+        </div>
+
+        <div class="cats-grid cats-grid--compact">
+            {% for cat in featured_cats %}
+                <article class="cat-card cat-card--soft">
+                    <a href="{% url 'cat_detail' cat.pk %}" class="cat-card__image-link">
+                        <div class="cat-card__placeholder">{{ cat.registered_name|default:'V'|slice:':1' }}</div>
+                    </a>
+                    <div class="cat-card__body">
+                        <div class="cat-card__meta">Maine Coon</div>
+                        <h3>{{ cat.registered_name|default:'Unsere Katze' }}</h3>
+                        <a href="{% url 'cat_detail' cat.pk %}" class="text-link text-link--strong">Mehr erfahren →</a>
+                    </div>
+                </article>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
 {% endblock %}

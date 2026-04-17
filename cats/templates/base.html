@@ -2,21 +2,21 @@
 {% load i18n %}
 {% get_current_language as CURRENT_LANGUAGE %}
 <!DOCTYPE html>
-<html lang="{{ CURRENT_LANGUAGE|default:'de' }}">
+<html lang="de">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
     <title>{% block title %}Vedenika{% endblock %}</title>
-    <meta name="description" content="{% block meta_description %}{% trans 'Maine-Coon-Pflegestätte Vedenika. Liebevoll aufgezogene Maine Coons, Galerie, Würfe und Kontakt für Familien aus Pforzheim und Umgebung.' %}{% endblock %}">
+    <meta name="description" content="{% block meta_description %}Maine-Coon-Cattery Vedenika in Pforzheim und Umgebung. Liebevoll aufgezogene Maine Coons, Galerie, Würfe und persönlicher Kontakt.{% endblock %}">
     <meta name="robots" content="index,follow">
-    <meta name="theme-color" content="#6b4f43">
+    <meta name="theme-color" content="#6f4e37">
     <link rel="canonical" href="{% block canonical_url %}{{ request.build_absolute_uri }}{% endblock %}">
 
     <meta property="og:type" content="website">
     <meta property="og:title" content="{% block og_title %}{% block og_title_inner %}Vedenika{% endblock %}{% endblock %}">
-    <meta property="og:description" content="{% block og_description %}{% trans 'Maine-Coon-Pflegestätte in Pforzheim und Umgebung: Galerie, Würfe, Charakter und liebevolle Aufzucht.' %}{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}Maine-Coon-Cattery in Pforzheim und Umgebung: Galerie, Katzen und persönlicher Kontakt.{% endblock %}">
     <meta property="og:url" content="{{ request.build_absolute_uri }}">
     <meta property="og:site_name" content="Vedenika">
 
@@ -33,27 +33,16 @@
       "@context": "https://schema.org",
       "@type": "Organization",
       "name": "Vedenika",
-      "url": "{{ request.scheme }}://{{ request.get_host }}",
-      "sameAs": [
-        {% if owner and owner.instagram %}"{{ owner.instagram }}"{% endif %}
-        {% if owner and owner.facebook %}{% if owner.instagram %}, {% endif %}"{{ owner.facebook }}"{% endif %}
-        {% if owner and owner.tiktok %}{% if owner.instagram or owner.facebook %}, {% endif %}"{{ owner.tiktok }}"{% endif %}
-      ]
+      "url": "{{ request.scheme }}://{{ request.get_host }}"
     }
     </script>
     {% endblock %}
 </head>
 <body>
-    <a class="skip-link" href="#main-content">{% trans "Zum Inhalt springen" %}</a>
-
     <header class="site-header">
         <div class="container site-header__inner">
             <a class="site-brand" href="{% url 'home' %}" aria-label="Vedenika Home">
-                <span class="site-brand__mark">V</span>
-                <span class="site-brand__text">
-                    <span class="site-brand__title">Vedenika</span>
-                    <span class="site-brand__subtitle">{% trans "Maine-Coon Cattery" %}</span>
-                </span>
+                <img src="{% static 'img/Vedenika-Logo2.png' %}" alt="Vedenika logo" class="site-brand__logo">
             </a>
 
             <button class="mobile-menu-toggle"
@@ -64,40 +53,28 @@
                 <span></span>
                 <span></span>
                 <span></span>
-                <span class="visually-hidden">{% trans "Menü öffnen" %}</span>
+                <span class="visually-hidden">Menü öffnen</span>
             </button>
 
             <div class="site-header__panel" id="main-navigation" data-menu-panel>
-                <nav class="main-nav" aria-label="{% trans 'Hauptnavigation' %}">
-                    <a href="{% url 'home' %}">{% trans "Startseite" %}</a>
-                    <a href="{% url 'cat_list' %}">{% trans "Unsere Katzen" %}</a>
-                    <a href="{% url 'litter_list' %}">{% trans "Würfe" %}</a>
-                    <a href="{% url 'gallery_list' %}">{% trans "Galerie" %}</a>
-                    <a href="{% url 'video_list' %}">{% trans "Videos" %}</a>
-                    <a href="{% url 'breed_info' %}">{% trans "Die Rasse" %}</a>
-                    <a href="{% url 'contacts' %}">{% trans "Kontakt" %}</a>
-                    <a href="{% url 'forum_list' %}">{% trans "Forum" %}</a>
+                <nav class="main-nav" aria-label="Hauptnavigation">
+                    <a href="{% url 'cat_list' %}">Katzen</a>
+                    <a href="{% url 'gallery_list' %}">Galerie</a>
+                    <a href="{% url 'contacts' %}">Kontakt</a>
                 </nav>
 
-                <div class="site-tools">
-                    <form action="{% url 'set_language' %}" method="post" class="language-switcher" aria-label="{% trans 'Sprache wählen' %}">
-                        {% csrf_token %}
-                        <input type="hidden" name="next" value="{{ request.get_full_path }}">
-                        <button type="submit" name="language" value="de" class="{% if CURRENT_LANGUAGE == 'de' %}is-active{% endif %}">DE</button>
-                        <button type="submit" name="language" value="en" class="{% if CURRENT_LANGUAGE == 'en' %}is-active{% endif %}">EN</button>
-                        <button type="submit" name="language" value="ru" class="{% if CURRENT_LANGUAGE == 'ru' %}is-active{% endif %}">RU</button>
-                    </form>
+                {# Sprache пока отключена. Вернем позже после настройки переводов .po #}
 
-                    <div class="account-links">
-                        {% if request.user.is_authenticated %}
-                            <a href="{% url 'profile' %}" class="account-pill">{{ request.user.username|first|upper }}</a>
-                            <a href="{% url 'account_logout' %}" class="text-link">{% trans "Abmelden" %}</a>
-                        {% else %}
-                            <a href="{% url 'account_login' %}" class="text-link">{% trans "Anmelden" %}</a>
-                            <a href="{% url 'account_signup' %}" class="button button--dark button--small">{% trans "Registrieren" %}</a>
-                        {% endif %}
-                    </div>
-                </div>
+{#                <div class="site-tools">#}
+{#                    <form action="{% url 'set_language' %}" method="post" class="language-switcher" aria-label="Sprache wählen">#}
+{#                        {% csrf_token %}#}
+{#                        <input type="hidden" name="next" value="{{ request.get_full_path }}">#}
+{#                        <button type="submit" name="language" value="de" class="is-active">DE</button>#}
+{#                        <button type="submit" name="language" value="en">EN</button>#}
+{#                        <button type="submit" name="language" value="ru">RU</button>#}
+{#                    </form>#}
+{#                </div>#}
+{#                #}
             </div>
         </div>
     </header>
@@ -111,31 +88,30 @@
             <div>
                 <div class="footer-brand">Vedenika</div>
                 <p class="footer-text">
-                    {% trans "Maine Coons mit ruhigem Charakter, starken Linien und liebevoller Aufzucht im Familienalltag." %}
+                    Maine Coons mit ruhigem Charakter, starken Linien und liebevoller Aufzucht im Familienalltag.
                 </p>
                 <p class="footer-text footer-text--small">© {% now "Y" %} Vedenika</p>
             </div>
 
             <div>
-                <h2 class="footer-title">{% trans "Navigation" %}</h2>
+                <h2 class="footer-title">Navigation</h2>
                 <ul class="footer-list">
-                    <li><a href="{% url 'home' %}">{% trans "Startseite" %}</a></li>
-                    <li><a href="{% url 'cat_list' %}">{% trans "Unsere Katzen" %}</a></li>
-                    <li><a href="{% url 'litter_list' %}">{% trans "Würfe" %}</a></li>
-                    <li><a href="{% url 'gallery_list' %}">{% trans "Galerie" %}</a></li>
-                    <li><a href="{% url 'breed_info' %}">{% trans "Die Rasse" %}</a></li>
-                    <li><a href="{% url 'contacts' %}">{% trans "Kontakt" %}</a></li>
+                    <li><a href="{% url 'home' %}">Startseite</a></li>
+                    <li><a href="{% url 'cat_list' %}">Unsere Katzen</a></li>
+                    <li><a href="{% url 'gallery_list' %}">Galerie</a></li>
+                    <li><a href="{% url 'contacts' %}">Kontakt</a></li>
                 </ul>
             </div>
 
             <div>
-                <h2 class="footer-title">{% trans "Kontakt & Social" %}</h2>
+                <h2 class="footer-title">Kontakt & Social</h2>
                 <ul class="footer-list">
                     {% if owner and owner.instagram %}<li><a href="{{ owner.instagram }}" target="_blank" rel="noopener">Instagram</a></li>{% endif %}
                     {% if owner and owner.facebook %}<li><a href="{{ owner.facebook }}" target="_blank" rel="noopener">Facebook</a></li>{% endif %}
                     {% if owner and owner.tiktok %}<li><a href="{{ owner.tiktok }}" target="_blank" rel="noopener">TikTok</a></li>{% endif %}
                     {% if owner and owner.whatsapp %}<li><a href="https://wa.me/{{ owner.whatsapp|cut:'+' }}" target="_blank" rel="noopener">WhatsApp</a></li>{% endif %}
-                    <li><a href="{% url 'impressum' %}">Impressum</a></li>
+                    {% if owner and owner.email %}<li><a href="mailto:{{ owner.email }}">E-Mail</a></li>{% endif %}
+                    {% if owner and owner.phone %}<li><a href="tel:{{ owner.phone }}">Telefon</a></li>{% endif %}
                 </ul>
             </div>
         </div>
