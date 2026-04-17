@@ -580,11 +580,43 @@ a {
     }
 }
 
-/* ===== home v7 ===== */
+/* ===== home v9 ===== */
+
+/* быстрая навигация по разделам */
+.section-nav {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    padding: 0.35rem 0 0.75rem;
+    background: linear-gradient(180deg, rgba(250,245,241,0.95) 0%, rgba(250,245,241,0.78) 100%);
+    backdrop-filter: blur(10px);
+}
+
+.section-nav__row {
+    display: flex;
+    gap: 0.55rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.section-nav__row a {
+    padding: 0.55rem 0.9rem;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.88);
+    color: #6a412f;
+    text-decoration: none;
+    font-weight: 700;
+    box-shadow: 0 8px 18px rgba(90, 57, 42, 0.08);
+}
+
+.section-nav__row a:hover {
+    color: #4f2f22;
+    background: #fff;
+}
 
 /* Первый экран */
 .hero-cattery {
-    padding: 1rem 0 2rem;
+    padding: 0.75rem 0 2rem;
 }
 
 .hero-cattery__grid {
@@ -594,17 +626,12 @@ a {
     align-items: stretch;
 }
 
-.hero-cattery__visual,
-.hero-cattery__content {
-    min-width: 0;
-}
-
 .hero-photo-card {
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: min(68vh, 720px);
-    max-height: min(68vh, 720px);
+    min-height: min(66vh, 700px);
+    max-height: min(66vh, 700px);
     background: transparent;
     border-radius: 28px;
     overflow: hidden;
@@ -638,7 +665,7 @@ a {
 }
 
 .hero-cattery__panel {
-    min-height: min(68vh, 720px);
+    min-height: min(66vh, 700px);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -648,30 +675,55 @@ a {
     box-shadow: 0 20px 45px rgba(28, 20, 16, 0.1);
 }
 
-.hero-cattery__eyebrow {
+.hero-cattery__eyebrow,
+.section-heading__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    width: fit-content;
     margin-bottom: 0.85rem;
-    font-size: 0.9rem;
-    font-weight: 700;
+    padding: 0.45rem 0.8rem;
+    border-radius: 999px;
+    background: linear-gradient(180deg, #f1e2d8 0%, #ead6c9 100%);
+    color: #8a6552;
+    font-size: 0.86rem;
+    font-weight: 800;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: #8a6552;
+    box-shadow: 0 8px 18px rgba(90, 57, 42, 0.12);
+}
+
+.hero-cattery__title,
+.section-heading h2 {
+    margin: 0 0 1rem;
+    color: #6a412f;
+    text-shadow: 0 1px 0 #fff, 0 7px 18px rgba(106, 65, 47, 0.12);
 }
 
 .hero-cattery__title {
-    margin: 0 0 1rem;
     font-size: clamp(2rem, 4vw, 4rem);
     line-height: 0.98;
 }
 
-.hero-cattery__lead {
-    margin: 0 0 1.35rem;
-    max-width: 34rem;
-    font-size: clamp(1rem, 1.3vw, 1.12rem);
-    line-height: 1.6;
-    color: #5c4b42;
+.section-heading h2 {
+    font-size: clamp(1.8rem, 3vw, 3rem);
+    line-height: 1.03;
 }
 
-.hero-cattery__actions {
+.hero-cattery__lead,
+.section-heading p {
+    margin: 0;
+    color: #5c4b42;
+    font-size: clamp(1rem, 1.25vw, 1.12rem);
+    line-height: 1.6;
+}
+
+.hero-cattery__lead {
+    margin-bottom: 1.35rem;
+    max-width: 34rem;
+}
+
+.hero-cattery__actions,
+.story-card__actions {
     display: flex;
     flex-wrap: wrap;
     gap: 0.75rem;
@@ -725,24 +777,25 @@ a {
     background: #faf7f4;
 }
 
-/* Витрина */
-.cattery-peek {
+/* общие секции */
+.cattery-peek,
+.breed-story,
+.character-grid-section,
+.care-grid-section,
+.about-us-section,
+.story-blocks {
     padding: 1rem 0 2rem;
 }
 
 .section-heading {
-    margin-bottom: 1.1rem;
+    margin-bottom: 1.2rem;
 }
 
 .section-heading--compact h2 {
     margin-bottom: 0.45rem;
 }
 
-.section-heading p {
-    margin: 0;
-    color: #67564d;
-}
-
+/* витрина */
 .peek-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -769,7 +822,7 @@ a {
 .peek-card img {
     display: block;
     width: 100%;
-    max-height: min(48vh, 460px);
+    max-height: min(45vh, 420px);
     object-fit: contain;
     object-position: center;
     background: #f4ebe4;
@@ -800,37 +853,9 @@ a {
     backdrop-filter: blur(8px);
 }
 
-/* Короткие текстовые блоки */
-.info-columns {
-    padding: 0.5rem 0 1.5rem;
-}
-
-.info-columns__grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 1rem;
-}
-
-.info-note {
-    padding: 1.2rem 1.1rem;
-    border-radius: 24px;
-    background: #fff;
-    box-shadow: 0 16px 34px rgba(28, 20, 16, 0.08);
-}
-
-.info-note h2 {
-    margin-bottom: 0.55rem;
-    font-size: 1.2rem;
-}
-
-.info-note p {
-    margin: 0;
-    color: #67564d;
-}
-
-/* Один пояс между текстовыми секциями */
+/* пояса */
 .gallery-belt-section {
-    padding: 0.5rem 0 1.5rem;
+    padding: 0.5rem 0 1.75rem;
     overflow: hidden;
 }
 
@@ -848,6 +873,12 @@ a {
     flex: 0 0 auto;
     display: block;
     height: min(26vh, 220px);
+    transition: transform 0.24s ease, opacity 0.24s ease;
+}
+
+.gallery-belt__item:hover {
+    transform: translateY(-2px);
+    opacity: 0.96;
 }
 
 .gallery-belt__item img {
@@ -858,34 +889,157 @@ a {
     object-position: center;
 }
 
-.story-blocks {
-    padding: 0 0 2.5rem;
-}
-
-.story-blocks__grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1rem;
-}
-
-.story-card {
-    padding: 1.35rem 1.2rem;
-    border-radius: 24px;
+/* die rasse */
+.feature-panel,
+.character-card,
+.care-card,
+.story-card,
+.about-us-card,
+.fact-card {
+    border-radius: 26px;
     background: linear-gradient(180deg, #fff 0%, #faf5f1 100%);
     box-shadow: 0 16px 34px rgba(28, 20, 16, 0.08);
 }
 
-.story-card h2 {
-    margin-bottom: 0.55rem;
-    font-size: 1.3rem;
+.feature-panel {
+    padding: 1.3rem 1.2rem;
 }
 
-.story-card p {
-    margin: 0 0 0.9rem;
+.feature-panel--intro {
+    margin-bottom: 1rem;
+}
+
+.feature-panel-grid {
+    display: grid;
+    gap: 1rem;
+}
+
+.feature-panel-grid--balanced {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.feature-panel h3,
+.character-card h3,
+.care-card h3,
+.story-card h2,
+.about-us-card h3 {
+    margin-bottom: 0.6rem;
+    color: #553326;
+    text-shadow: 0 1px 0 #fff, 0 4px 10px rgba(85, 51, 38, 0.08);
+}
+
+.feature-panel p,
+.character-card p,
+.care-card p,
+.story-card p,
+.about-us-card p {
+    margin: 0;
     color: #67564d;
+    line-height: 1.65;
+}
+
+.facts-strip {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1rem;
+}
+
+.fact-pill {
+    padding: 0.75rem 0.95rem;
+    border-radius: 18px;
+    background: #f3e5db;
+    min-width: 120px;
+}
+
+.fact-pill strong {
+    display: block;
+    color: #6a412f;
+    font-size: 1.02rem;
+}
+
+.fact-pill span {
+    display: block;
+    margin-top: 0.15rem;
+    color: #7a665d;
+    font-size: 0.88rem;
+}
+
+.facts-grid {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 0.85rem;
+    margin-top: 1rem;
+}
+
+.fact-card {
+    padding: 1rem 0.9rem;
+    text-align: center;
+}
+
+.fact-card strong {
+    display: block;
+    color: #6a412f;
+    font-size: 1.1rem;
+    margin-bottom: 0.2rem;
+}
+
+.fact-card span {
+    display: block;
+    color: #7a665d;
+    font-size: 0.92rem;
+}
+
+/* charakter und pflege */
+.character-grid,
+.care-grid,
+.about-us-grid,
+.story-blocks__grid {
+    display: grid;
+    gap: 1rem;
+}
+
+.character-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.care-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.about-us-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.story-blocks__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.character-card,
+.care-card,
+.story-card,
+.about-us-card {
+    padding: 1.25rem 1.1rem;
+}
+
+.about-us-card--wide {
+    grid-column: 1 / -1;
+}
+
+.care-card__icon {
+    width: 50px;
+    height: 50px;
+    display: grid;
+    place-items: center;
+    margin-bottom: 0.85rem;
+    border-radius: 16px;
+    background: #f3e5db;
+    font-size: 1.35rem;
 }
 
 .text-link-cta {
+    display: inline-block;
+    margin-top: 0.95rem;
     font-weight: 700;
     text-decoration: none;
     color: #7d4d39;
@@ -895,13 +1049,21 @@ a {
     color: #5c3425;
 }
 
-/* Мобилка */
+/* мобилка */
 @media (max-width: 991.98px) {
-    .hero-cattery {
-        padding-top: 0.5rem;
+    .section-nav {
+        position: static;
+        padding-top: 0.2rem;
     }
 
-    .hero-cattery__grid {
+    .hero-cattery__grid,
+    .feature-panel-grid--balanced,
+    .peek-grid,
+    .character-grid,
+    .care-grid,
+    .about-us-grid,
+    .story-blocks__grid,
+    .facts-grid {
         grid-template-columns: 1fr;
     }
 
@@ -928,17 +1090,19 @@ a {
         font-size: clamp(1.8rem, 8vw, 2.6rem);
     }
 
-    .peek-grid,
-    .info-columns__grid,
-    .story-blocks__grid {
-        grid-template-columns: 1fr;
-    }
-
     .peek-card img {
         max-height: min(42vh, 360px);
     }
 
     .gallery-belt__item {
         height: min(22vh, 170px);
+    }
+
+    .facts-strip {
+        flex-direction: column;
+    }
+
+    .fact-pill {
+        width: 100%;
     }
 }
