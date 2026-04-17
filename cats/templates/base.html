@@ -1,311 +1,161 @@
-<!DOCTYPE html>
 {% load static %}
 {% load i18n %}
 {% get_current_language as CURRENT_LANGUAGE %}
-
-<html lang="{{ CURRENT_LANGUAGE }}">
+<!DOCTYPE html>
+<html lang="{{ CURRENT_LANGUAGE|default:'de' }}">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
     <title>{% block title %}Vedenika{% endblock %}</title>
+    <meta name="description" content="{% block meta_description %}{% trans 'Maine-Coon-Pflegestätte Vedenika. Liebevoll aufgezogene Maine Coons, Galerie, Würfe und Kontakt für Familien aus Pforzheim und Umgebung.' %}{% endblock %}">
+    <meta name="robots" content="index,follow">
+    <meta name="theme-color" content="#6b4f43">
+    <link rel="canonical" href="{% block canonical_url %}{{ request.build_absolute_uri }}{% endblock %}">
+
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="{% block og_title %}{% block og_title_inner %}Vedenika{% endblock %}{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}{% trans 'Maine-Coon-Pflegestätte in Pforzheim und Umgebung: Galerie, Würfe, Charakter und liebevolle Aufzucht.' %}{% endblock %}">
+    <meta property="og:url" content="{{ request.build_absolute_uri }}">
+    <meta property="og:site_name" content="Vedenika">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="{% static 'css/base.css' %}" rel="stylesheet">
-
-    <!-- Yandex.Metrika counter -->
-        <script type="text/javascript">
-            (function(m,e,t,r,i,k,a){
-                m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-                m[i].l=1*new Date();
-                for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-                k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
-            })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=108483651', 'ym');
-
-            ym(108483651, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
-        </script>
-        <noscript><div><img src="https://mc.yandex.ru/watch/108483651" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-    <!-- /Yandex.Metrika counter -->
+    <link rel="stylesheet" href="{% static 'css/base_v2.css' %}">
 
     {% block extra_css %}{% endblock %}
+    {% block structured_data %}
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Vedenika",
+      "url": "{{ request.scheme }}://{{ request.get_host }}",
+      "sameAs": [
+        {% if owner and owner.instagram %}"{{ owner.instagram }}"{% endif %}
+        {% if owner and owner.facebook %}{% if owner.instagram %}, {% endif %}"{{ owner.facebook }}"{% endif %}
+        {% if owner and owner.tiktok %}{% if owner.instagram or owner.facebook %}, {% endif %}"{{ owner.tiktok }}"{% endif %}
+      ]
+    }
+    </script>
+    {% endblock %}
 </head>
-
 <body>
+    <a class="skip-link" href="#main-content">{% trans "Zum Inhalt springen" %}</a>
 
-<!-- NAVBAR -->
-<nav class="navbar navbar-expand-lg navbar-light bg-light py-0 border-bottom shadow-sm">
-    <div class="container">
+    <header class="site-header">
+        <div class="container site-header__inner">
+            <a class="site-brand" href="{% url 'home' %}" aria-label="Vedenika Home">
+                <span class="site-brand__mark">V</span>
+                <span class="site-brand__text">
+                    <span class="site-brand__title">Vedenika</span>
+                    <span class="site-brand__subtitle">{% trans "Maine-Coon Cattery" %}</span>
+                </span>
+            </a>
 
-        <a class="navbar-brand" href="{% url 'home' %}">
-            <img src="{% static 'img/Vedenika-Logo2.png' %}" alt="Vedenika logo" height="40">
-        </a>
+            <button class="mobile-menu-toggle"
+                    type="button"
+                    aria-expanded="false"
+                    aria-controls="main-navigation"
+                    data-menu-toggle>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span class="visually-hidden">{% trans "Menü öffnen" %}</span>
+            </button>
 
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+            <div class="site-header__panel" id="main-navigation" data-menu-panel>
+                <nav class="main-nav" aria-label="{% trans 'Hauptnavigation' %}">
+                    <a href="{% url 'home' %}">{% trans "Startseite" %}</a>
+                    <a href="{% url 'cat_list' %}">{% trans "Unsere Katzen" %}</a>
+                    <a href="{% url 'litter_list' %}">{% trans "Würfe" %}</a>
+                    <a href="{% url 'gallery_list' %}">{% trans "Galerie" %}</a>
+                    <a href="{% url 'video_list' %}">{% trans "Videos" %}</a>
+                    <a href="{% url 'breed_info' %}">{% trans "Die Rasse" %}</a>
+                    <a href="{% url 'contacts' %}">{% trans "Kontakt" %}</a>
+                    <a href="{% url 'forum_list' %}">{% trans "Forum" %}</a>
+                </nav>
 
-        <div class="collapse navbar-collapse" id="navbarNav">
-
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}"
-                       href="{% url 'home' %}">
-                        {% trans "Главная" %}
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link {% if request.resolver_match.url_name == 'cat_list' or request.resolver_match.url_name == 'cat_detail' %}active{% endif %}"
-                       href="{% url 'cat_list' %}">
-                        {% trans "Коты" %}
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link {% if request.resolver_match.url_name == 'litter_list' or request.resolver_match.url_name == 'litter_detail' %}active{% endif %}"
-                       href="{% url 'litter_list' %}">
-                        {% trans "Помёты" %}
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link {% if request.resolver_match.url_name == 'gallery_list' or request.resolver_match.url_name == 'gallery_album' %}active{% endif %}"
-                       href="{% url 'gallery_list' %}">
-                        {% trans "Галерея" %}
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link {% if request.resolver_match.url_name == 'video_list' %}active{% endif %}"
-                       href="{% url 'video_list' %}">
-                        {% trans "Видео" %}
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link {% if request.resolver_match.url_name == 'about_breed' %}active{% endif %}"
-                       href="{% url 'about_breed' %}">
-                        {% trans "О породе" %}
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link {% if request.resolver_match.url_name == 'contacts' %}active{% endif %}"
-                       href="{% url 'contacts' %}">
-                        {% trans "Контакты" %}
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link {% if 'forum' in request.resolver_match.url_name %}active{% endif %}"
-                       href="{% url 'forum_index' %}">
-                        {% trans "Форум" %}
-                    </a>
-                </li>
-            </ul>
-
-            {% if request.user.is_staff %}
-            <ul class="navbar-nav mb-2 mb-lg-0 me-2">
-                <li class="nav-item">
-                    <a class="nav-link {% if 'manage' in request.resolver_match.url_name %}active{% endif %}"
-                       href="{% url 'gallery_manage' %}"
-                       style="font-size:12px;color:var(--muted);">
-                        ⚙ {% trans "Галерея" %}
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link {% if 'video_manage' in request.resolver_match.url_name %}active{% endif %}"
-                       href="{% url 'video_manage' %}"
-                       style="font-size:12px;color:var(--muted);">
-                        ⚙ {% trans "Видео" %}
-                    </a>
-                </li>
-            </ul>
-            {% endif %}
-
-            <!-- USER AUTH -->
-            <div class="navbar-auth">
-                {% if request.user.is_authenticated %}
-                    <a href="{% url 'profile' %}" class="navbar-user">
-                        <div class="navbar-user-initials">
-                            {{ request.user.username|first|upper }}
-                        </div>
-                    </a>
-                    <a href="{% url 'account_logout' %}" class="navbar-auth-link">{% trans "Выйти" %}</a>
-                {% else %}
-                    <a href="{% url 'account_login' %}" class="navbar-auth-link">{% trans "Войти" %}</a>
-                    <a href="{% url 'account_signup' %}" class="navbar-auth-btn">{% trans "Регистрация" %}</a>
-                {% endif %}
-            </div>
-
-            <div id="ld" style="position:relative;margin-left:12px;">
-
-                <!-- Текущий язык — всегда виден -->
-                <button onclick="var m=document.getElementById('lm');m.style.display=m.style.display==='block'?'none':'block';" type="button"
-                        style="background:none;border:none;padding:2px 4px;cursor:pointer;display:flex;align-items:center;gap:4px;">
-                    <img src="{% static 'img/' %}{{ CURRENT_LANGUAGE }}.png" alt="{{ CURRENT_LANGUAGE }}"
-                         style="width:22px;height:auto;display:block;">
-                    <svg style="width:10px;height:6px;color:#8c7660;flex-shrink:0;" viewBox="0 0 10 6" fill="none">
-                        <path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                    </svg>
-                </button>
-
-                <!-- Выпадающее меню -->
-                <div id="lm" style="display:none;position:absolute;top:calc(100% + 6px);right:0;background:#fff;border:1px solid rgba(201,169,110,0.3);border-radius:10px;padding:6px;box-shadow:0 6px 20px rgba(44,32,21,0.12);z-index:999;min-width:120px;">
-                    <form action="{% url 'set_language' %}" method="post">
+                <div class="site-tools">
+                    <form action="{% url 'set_language' %}" method="post" class="language-switcher" aria-label="{% trans 'Sprache wählen' %}">
                         {% csrf_token %}
                         <input type="hidden" name="next" value="{{ request.get_full_path }}">
-                        {% if CURRENT_LANGUAGE != 'ru' %}
-                        <button type="submit" name="language" value="ru"
-                                style="display:flex;align-items:center;gap:8px;width:100%;background:none;border:none;padding:6px 10px;border-radius:6px;cursor:pointer;font-family:Jost,sans-serif;font-size:13px;color:#2c2015;">
-                            <img src="{% static 'img/ru.png' %}" alt="RU" style="width:20px;height:auto;"> Русский
-                        </button>
-                        {% endif %}
-                        {% if CURRENT_LANGUAGE != 'de' %}
-                        <button type="submit" name="language" value="de"
-                                style="display:flex;align-items:center;gap:8px;width:100%;background:none;border:none;padding:6px 10px;border-radius:6px;cursor:pointer;font-family:Jost,sans-serif;font-size:13px;color:#2c2015;">
-                            <img src="{% static 'img/de.png' %}" alt="DE" style="width:20px;height:auto;"> Deutsch
-                        </button>
-                        {% endif %}
-                        {% if CURRENT_LANGUAGE != 'en' %}
-                        <button type="submit" name="language" value="en"
-                                style="display:flex;align-items:center;gap:8px;width:100%;background:none;border:none;padding:6px 10px;border-radius:6px;cursor:pointer;font-family:Jost,sans-serif;font-size:13px;color:#2c2015;">
-                            <img src="{% static 'img/en.png' %}" alt="EN" style="width:20px;height:auto;"> English
-                        </button>
-                        {% endif %}
+                        <button type="submit" name="language" value="de" class="{% if CURRENT_LANGUAGE == 'de' %}is-active{% endif %}">DE</button>
+                        <button type="submit" name="language" value="en" class="{% if CURRENT_LANGUAGE == 'en' %}is-active{% endif %}">EN</button>
+                        <button type="submit" name="language" value="ru" class="{% if CURRENT_LANGUAGE == 'ru' %}is-active{% endif %}">RU</button>
                     </form>
+
+                    <div class="account-links">
+                        {% if request.user.is_authenticated %}
+                            <a href="{% url 'profile' %}" class="account-pill">{{ request.user.username|first|upper }}</a>
+                            <a href="{% url 'account_logout' %}" class="text-link">{% trans "Abmelden" %}</a>
+                        {% else %}
+                            <a href="{% url 'account_login' %}" class="text-link">{% trans "Anmelden" %}</a>
+                            <a href="{% url 'account_signup' %}" class="button button--dark button--small">{% trans "Registrieren" %}</a>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
+        </div>
+    </header>
 
-            <script>
-            document.addEventListener('click', function(e) {
-                var ld = document.getElementById('ld');
-                var lm = document.getElementById('lm');
-                if (ld && lm && !ld.contains(e.target)) lm.style.display = 'none';
+    <main id="main-content" class="site-main">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="site-footer">
+        <div class="container site-footer__grid">
+            <div>
+                <div class="footer-brand">Vedenika</div>
+                <p class="footer-text">
+                    {% trans "Maine Coons mit ruhigem Charakter, starken Linien und liebevoller Aufzucht im Familienalltag." %}
+                </p>
+                <p class="footer-text footer-text--small">© {% now "Y" %} Vedenika</p>
+            </div>
+
+            <div>
+                <h2 class="footer-title">{% trans "Navigation" %}</h2>
+                <ul class="footer-list">
+                    <li><a href="{% url 'home' %}">{% trans "Startseite" %}</a></li>
+                    <li><a href="{% url 'cat_list' %}">{% trans "Unsere Katzen" %}</a></li>
+                    <li><a href="{% url 'litter_list' %}">{% trans "Würfe" %}</a></li>
+                    <li><a href="{% url 'gallery_list' %}">{% trans "Galerie" %}</a></li>
+                    <li><a href="{% url 'breed_info' %}">{% trans "Die Rasse" %}</a></li>
+                    <li><a href="{% url 'contacts' %}">{% trans "Kontakt" %}</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h2 class="footer-title">{% trans "Kontakt & Social" %}</h2>
+                <ul class="footer-list">
+                    {% if owner and owner.instagram %}<li><a href="{{ owner.instagram }}" target="_blank" rel="noopener">Instagram</a></li>{% endif %}
+                    {% if owner and owner.facebook %}<li><a href="{{ owner.facebook }}" target="_blank" rel="noopener">Facebook</a></li>{% endif %}
+                    {% if owner and owner.tiktok %}<li><a href="{{ owner.tiktok }}" target="_blank" rel="noopener">TikTok</a></li>{% endif %}
+                    {% if owner and owner.whatsapp %}<li><a href="https://wa.me/{{ owner.whatsapp|cut:'+' }}" target="_blank" rel="noopener">WhatsApp</a></li>{% endif %}
+                    <li><a href="{% url 'impressum' %}">Impressum</a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        (function () {
+            const toggle = document.querySelector('[data-menu-toggle]');
+            const panel = document.querySelector('[data-menu-panel]');
+            if (!toggle || !panel) return;
+
+            toggle.addEventListener('click', function () {
+                const expanded = toggle.getAttribute('aria-expanded') === 'true';
+                toggle.setAttribute('aria-expanded', String(!expanded));
+                panel.classList.toggle('is-open');
+                document.body.classList.toggle('menu-open');
             });
-            </script>
-
-        </div>
-    </div>
-</nav>
-
-<!-- CONTENT -->
-<main class="container mt-4">
-    {% block content %}
-    {% endblock %}
-</main>
-
-<!-- FOOTER -->
-<footer class="site-footer mt-5">
-    <div class="container">
-
-        <div class="footer-top">
-            <div class="footer-col footer-col--brand">
-                <div class="footer-logo">Vedenika</div>
-                <div class="footer-tagline">{% trans "Питомник мейн-кунов" %}</div>
-                <div class="footer-copy">© {% now "Y" %} Vedenika</div>
-            </div>
-            <div class="footer-col">
-                <div class="footer-col-title">{% trans "Навигация" %}</div>
-                <div class="footer-links">
-                    <a href="{% url 'home' %}">{% trans "Главная" %}</a>
-                    <a href="{% url 'cat_list' %}">{% trans "Коты" %}</a>
-                    <a href="{% url 'litter_list' %}">{% trans "Помёты" %}</a>
-                    <a href="{% url 'gallery_list' %}">{% trans "Галерея" %}</a>
-                    <a href="{% url 'video_list' %}">{% trans "Видео" %}</a>
-                    <a href="{% url 'about_breed' %}">{% trans "О породе" %}</a>
-                    <a href="{% url 'contacts' %}">{% trans "Контакты" %}</a>
-                </div>
-            </div>
-            <div class="footer-col">
-                <div class="footer-col-title">{% trans "Соцсети" %}</div>
-                <div class="footer-socials">
-                    {% if owner and owner.instagram %}
-                        <a href="{{ owner.instagram }}" target="_blank" rel="noopener" class="footer-social-link">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" stroke="none"/></svg>
-                            Instagram
-                        </a>
-                    {% endif %}
-                    {% if owner and owner.facebook %}
-                        <a href="{{ owner.facebook }}" target="_blank" rel="noopener" class="footer-social-link">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
-                            Facebook
-                        </a>
-                    {% endif %}
-                    {% if owner and owner.vk %}
-                        <a href="{{ owner.vk }}" target="_blank" rel="noopener" class="footer-social-link">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M21.6 7.2c.1-.5 0-.8-.7-.8h-2.4c-.6 0-.9.3-1 .7 0 0-1.2 2.9-2.9 4.7-.5.5-.8.7-1 .7-.2 0-.3-.2-.3-.7V7.2c0-.6-.2-.8-.7-.8H9.3c-.4 0-.7.3-.7.6 0 .6.9.8 1 2.6v3.9c0 .7-.1.9-.4.9-.8 0-2.7-2.9-3.8-6.3-.2-.6-.5-.9-1.1-.9H1.9c-.7 0-.9.3-.9.7 0 .7.8 4.2 3.8 8.9 2 3.1 4.9 4.8 7.5 4.8 1.5 0 1.7-.3 1.7-.9v-2.1c0-.7.1-.9.7-.9.4 0 1.1.2 2.7 1.7 1.8 1.8 2.1 2.3 3.1 2.3h2.4c.7 0 1-.3.8-1-.2-.7-.9-1.7-1.9-2.9-.5-.6-1.3-1.3-1.5-1.6-.4-.5-.3-.7 0-1.2 0 0 3-4.2 3.3-5.6z"/></svg>
-                            ВКонтакте
-                        </a>
-                    {% endif %}
-                    {% if owner and owner.tiktok %}
-                        <a href="{{ owner.tiktok }}" target="_blank" rel="noopener" class="footer-social-link">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19.6 3a3.6 3.6 0 01-3.6-3h-2.8v13.4a2.2 2.2 0 01-2.2 2 2.2 2.2 0 01-2.2-2.2 2.2 2.2 0 012.2-2.2c.2 0 .4 0 .6.1V8.3a5 5 0 00-.6 0 5 5 0 00-5 5 5 5 0 005 5 5 5 0 005-5V8.6A8.8 8.8 0 0021 10V7.2a3.6 3.6 0 01-1.4-.2z"/></svg>
-                            TikTok
-                        </a>
-                    {% endif %}
-                    {% if owner and owner.whatsapp %}
-                        <a href="https://wa.me/{{ owner.whatsapp|cut:'+' }}" target="_blank" rel="noopener" class="footer-social-link">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.1-1.7-.8-1.9-.9-.3-.1-.5-.1-.7.2-.2.3-.7.9-.9 1.1-.2.2-.3.2-.6.1s-1.2-.4-2.2-1.4c-.8-.7-1.4-1.6-1.5-1.9-.2-.3 0-.4.1-.6l.4-.5c.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5l-.9-2.1c-.2-.5-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4C8.2 8 7.5 8.7 7.5 10.1c0 1.4 1 2.7 1.2 2.9.1.2 2 3.1 4.9 4.3.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.5-.1 1.7-.7 1.9-1.3.2-.7.2-1.2.2-1.3 0-.1-.2-.2-.5-.3M12 2a10 10 0 00-8.7 14.9L2 22l5.3-1.4A10 10 0 1012 2z"/></svg>
-                            WhatsApp
-                        </a>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-
-        <div class="footer-bottom">
-            <a href="{% url 'impressum' %}">Impressum</a>
-        </div>
-
-    </div>
-</footer>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-(function() {
-  var trigger = document.getElementById('langTrigger');
-  var menu    = document.getElementById('langMenu');
-  var dropdown = document.getElementById('langDropdown');
-  if (!trigger) return;
-
-  trigger.addEventListener('click', function(e) {
-    e.stopPropagation();
-    var open = dropdown.classList.toggle('open');
-    trigger.setAttribute('aria-expanded', open);
-  });
-
-  document.addEventListener('click', function(e) {
-    if (!dropdown.contains(e.target)) {
-      dropdown.classList.remove('open');
-      trigger.setAttribute('aria-expanded', 'false');
-    }
-  });
-
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') {
-      dropdown.classList.remove('open');
-      trigger.setAttribute('aria-expanded', 'false');
-    }
-  });
-})();
-</script>
-{% block extra_js %}{% endblock %}
-<script>
-function togglePwd(inputId, iconId) {
-  var input = document.getElementById(inputId);
-  var icon  = document.getElementById(iconId);
-  if (!input) return;
-
-  if (input.type === 'password') {
-    input.type = 'text';
-    // Иконка "глаз зачёркнутый" — пароль виден
-    icon.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94"/>' +
-      '<path d="M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19"/>' +
-      '<line x1="1" y1="1" x2="23" y2="23"/>';
-  } else {
-    input.type = 'password';
-    // Иконка "глаз открытый" — пароль скрыт
-    icon.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>' +
-      '<circle cx="12" cy="12" r="3"/>';
-  }
-}
-</script>
+        })();
+    </script>
+    {% block extra_js %}{% endblock %}
 </body>
 </html>

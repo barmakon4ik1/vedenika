@@ -128,7 +128,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/
 
-LANGUAGE_CODE = "ru"
+LANGUAGE_CODE = "de"
 
 TIME_ZONE = "Europe/Berlin"
 
@@ -139,19 +139,19 @@ USE_I18N = True
 USE_TZ = True
 
 LANGUAGES = [
+    ("de", _("Deutsch")),
     ("en", _("English")),
     ("ru", _("Русский")),
-    ("de", _("Deutsch")),
 ]
 
 PARLER_LANGUAGES = {
     None: (
-        {'code': 'en'},
-        {'code': 'ru'},
         {'code': 'de'},
+        {'code': 'ru'},
+        {'code': 'en'},
     ),
     'default': {
-        'fallbacks': ['en'],   # если нет перевода
+        'fallbacks': ['de'],   # если нет перевода
         'hide_untranslated': False,
     }
 }
