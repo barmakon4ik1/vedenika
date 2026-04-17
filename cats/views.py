@@ -143,6 +143,7 @@ class CatDetailView(DetailView):
 # =========================================================
 # 🐱 Home page
 # =========================================================
+
 def home(request):
     from .models import GalleryPhoto, Cat
     import random
@@ -154,26 +155,49 @@ def home(request):
             album__is_active=True
         ).values_list("id", flat=True)
     )
+
     random_photos = []
     if photo_ids:
         sample_ids = random.sample(photo_ids, min(6, len(photo_ids)))
         random_photos = list(
-            GalleryPhoto.objects.filter(id__in=sample_ids)
-            .select_related("album")
+            GalleryPhoto.objects.filter(id__in=sample_ids).select_related("album")
         )
 
-    # Несколько активных котов для витрины
-    featured_cats = list(
-        Cat.objects.filter(is_active=True, is_featured=True)
-        .select_related("cat_color", "breed")
-        .prefetch_related("photos")
-        .order_by("?")[:4]
+    # Логика витринных котов:
+    # 1) сначала стараемся взять тех же котов, что и на странице cat_list
+    #    (is_featured=True, owner_id=1)
+    # 2) если среди них есть активные — показываем их первыми
+    # 3) если таких нет, делаем безопасный fallback на активных котов
+    owner_person_id = 1
+
+    cats_qs = (
+        Cat.objects
+        .filter(is_featured=True, owner_id=owner_person_id)
+        .select_related("breed", "cattery", "cat_color", "father", "mother", "owner", "litter")
+        .prefetch_related("photos", "cat_color__components")
+        .order_by("registered_name")
+        .distinct()
     )
+
+    featured_cats = [cat for cat in cats_qs if cat.is_active][:4]
+
+    if not featured_cats:
+        featured_cats = list(cats_qs[:4])
+
+    if not featured_cats:
+        featured_cats = list(
+            Cat.objects
+            .filter(is_active=True)
+            .select_related("breed", "cattery", "cat_color", "father", "mother", "owner", "litter")
+            .prefetch_related("photos", "cat_color__components")
+            .order_by("registered_name")[:4]
+        )
 
     return render(request, "home.html", {
         "random_photos": random_photos,
         "featured_cats": featured_cats,
     })
+
 
 # =========================================================
 # 🐱 Страница котов

@@ -1,134 +1,133 @@
 {% extends "base.html" %}
+{% load i18n %}
+{% load static %}
 
-{% block title %}Vedenika | Maine Coon Cattery in Pforzheim{% endblock %}
-{% block meta_description %}Vedenika ist eine Maine-Coon-Cattery in Pforzheim und Umgebung. Lernen Sie unsere Katzen kennen, entdecken Sie Bilder aus dem Alltag und nehmen Sie Kontakt auf.{% endblock %}
-{% block og_title_inner %}Vedenika | Maine Coon Cattery in Pforzheim{% endblock %}
-{% block og_description %}Maine Coons mit Charakter, Galerie und persönlicher Kontakt für Interessenten aus Pforzheim und Umgebung.{% endblock %}
-
-{% block structured_data %}
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "LocalBusiness",
-  "name": "Vedenika",
-  "url": "{{ request.build_absolute_uri }}",
-  "areaServed": ["Pforzheim", "Enzkreis", "Karlsruhe", "Stuttgart"]
-}
-</script>
-{% endblock %}
+{% block title %}Vedenika | Maine Coon Cattery{% endblock %}
+{% block meta_description %}{% trans "Liebevoll aufgezogene Maine Coons, Einblicke in unseren Alltag, Galerie und Kontakt für Familien aus Pforzheim und Umgebung." %}{% endblock %}
 
 {% block content %}
-<section class="hero-shell">
+<section class="hero-cattery">
     <div class="container">
-        <div class="hero-card">
-            <div class="hero-media">
+        <div class="hero-cattery__grid">
+            <div class="hero-cattery__visual">
                 {% if random_photos %}
-                    {% with first_photo=random_photos|first %}
-                        <a href="{% url 'gallery_list' %}" class="hero-media__link" aria-label="Galerie öffnen">
-                            <img src="{{ first_photo.image.url }}"
-                                 alt="{{ first_photo.title|default:'Maine Coon aus der Galerie' }}"
-                                 class="hero-media__image"
-                                 loading="eager">
-                        </a>
-                    {% endwith %}
+                    <a href="{% url 'gallery_list' %}" class="hero-photo-card" aria-label="{% trans 'Zur Galerie' %}">
+                        <img
+                            src="{{ random_photos.0.image.url }}"
+                            alt="{{ random_photos.0.title|default:'Vedenika Maine Coon' }}"
+                            class="hero-photo-card__img">
+                    </a>
                 {% else %}
-                    <div class="hero-media__placeholder">
-                        <span>Vedenika</span>
+                    <div class="hero-photo-card hero-photo-card--empty">
+                        <div class="hero-photo-card__empty">{% trans "Bald zeigen wir hier neue Einblicke aus unserer Galerie." %}</div>
                     </div>
                 {% endif %}
             </div>
 
-            <div class="hero-copy compact-copy">
-                <div class="eyebrow">Vedenika · Maine Coon Cattery</div>
-                <h1>Maine Coons mit Charakter.</h1>
-                <p class="hero-lead">
-                    Liebevoll aufgezogen, ruhig im Wesen und nah am Familienalltag.
-                </p>
-                <div class="hero-actions">
-                    <a href="{% url 'cat_list' %}" class="button button--accent">Unsere Katzen</a>
-                    <a href="{% url 'gallery_list' %}" class="button button--ghost">Galerie</a>
-                    <a href="{% url 'contacts' %}" class="button button--dark">Kontakt</a>
+            <div class="hero-cattery__content">
+                <div class="hero-cattery__panel">
+                    <div class="hero-cattery__eyebrow">Vedenika Maine Coon Cattery</div>
+                    <h1 class="hero-cattery__title">
+                        {% trans "Maine Coons mit Charakter, Ruhe und besonderer Ausstrahlung." %}
+                    </h1>
+                    <p class="hero-cattery__lead">
+                        {% trans "Ein kleiner Einblick in unsere Cattery und das Leben unserer Katzen." %}
+                    </p>
+
+                    <div class="hero-cattery__actions">
+                        <a class="button button--primary" href="{% url 'cat_list' %}">{% trans "Unsere Katzen" %}</a>
+                        <a class="button button--secondary" href="{% url 'gallery_list' %}">{% trans "Galerie" %}</a>
+                        <a class="button button--ghost" href="{% url 'contacts' %}">{% trans "Kontakt" %}</a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-<section class="section section--tight">
+<section class="cattery-peek">
     <div class="container">
-        <div class="mini-gallery-grid">
-            {% if random_photos %}
-                {% for photo in random_photos|slice:"1:3" %}
-                    <a href="{% url 'gallery_list' %}" class="mini-gallery-card">
-                        <span class="mini-gallery-card__image-wrap">
-                            <img src="{{ photo.image.url }}" alt="{{ photo.title|default:'Galeriebild' }}" class="mini-gallery-card__image" loading="lazy">
-                        </span>
-                        <span class="mini-gallery-card__caption">Mehr Bilder ansehen</span>
+        <div class="section-heading section-heading--compact">
+            <h2>Ein kleiner Einblick in unsere Cattery</h2>
+            <p>{% trans "Einige Momente aus unserem Alltag und aus dem Leben unserer Maine Coons." %}</p>
+        </div>
+
+        <div class="peek-grid">
+            {% if featured_cats %}
+                {% for cat in featured_cats|slice:":3" %}
+                    <a class="peek-card" href="{% url 'cat_detail' cat.pk %}">
+                        {% with main_image=cat.get_main_image %}
+                            {% if main_image %}
+                                <img src="{{ main_image.image.url }}" alt="{{ cat.name }}">
+                            {% else %}
+                                <div class="peek-card__empty">{{ cat.name }}</div>
+                            {% endif %}
+                        {% endwith %}
+                        <span class="peek-card__title">{{ cat.name }}</span>
+                    </a>
+                {% endfor %}
+            {% elif random_photos %}
+                {% for photo in random_photos|slice:":3" %}
+                    <a class="peek-card" href="{% url 'gallery_list' %}">
+                        <img src="{{ photo.image.url }}" alt="{{ photo.title|default:'Vedenika' }}">
+                        <span class="peek-card__title">{{ photo.title|default:"Vedenika" }}</span>
                     </a>
                 {% endfor %}
             {% endif %}
+        </div>
+    </div>
+</section>
 
-            <article class="mini-text-card">
-                <h2>Ein kurzer erster Eindruck.</h2>
-                <p>
-                    Kein langes Suchen, keine überladene Startseite. Erst sehen, dann entdecken.
-                </p>
+<section class="info-columns">
+    <div class="container">
+        <div class="info-columns__grid">
+            <article class="info-note">
+                <h2>{% trans "Die Rasse" %}</h2>
+                <p>{% trans "Maine Coons faszinieren durch Größe, Ausdruck und ihre ruhige, menschenbezogene Art." %}</p>
+            </article>
+            <article class="info-note">
+                <h2>{% trans "Der Charakter" %}</h2>
+                <p>{% trans "Viele Maine Coons sind aufmerksam, sanft und gerne nah bei ihrer Familie, ohne aufdringlich zu sein." %}</p>
+            </article>
+            <article class="info-note">
+                <h2>{% trans "Unser Alltag" %}</h2>
+                <p>{% trans "Wir mögen natürliche, lebendige Einblicke – genau deshalb zeigen wir auf dieser Seite wechselnde Fotos aus unserer Galerie." %}</p>
             </article>
         </div>
     </div>
 </section>
 
-<section class="section section--soft section--compact">
-    <div class="container">
-        <div class="section-heading section-heading--center narrow-heading">
-            <div class="eyebrow">Vedenika</div>
-            <h2>Wenig Text. Klare Wege. Schöne Bilder.</h2>
-            <p>So soll sich die Seite anfühlen: ruhig, modern und leicht zu bedienen – besonders auf dem Handy.</p>
-        </div>
-
-        <div class="quick-links-grid quick-links-grid--3">
-            <a href="{% url 'cat_list' %}" class="quick-link-card interactive-card">
-                <span class="quick-link-card__title">Katzen</span>
-                <span class="quick-link-card__text">Lernen Sie unsere Maine Coons kennen.</span>
-                <span class="quick-link-card__cta">Jetzt ansehen →</span>
+{% if random_photos %}
+<section class="gallery-belt-section">
+    <div class="gallery-belt" aria-label="{% trans 'Fotoband aus der Galerie' %}">
+        {% for photo in random_photos %}
+            <a href="{% url 'gallery_list' %}" class="gallery-belt__item">
+                <img src="{{ photo.image.url }}" alt="{{ photo.title|default:'Vedenika Galerie' }}">
             </a>
-            <a href="{% url 'gallery_list' %}" class="quick-link-card interactive-card">
-                <span class="quick-link-card__title">Galerie</span>
-                <span class="quick-link-card__text">Bilder aus dem Alltag, Porträts und kleine Momente.</span>
-                <span class="quick-link-card__cta">Zur Galerie →</span>
+        {% endfor %}
+        {% for photo in random_photos %}
+            <a href="{% url 'gallery_list' %}" class="gallery-belt__item gallery-belt__item--repeat" aria-hidden="true" tabindex="-1">
+                <img src="{{ photo.image.url }}" alt="">
             </a>
-            <a href="{% url 'contacts' %}" class="quick-link-card interactive-card">
-                <span class="quick-link-card__title">Kontakt</span>
-                <span class="quick-link-card__text">Fragen Sie in Ruhe nach einem Kitten oder einer Verpaarung.</span>
-                <span class="quick-link-card__cta">Kontakt aufnehmen →</span>
-            </a>
-        </div>
-    </div>
-</section>
-
-{% if featured_cats %}
-<section class="section section--compact">
-    <div class="container">
-        <div class="section-heading">
-            <div class="eyebrow">Ausgewählte Katzen</div>
-            <h2>Ein kleiner Blick in unsere Vitrine.</h2>
-        </div>
-
-        <div class="cats-grid cats-grid--compact">
-            {% for cat in featured_cats %}
-                <article class="cat-card cat-card--soft">
-                    <a href="{% url 'cat_detail' cat.pk %}" class="cat-card__image-link">
-                        <div class="cat-card__placeholder">{{ cat.registered_name|default:'V'|slice:':1' }}</div>
-                    </a>
-                    <div class="cat-card__body">
-                        <div class="cat-card__meta">Maine Coon</div>
-                        <h3>{{ cat.registered_name|default:'Unsere Katze' }}</h3>
-                        <a href="{% url 'cat_detail' cat.pk %}" class="text-link text-link--strong">Mehr erfahren →</a>
-                    </div>
-                </article>
-            {% endfor %}
-        </div>
+        {% endfor %}
     </div>
 </section>
 {% endif %}
+
+<section class="story-blocks">
+    <div class="container">
+        <div class="story-blocks__grid">
+            <article class="story-card">
+                <h2>{% trans "Galerie entdecken" %}</h2>
+                <p>{% trans "In der Galerie zeigen wir nicht nur einzelne Porträts, sondern auch kleine Momente aus dem Leben unserer Katzen." %}</p>
+                <a class="text-link-cta" href="{% url 'gallery_list' %}">{% trans "Zur Galerie" %}</a>
+            </article>
+            <article class="story-card">
+                <h2>{% trans "Kontakt aufnehmen" %}</h2>
+                <p>{% trans "Wenn Sie unsere Maine Coons kennenlernen möchten, freuen wir uns über eine freundliche Nachricht." %}</p>
+                <a class="text-link-cta" href="{% url 'contacts' %}">{% trans "Kontakt ansehen" %}</a>
+            </article>
+        </div>
+    </div>
+</section>
 {% endblock %}
