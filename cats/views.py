@@ -148,7 +148,6 @@ def home(request):
     from .models import GalleryPhoto, Cat
     import random
 
-    # Случайные фото для hero и других блоков
     photo_ids = list(
         GalleryPhoto.objects.filter(
             is_active=True,
@@ -161,11 +160,9 @@ def home(request):
         photo_count = min(HOME_RANDOM_PHOTO_COUNT, len(photo_ids))
         sample_ids = random.sample(photo_ids, photo_count)
         random_photos = list(
-            GalleryPhoto.objects.filter(id__in=sample_ids)
-            .select_related("album")
+            GalleryPhoto.objects.filter(id__in=sample_ids).select_related("album")
         )
 
-    # Фото только из album_3 для пояса
     belt_photos = list(
         GalleryPhoto.objects.filter(
             is_active=True,
@@ -174,7 +171,6 @@ def home(request):
         ).select_related("album")
     )
 
-    # Несколько активных котов для витрины
     featured_cats = list(
         Cat.objects.filter(is_active=True, is_featured=True)
         .select_related("cat_color", "breed")
@@ -187,6 +183,7 @@ def home(request):
         "belt_photos": belt_photos,
         "featured_cats": featured_cats,
     })
+
 
 # =========================================================
 # 🐱 Страница котов

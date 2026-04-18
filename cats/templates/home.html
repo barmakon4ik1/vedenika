@@ -70,14 +70,12 @@
                     <a class="peek-card" href="{% url 'cat_detail' cat.pk %}">
                         {% with main_image=cat.get_main_image %}
                             {% if main_image %}
-                                <img src="{{ main_image.image.url }}" alt="{{ cat.name }}">
+                                <img src="{{ main_image.image.url }}" alt="{{ cat.call_name|default:cat.registered_name }}">
                             {% else %}
-                                <div class="peek-card__empty">{{ cat.name }}</div>
+                                <div class="peek-card__empty">{{ cat.call_name|default:cat.registered_name }}</div>
                             {% endif %}
                         {% endwith %}
-                        <span class="peek-card__title">
-                            {{ cat.call_name|default:cat.registered_name }}
-                        </span>
+                        <span class="peek-card__title">{{ cat.call_name|default:cat.registered_name }}</span>
                     </a>
                 {% endfor %}
             {% endif %}
@@ -85,24 +83,26 @@
     </div>
 </section>
 
-{% if random_photos %}
+{% if belt_photos %}
 <section class="gallery-belt-section">
-    <div class="gallery-belt" aria-label="Fotoband aus der Galerie">
-        {% for photo in random_photos %}
-            <a href="{% url 'gallery_list' %}" class="gallery-belt__item">
-                <img src="{{ photo.image.url }}" alt="{{ photo.title|default:'Vedenika Galerie' }}">
-            </a>
-        {% endfor %}
-        {% for photo in random_photos %}
-            <a href="{% url 'gallery_list' %}" class="gallery-belt__item gallery-belt__item--repeat" aria-hidden="true" tabindex="-1">
-                <img src="{{ photo.image.url }}" alt="">
-            </a>
-        {% endfor %}
-        {% for photo in random_photos %}
-            <a href="{% url 'gallery_list' %}" class="gallery-belt__item gallery-belt__item--repeat" aria-hidden="true" tabindex="-1">
-                <img src="{{ photo.image.url }}" alt="">
-            </a>
-        {% endfor %}
+    <div class="gallery-belt-wrap">
+        <div class="gallery-belt" aria-label="Fotoband aus dem Album 3">
+            {% for photo in belt_photos %}
+                <a href="{% url 'gallery_list' %}" class="gallery-belt__item">
+                    <img src="{{ photo.image.url }}" alt="{{ photo.title|default:'Vedenika Galerie' }}">
+                </a>
+            {% endfor %}
+            {% for photo in belt_photos %}
+                <a href="{% url 'gallery_list' %}" class="gallery-belt__item gallery-belt__item--repeat" aria-hidden="true" tabindex="-1">
+                    <img src="{{ photo.image.url }}" alt="">
+                </a>
+            {% endfor %}
+            {% for photo in belt_photos %}
+                <a href="{% url 'gallery_list' %}" class="gallery-belt__item gallery-belt__item--repeat" aria-hidden="true" tabindex="-1">
+                    <img src="{{ photo.image.url }}" alt="">
+                </a>
+            {% endfor %}
+        </div>
     </div>
 </section>
 {% endif %}
@@ -209,28 +209,6 @@
         </div>
     </div>
 </section>
-
-{% if random_photos %}
-<section class="gallery-belt-section gallery-belt-section--secondary">
-    <div class="gallery-belt" aria-label="Weiteres Fotoband aus der Galerie">
-        {% for photo in random_photos %}
-            <a href="{% url 'gallery_list' %}" class="gallery-belt__item">
-                <img src="{{ photo.image.url }}" alt="{{ photo.title|default:'Vedenika Galerie' }}">
-            </a>
-        {% endfor %}
-        {% for photo in random_photos %}
-            <a href="{% url 'gallery_list' %}" class="gallery-belt__item gallery-belt__item--repeat" aria-hidden="true" tabindex="-1">
-                <img src="{{ photo.image.url }}" alt="">
-            </a>
-        {% endfor %}
-        {% for photo in random_photos %}
-            <a href="{% url 'gallery_list' %}" class="gallery-belt__item gallery-belt__item--repeat" aria-hidden="true" tabindex="-1">
-                <img src="{{ photo.image.url }}" alt="">
-            </a>
-        {% endfor %}
-    </div>
-</section>
-{% endif %}
 
 <section class="care-grid-section" id="care">
     <div class="container">
