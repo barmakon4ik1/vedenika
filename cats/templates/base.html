@@ -2,21 +2,21 @@
 {% load i18n %}
 {% get_current_language as CURRENT_LANGUAGE %}
 <!DOCTYPE html>
-<html lang="de">
+<html lang="{{ CURRENT_LANGUAGE|default:'de' }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
     <title>{% block title %}Vedenika{% endblock %}</title>
-    <meta name="description" content="{% block meta_description %}Maine-Coon-Cattery Vedenika in Pforzheim und Umgebung. Liebevoll aufgezogene Maine Coons, Galerie, Würfe und persönlicher Kontakt.{% endblock %}">
+    <meta name="description" content="{% block meta_description %}{% trans 'Maine-Coon-Pflegestätte Vedenika. Liebevoll aufgezogene Maine Coons, Galerie und Kontakt für Familien aus Pforzheim und Umgebung.' %}{% endblock %}">
     <meta name="robots" content="index,follow">
-    <meta name="theme-color" content="#6f4e37">
+    <meta name="theme-color" content="#3d2a23">
     <link rel="canonical" href="{% block canonical_url %}{{ request.build_absolute_uri }}{% endblock %}">
 
     <meta property="og:type" content="website">
     <meta property="og:title" content="{% block og_title %}{% block og_title_inner %}Vedenika{% endblock %}{% endblock %}">
-    <meta property="og:description" content="{% block og_description %}Maine-Coon-Cattery in Pforzheim und Umgebung: Galerie, Katzen und persönlicher Kontakt.{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}{% trans 'Maine-Coon-Pflegestätte in Pforzheim und Umgebung: Galerie, Charakter und liebevolle Aufzucht.' %}{% endblock %}">
     <meta property="og:url" content="{{ request.build_absolute_uri }}">
     <meta property="og:site_name" content="Vedenika">
 
@@ -27,22 +27,12 @@
     <link rel="stylesheet" href="{% static 'css/base_v2.css' %}">
 
     {% block extra_css %}{% endblock %}
-    {% block structured_data %}
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "Organization",
-      "name": "Vedenika",
-      "url": "{{ request.scheme }}://{{ request.get_host }}"
-    }
-    </script>
-    {% endblock %}
 </head>
 <body>
     <header class="site-header">
         <div class="container site-header__inner">
             <a class="site-brand" href="{% url 'home' %}" aria-label="Vedenika Home">
-                <img src="{% static 'img/Vedenika-Logo2.png' %}" alt="Vedenika logo" class="site-brand__logo">
+                <img src="{% static 'img/Vedenika-Logo2.png' %}" alt="Vedenika logo" height="80">
             </a>
 
             <button class="mobile-menu-toggle"
@@ -53,28 +43,15 @@
                 <span></span>
                 <span></span>
                 <span></span>
-                <span class="visually-hidden">Menü öffnen</span>
+                <span class="visually-hidden">{% trans "Menü öffnen" %}</span>
             </button>
 
             <div class="site-header__panel" id="main-navigation" data-menu-panel>
-                <nav class="main-nav" aria-label="Hauptnavigation">
-                    <a href="{% url 'cat_list' %}">Katzen</a>
-                    <a href="{% url 'gallery_list' %}">Galerie</a>
-                    <a href="{% url 'contacts' %}">Kontakt</a>
+                <nav class="main-nav" aria-label="{% trans 'Hauptnavigation' %}">
+                    <a href="{% url 'cat_list' %}">{% trans "Katzen" %}</a>
+                    <a href="{% url 'gallery_list' %}">{% trans "Galerie" %}</a>
+                    <a href="{% url 'contacts' %}">{% trans "Kontakt" %}</a>
                 </nav>
-
-                {# Sprache пока отключена. Вернем позже после настройки переводов .po #}
-
-{#                <div class="site-tools">#}
-{#                    <form action="{% url 'set_language' %}" method="post" class="language-switcher" aria-label="Sprache wählen">#}
-{#                        {% csrf_token %}#}
-{#                        <input type="hidden" name="next" value="{{ request.get_full_path }}">#}
-{#                        <button type="submit" name="language" value="de" class="is-active">DE</button>#}
-{#                        <button type="submit" name="language" value="en">EN</button>#}
-{#                        <button type="submit" name="language" value="ru">RU</button>#}
-{#                    </form>#}
-{#                </div>#}
-{#                #}
             </div>
         </div>
     </header>
@@ -83,53 +60,74 @@
         {% block content %}{% endblock %}
     </main>
 
-    <footer class="site-footer">
+    <button class="scroll-top" type="button" aria-label="{% trans 'Nach oben' %}" data-scroll-top>↑</button>
+
+    <footer class="site-footer site-footer--dark">
         <div class="container site-footer__grid">
             <div>
                 <div class="footer-brand">Vedenika</div>
                 <p class="footer-text">
-                    Maine Coons mit ruhigem Charakter, starken Linien und liebevoller Aufzucht im Familienalltag.
+                    {% trans "Maine Coons mit ruhigem Charakter, starken Linien und liebevoller Aufzucht im Familienalltag." %}
                 </p>
                 <p class="footer-text footer-text--small">© {% now "Y" %} Vedenika</p>
             </div>
 
             <div>
-                <h2 class="footer-title">Navigation</h2>
+                <h2 class="footer-title">{% trans "Navigation" %}</h2>
                 <ul class="footer-list">
-                    <li><a href="{% url 'home' %}">Startseite</a></li>
-                    <li><a href="{% url 'cat_list' %}">Unsere Katzen</a></li>
-                    <li><a href="{% url 'gallery_list' %}">Galerie</a></li>
-                    <li><a href="{% url 'contacts' %}">Kontakt</a></li>
+                    <li><a href="{% url 'home' %}">{% trans "Startseite" %}</a></li>
+                    <li><a href="{% url 'cat_list' %}">{% trans "Unsere Katzen" %}</a></li>
+                    <li><a href="{% url 'gallery_list' %}">{% trans "Galerie" %}</a></li>
+                    <li><a href="{% url 'contacts' %}">{% trans "Kontakt" %}</a></li>
                 </ul>
             </div>
 
             <div>
-                <h2 class="footer-title">Kontakt & Social</h2>
+                <h2 class="footer-title">{% trans "Kontakt & Social" %}</h2>
                 <ul class="footer-list">
                     {% if owner and owner.instagram %}<li><a href="{{ owner.instagram }}" target="_blank" rel="noopener">Instagram</a></li>{% endif %}
                     {% if owner and owner.facebook %}<li><a href="{{ owner.facebook }}" target="_blank" rel="noopener">Facebook</a></li>{% endif %}
                     {% if owner and owner.tiktok %}<li><a href="{{ owner.tiktok }}" target="_blank" rel="noopener">TikTok</a></li>{% endif %}
                     {% if owner and owner.whatsapp %}<li><a href="https://wa.me/{{ owner.whatsapp|cut:'+' }}" target="_blank" rel="noopener">WhatsApp</a></li>{% endif %}
-                    {% if owner and owner.email %}<li><a href="mailto:{{ owner.email }}">E-Mail</a></li>{% endif %}
-                    {% if owner and owner.phone %}<li><a href="tel:{{ owner.phone }}">Telefon</a></li>{% endif %}
+                    <li><a href="{% url 'impressum' %}">Impressum</a></li>
                 </ul>
             </div>
         </div>
+
+        <div class="container footer-admin-row">
+            <a class="footer-admin-link" href="{% url 'account_login' %}">Verwaltung</a>
+        </div>
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         (function () {
             const toggle = document.querySelector('[data-menu-toggle]');
             const panel = document.querySelector('[data-menu-panel]');
-            if (!toggle || !panel) return;
+            if (toggle && panel) {
+                toggle.addEventListener('click', function () {
+                    const expanded = toggle.getAttribute('aria-expanded') === 'true';
+                    toggle.setAttribute('aria-expanded', String(!expanded));
+                    panel.classList.toggle('is-open');
+                    document.body.classList.toggle('menu-open');
+                });
+            }
 
-            toggle.addEventListener('click', function () {
-                const expanded = toggle.getAttribute('aria-expanded') === 'true';
-                toggle.setAttribute('aria-expanded', String(!expanded));
-                panel.classList.toggle('is-open');
-                document.body.classList.toggle('menu-open');
-            });
+            const scrollTopBtn = document.querySelector('[data-scroll-top]');
+            if (scrollTopBtn) {
+                const onScroll = () => {
+                    if (window.scrollY > 500) {
+                        scrollTopBtn.classList.add('is-visible');
+                    } else {
+                        scrollTopBtn.classList.remove('is-visible');
+                    }
+                };
+                window.addEventListener('scroll', onScroll, { passive: true });
+                onScroll();
+
+                scrollTopBtn.addEventListener('click', () => {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                });
+            }
         })();
     </script>
     {% block extra_js %}{% endblock %}

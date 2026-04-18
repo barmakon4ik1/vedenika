@@ -1152,7 +1152,7 @@ class Cat(models.Model):
 
     sex = models.CharField(
         max_length=1,
-        choices=Sex.choices,
+        choices=Sex.choices, # type: ignore
         verbose_name="Пол"
     )
 

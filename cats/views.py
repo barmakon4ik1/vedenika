@@ -16,6 +16,7 @@ owner_id = settings.CATTERY_OWNER_PERSON_ID
 
 User = get_user_model()
 OWNER_PERSON_ID = 1
+HOME_RANDOM_PHOTO_COUNT = 24
 
 def impressum(request):
     owner = Person.objects.select_related("address__city", "address__country").filter(
@@ -147,7 +148,7 @@ def home(request):
     from .models import GalleryPhoto, Cat
     import random
 
-    # Случайные фото из активных альбомов галереи
+    # Случайные фото для hero и других блоков
     photo_ids = list(
         GalleryPhoto.objects.filter(
             is_active=True,
@@ -157,12 +158,21 @@ def home(request):
 
     random_photos = []
     if photo_ids:
-        photo_count = min(24, len(photo_ids))   # было 6
+        photo_count = min(HOME_RANDOM_PHOTO_COUNT, len(photo_ids))
         sample_ids = random.sample(photo_ids, photo_count)
         random_photos = list(
             GalleryPhoto.objects.filter(id__in=sample_ids)
             .select_related("album")
         )
+
+    # Фото только из album_3 для пояса
+    belt_photos = list(
+        GalleryPhoto.objects.filter(
+            is_active=True,
+            album__is_active=True,
+            album_id=3
+        ).select_related("album")
+    )
 
     # Несколько активных котов для витрины
     featured_cats = list(
@@ -174,6 +184,7 @@ def home(request):
 
     return render(request, "home.html", {
         "random_photos": random_photos,
+        "belt_photos": belt_photos,
         "featured_cats": featured_cats,
     })
 

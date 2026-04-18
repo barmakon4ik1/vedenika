@@ -75,7 +75,9 @@
                                 <div class="peek-card__empty">{{ cat.name }}</div>
                             {% endif %}
                         {% endwith %}
-                        <span class="peek-card__title">{{ cat.name }}</span>
+                        <span class="peek-card__title">
+                            {{ cat.call_name|default:cat.registered_name }}
+                        </span>
                     </a>
                 {% endfor %}
             {% endif %}
