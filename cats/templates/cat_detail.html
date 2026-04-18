@@ -1,257 +1,193 @@
 {% extends "base.html" %}
 {% load static %}
-{% load i18n %}
 
 {% block title %}{{ cat.registered_name }} — Vedenika{% endblock %}
 
 {% block content %}
+<section class="cat-detail-page">
+  <div class="container">
 
+    <nav class="detail-breadcrumb" aria-label="Breadcrumb">
+      <a href="{% url 'home' %}">Startseite</a>
+      <span class="detail-breadcrumb__sep">/</span>
+      <a href="{% url 'cat_list' %}">Katzen</a>
+      <span class="detail-breadcrumb__sep">/</span>
+      <span class="detail-breadcrumb__current">{{ cat.call_name|default:cat.registered_name }}</span>
+    </nav>
 
-<div class="detail-wrap">
+    <div class="cat-detail-layout">
 
-  <!-- BREADCRUMB -->
-  <nav class="breadcrumb-warm">
-    <a href="{% url 'home' %}">{% trans "Главная" %}</a>
-    <span class="breadcrumb-sep">/</span>
-    <a href="{% url 'cat_list' %}">{% trans "Коты" %}</a>
-    <span class="breadcrumb-sep">/</span>
-    <span class="breadcrumb-current">{{ cat.registered_name }}</span>
-  </nav>
+      <div class="cat-detail-media-column">
+        <div class="cat-detail-main-photo-card">
+          {% with img=cat.get_main_image %}
+            {% if img %}
+              <a href="{% url 'cat_gallery' cat.pk %}" class="cat-detail-main-photo-link" aria-label="Zur Galerie">
+                <img src="{{ img.image.url }}" alt="{{ cat.call_name|default:cat.registered_name }}" class="cat-detail-main-photo">
+                <span class="cat-detail-main-photo-overlay">Zur Galerie →</span>
+              </a>
+            {% else %}
+              <div class="cat-detail-main-photo-empty">
+                <div class="cat-detail-main-photo-empty__icon">🐾</div>
+                <div class="cat-detail-main-photo-empty__text">Noch kein Foto</div>
+              </div>
+            {% endif %}
+          {% endwith %}
+        </div>
 
-  <div class="detail-grid">
+        {% if request.user.is_staff %}
+          <div class="cat-detail-photo-actions">
+            <a href="{% url 'cat_upload_photo' cat.pk %}" class="button button--primary">+ Foto hinzufügen</a>
+            <a href="{% url 'cat_gallery' cat.pk %}" class="button button--secondary">Galerie</a>
+          </div>
+        {% endif %}
 
-    <!-- LEFT: PHOTO -->
-    <div class="detail-left">
-
-      <div class="detail-photo-main">
-        {% with img=cat.get_main_image %}
-          {% if img %}
-            <a href="{% url 'cat_gallery' cat.pk %}">
-              <img src="{{ img.image.url }}" alt="{{ cat.registered_name }}">
-            </a>
-            <div class="detail-photo-overlay">{% trans "Открыть галерею" %} →</div>
-          {% else %}
-            <div class="detail-no-photo">
-              <div class="detail-no-photo-icon">🐾</div>
-              <div class="detail-no-photo-text">{% trans "Фото пока нет" %}</div>
+        {% with photos=cat.get_images %}
+          {% if photos.count > 1 %}
+            <div class="cat-detail-strip-card">
+              <div class="cat-detail-strip-card__header">
+                <div class="cat-detail-strip-card__title">Fotografien</div>
+                <a href="{% url 'cat_gallery' cat.pk %}" class="cat-detail-strip-card__link">Alle Fotos →</a>
+              </div>
+              <div class="cat-detail-strip-grid">
+                {% for photo in photos|slice:":4" %}
+                  <a href="{% url 'cat_gallery' cat.pk %}" class="cat-detail-strip-thumb">
+                    <img src="{{ photo.image.url }}" alt="{{ cat.call_name|default:cat.registered_name }}">
+                  </a>
+                {% endfor %}
+              </div>
             </div>
           {% endif %}
         {% endwith %}
       </div>
 
-      {% if request.user.is_staff %}
-        <div class="detail-photo-actions">
-          <a href="{% url 'cat_upload_photo' cat.pk %}" class="btn-photo-action">
-            + {% trans "Добавить фото" %}
-          </a>
-          <a href="{% url 'cat_gallery' cat.pk %}" class="btn-photo-action">
-            {% trans "Галерея" %}
-          </a>
-        </div>
-      {% endif %}
+      <div class="cat-detail-info-column">
+        <div class="cat-detail-intro-card">
+          {% if cat.sex == "M" %}
+            <div class="cat-detail-sex-badge cat-detail-sex-badge--male">♂ Kater</div>
+          {% else %}
+            <div class="cat-detail-sex-badge cat-detail-sex-badge--female">♀ Katze</div>
+          {% endif %}
 
-      <!-- GALLERY STRIP -->
-      {% with photos=cat.get_images %}
-        {% if photos.count > 1 %}
-          <div class="gallery-strip-wrap">
-            <div class="gallery-strip-header">
-              <div class="gallery-strip-title">{% trans "Фотографии" %}</div>
-              <a href="{% url 'cat_gallery' cat.pk %}" class="gallery-strip-link">
-                {% trans "Все фото" %} →
-              </a>
+          <h1 class="cat-detail-title">{{ cat.call_name|default:cat.registered_name }}</h1>
+
+          {% if cat.call_name and cat.registered_name %}
+            <div class="cat-detail-registered-name">{{ cat.registered_name }}</div>
+          {% endif %}
+
+          {% if cat.breed or cat.cattery %}
+            <div class="cat-detail-subtitle">
+              {% if cat.breed %}{{ cat.breed }}{% endif %}{% if cat.breed and cat.cattery %} · {% endif %}{% if cat.cattery %}{{ cat.cattery }}{% endif %}
             </div>
-            <div class="gallery-strip">
-              {% for photo in photos|slice:":4" %}
-                <a href="{% url 'cat_gallery' cat.pk %}" class="gallery-thumb">
-                  <img src="{{ photo.image.url }}" alt="{{ cat.registered_name }}">
-                </a>
-              {% endfor %}
+          {% endif %}
+
+          {% if cat.ems_code %}
+            <div class="cat-detail-ems-badge">
+              <span class="cat-detail-ems-badge__label">EMS</span>
+              <span class="cat-detail-ems-badge__value">{{ cat.ems_code }}</span>
+            </div>
+          {% endif %}
+        </div>
+
+        {% if cat.color %}
+          <div class="cat-detail-info-card cat-detail-info-card--accent">
+            <div class="cat-detail-info-card__row cat-detail-info-card__row--top">
+              <div>
+                <div class="cat-detail-field-label">Farbe</div>
+                <div class="cat-detail-color-value">{{ cat.color }}</div>
+              </div>
+              {% if request.user.is_staff %}
+                <a href="{% url 'color_update_for_cat' cat.pk %}" class="button button--ghost">Ändern</a>
+              {% endif %}
+            </div>
+          </div>
+        {% elif request.user.is_staff %}
+          <div class="cat-detail-info-card cat-detail-info-card--accent-muted">
+            <div class="cat-detail-info-card__row cat-detail-info-card__row--top">
+              <div>
+                <div class="cat-detail-field-label">Farbe</div>
+                <div class="cat-detail-color-value cat-detail-color-value--empty">Nicht angegeben</div>
+              </div>
+              <a href="{% url 'color_create_for_cat' cat.pk %}" class="button button--primary">+ Hinzufügen</a>
             </div>
           </div>
         {% endif %}
-      {% endwith %}
 
-    </div>
+        <div class="cat-detail-info-card">
+          <div class="cat-detail-section-title">Grunddaten</div>
+          <div class="cat-detail-fields-grid">
+            <div class="cat-detail-field">
+              <div class="cat-detail-field-label">Geburtsdatum</div>
+              <div class="cat-detail-field-value {% if not cat.birth_date %}is-empty{% endif %}">{{ cat.birth_date|default:"—" }}</div>
+            </div>
+            <div class="cat-detail-field">
+              <div class="cat-detail-field-label">Rasse</div>
+              <div class="cat-detail-field-value {% if not cat.breed %}is-empty{% endif %}">{{ cat.breed|default:"—" }}</div>
+            </div>
+            <div class="cat-detail-field">
+              <div class="cat-detail-field-label">Stammbaum-Nr.</div>
+              <div class="cat-detail-field-value {% if not cat.pedigree_number %}is-empty{% endif %}">{{ cat.pedigree_number|default:"—" }}</div>
+            </div>
+            <div class="cat-detail-field">
+              <div class="cat-detail-field-label">Mikrochip</div>
+              <div class="cat-detail-field-value {% if not cat.microchip %}is-empty{% endif %}">{{ cat.microchip|default:"—" }}</div>
+            </div>
+          </div>
+        </div>
 
-    <!-- RIGHT: INFO -->
-    <div class="detail-right">
+        <div class="cat-detail-info-card">
+          <div class="cat-detail-section-title">Herkunft</div>
+          <div class="cat-detail-fields-grid">
+            <div class="cat-detail-field">
+              <div class="cat-detail-field-label">Zuchtstätte</div>
+              <div class="cat-detail-field-value {% if not cat.cattery %}is-empty{% endif %}">{{ cat.cattery|default:"—" }}</div>
+            </div>
+            <div class="cat-detail-field">
+              <div class="cat-detail-field-label">Wurf</div>
+              <div class="cat-detail-field-value {% if not cat.litter %}is-empty{% endif %}">{{ cat.litter|default:"—" }}</div>
+            </div>
+            <div class="cat-detail-field">
+              <div class="cat-detail-field-label">Vater</div>
+              <div class="cat-detail-field-value {% if not cat.father %}is-empty{% endif %}">
+                {% if cat.father %}<a href="{% url 'cat_detail' cat.father.pk %}">{{ cat.father }}</a>{% else %}—{% endif %}
+              </div>
+            </div>
+            <div class="cat-detail-field">
+              <div class="cat-detail-field-label">Mutter</div>
+              <div class="cat-detail-field-value {% if not cat.mother %}is-empty{% endif %}">
+                {% if cat.mother %}<a href="{% url 'cat_detail' cat.mother.pk %}">{{ cat.mother }}</a>{% else %}—{% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
 
-      <!-- NAME -->
-      <div class="detail-name-block">
-        {% if cat.sex == "M" %}
-          <div class="detail-sex-badge male">♂ {% trans "Кот" %}</div>
-        {% else %}
-          <div class="detail-sex-badge female">♀ {% trans "Кошка" %}</div>
+        <div class="cat-detail-info-card">
+          <div class="cat-detail-section-title">Status</div>
+          <div class="cat-detail-status-tags">
+            {% if cat.is_for_breeding %}
+              <span class="cat-detail-status-tag cat-detail-status-tag--green">✓ Zur Zucht zugelassen</span>
+            {% endif %}
+            {% if cat.is_featured %}
+              <span class="cat-detail-status-tag cat-detail-status-tag--tan">★ Auf der Startseite</span>
+            {% endif %}
+            {% if not cat.is_active %}
+              <span class="cat-detail-status-tag cat-detail-status-tag--muted">Nicht aktiv</span>
+            {% endif %}
+            {% if cat.death_date %}
+              <span class="cat-detail-status-tag cat-detail-status-tag--red">Verstorben: {{ cat.death_date }}</span>
+            {% endif %}
+          </div>
+        </div>
+
+        {% if request.user.is_staff %}
+          <div class="cat-detail-admin-actions">
+            <a href="{% url 'cat_edit' cat.pk %}" class="button button--primary">Katze bearbeiten</a>
+            <a href="{% url 'cat_gallery' cat.pk %}" class="button button--secondary">Galerie</a>
+            <a href="{% url 'cat_upload_photo' cat.pk %}" class="button button--ghost">+ Foto</a>
+          </div>
         {% endif %}
-
-        <h1 class="detail-name">{{ cat.registered_name }}</h1>
-
-        {% if cat.call_name %}
-          <div class="detail-callname">«{{ cat.call_name }}»</div>
-        {% endif %}
-
-        <div class="detail-subtitle">
-          {{ cat.breed }}{% if cat.cattery %} · {{ cat.cattery }}{% endif %}
-        </div>
       </div>
-
-      <!-- EMS -->
-      {% if cat.ems_code %}
-        <div class="ems-badge">
-          <span class="ems-label">EMS</span>
-          <span class="ems-code">{{ cat.ems_code }}</span>
-        </div>
-      {% endif %}
-
-      <!-- COLOR -->
-      {% if cat.color %}
-        <div class="color-block">
-          <div class="color-block-left">
-            <div class="color-block-label">{% trans "Окрас" %}</div>
-            <div class="color-block-value">{{ cat.color }}</div>
-          </div>
-          {% if request.user.is_staff %}
-            <a href="{% url 'color_update_for_cat' cat.pk %}" class="btn-sq btn-sq-outline">
-              {% trans "Изменить" %}
-            </a>
-          {% endif %}
-        </div>
-      {% elif request.user.is_staff %}
-        <div class="color-block color-block--muted">
-          <div class="color-block-left">
-            <div class="color-block-label">{% trans "Окрас" %}</div>
-            <div class="color-block-value color-block-value--empty">{% trans "Не задан" %}</div>
-          </div>
-          <a href="{% url 'color_create_for_cat' cat.pk %}" class="btn-sq btn-sq-primary">
-            + {% trans "Добавить" %}
-          </a>
-        </div>
-      {% endif %}
-
-      <!-- SECTION: ОСНОВНОЕ -->
-      <div class="detail-section">
-        <div class="detail-section-title">{% trans "Основное" %}</div>
-        <div class="detail-fields">
-
-          <div class="detail-field">
-            <div class="detail-field-label">{% trans "Дата рождения" %}</div>
-            <div class="detail-field-value {% if not cat.birth_date %}empty{% endif %}">
-              {{ cat.birth_date|default:"—" }}
-            </div>
-          </div>
-
-          <div class="detail-field">
-            <div class="detail-field-label">{% trans "Порода" %}</div>
-            <div class="detail-field-value">{{ cat.breed }}</div>
-          </div>
-
-          <div class="detail-field">
-            <div class="detail-field-label">{% trans "Номер родословной" %}</div>
-            <div class="detail-field-value {% if not cat.pedigree_number %}empty{% endif %}">
-              {{ cat.pedigree_number|default:"—" }}
-            </div>
-          </div>
-
-          <div class="detail-field">
-            <div class="detail-field-label">{% trans "Микрочип" %}</div>
-            <div class="detail-field-value {% if not cat.microchip %}empty{% endif %}">
-              {{ cat.microchip|default:"—" }}
-            </div>
-          </div>
-
-        </div>
-      </div>
-
-      <!-- SECTION: ПРОИСХОЖДЕНИЕ -->
-      <div class="detail-section">
-        <div class="detail-section-title">{% trans "Происхождение" %}</div>
-        <div class="detail-fields">
-
-          <div class="detail-field">
-            <div class="detail-field-label">{% trans "Питомник" %}</div>
-            <div class="detail-field-value {% if not cat.cattery %}empty{% endif %}">
-              {{ cat.cattery|default:"—" }}
-            </div>
-          </div>
-
-          <div class="detail-field">
-            <div class="detail-field-label">{% trans "Помёт" %}</div>
-            <div class="detail-field-value {% if not cat.litter %}empty{% endif %}">
-              {{ cat.litter|default:"—" }}
-            </div>
-          </div>
-
-          <div class="detail-field">
-            <div class="detail-field-label">{% trans "Отец" %}</div>
-            <div class="detail-field-value {% if not cat.father %}empty{% endif %}">
-              {% if cat.father %}
-                <a href="{% url 'cat_detail' cat.father.pk %}">{{ cat.father }}</a>
-              {% else %}—{% endif %}
-            </div>
-          </div>
-
-          <div class="detail-field">
-            <div class="detail-field-label">{% trans "Мать" %}</div>
-            <div class="detail-field-value {% if not cat.mother %}empty{% endif %}">
-              {% if cat.mother %}
-                <a href="{% url 'cat_detail' cat.mother.pk %}">{{ cat.mother }}</a>
-              {% else %}—{% endif %}
-            </div>
-          </div>
-
-        </div>
-      </div>
-
-      <!-- SECTION: СТАТУС -->
-      <div class="detail-section">
-        <div class="detail-section-title">{% trans "Статус" %}</div>
-        <div class="status-tags">
-
-          {% if cat.is_for_breeding %}
-            <span class="status-tag status-tag--green">
-              ✓ {% trans "Допущен к разведению" %}
-            </span>
-          {% endif %}
-
-          {% if cat.is_featured %}
-            <span class="status-tag status-tag--tan">
-              ★ {% trans "На витрине" %}
-            </span>
-          {% endif %}
-
-          {% if not cat.is_active %}
-            <span class="status-tag status-tag--muted">
-              {% trans "Неактивен" %}
-            </span>
-          {% endif %}
-
-          {% if cat.death_date %}
-            <span class="status-tag status-tag--red">
-              {% trans "Дата гибели" %}: {{ cat.death_date }}
-            </span>
-          {% endif %}
-
-        </div>
-      </div>
-
-      <!-- ADMIN ACTIONS -->
-      {% if request.user.is_staff %}
-        <div class="admin-actions">
-          <a href="{% url 'cat_edit' cat.pk %}" class="btn-sq btn-sq-primary">
-            {% trans "Редактировать кота" %}
-          </a>
-          <a href="{% url 'cat_gallery' cat.pk %}" class="btn-sq btn-sq-outline">
-            {% trans "Галерея" %}
-          </a>
-          <a href="{% url 'cat_upload_photo' cat.pk %}" class="btn-sq btn-sq-outline">
-            + {% trans "Фото" %}
-          </a>
-        </div>
-      {% endif %}
 
     </div>
   </div>
-
-</div>
-
+</section>
 {% endblock %}

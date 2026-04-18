@@ -885,3 +885,323 @@ a {
     justify-content: center;
     padding-top: 0.8rem;
 }
+
+/* =========================
+   Cat detail (DESKTOP)
+   ========================= */
+
+.cat-detail-page {
+    padding: 1rem 0 2rem;
+}
+
+.detail-breadcrumb {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    align-items: center;
+    margin-bottom: 1rem;
+    color: var(--text-soft);
+    font-size: 0.92rem;
+}
+
+.detail-breadcrumb a {
+    text-decoration: none;
+}
+
+.detail-breadcrumb a:hover {
+    color: var(--accent-deep);
+}
+
+.detail-breadcrumb__current {
+    color: var(--text-main);
+    font-weight: 700;
+}
+
+.cat-detail-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.02fr) minmax(320px, 0.98fr);
+    gap: 1.25rem;
+    align-items: start;
+}
+
+.cat-detail-media-column,
+.cat-detail-info-column {
+    display: grid;
+    gap: 1rem;
+}
+
+.cat-detail-main-photo-card,
+.cat-detail-strip-card,
+.cat-detail-intro-card,
+.cat-detail-info-card {
+    border-radius: 26px;
+    overflow: hidden;
+    background: linear-gradient(180deg, #f8efea 0%, #f0e2d8 100%);
+    box-shadow: var(--shadow-soft);
+    border: 1px solid rgba(63, 37, 29, 0.05);
+}
+
+.cat-detail-main-photo-card {
+    background: linear-gradient(180deg, #2e211c 0%, #1e1512 100%);
+}
+
+.cat-detail-main-photo-link {
+    position: relative;
+    display: block;
+    text-decoration: none;
+}
+
+.cat-detail-main-photo {
+    display: block;
+    width: 100%;
+    height: min(66vh, 740px);
+    object-fit: cover;
+    object-position: center;
+}
+
+.cat-detail-main-photo-overlay {
+    position: absolute;
+    left: 1rem;
+    right: 1rem;
+    bottom: 1rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 46px;
+    border-radius: 18px;
+    background: linear-gradient(180deg, rgba(20,14,12,0.22) 0%, rgba(20,14,12,0.72) 100%);
+    color: #fff;
+    font-weight: 700;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.12);
+}
+
+.cat-detail-main-photo-empty {
+    min-height: 420px;
+    display: grid;
+    place-items: center;
+    text-align: center;
+    color: #d8c7bd;
+    padding: 2rem;
+}
+
+.cat-detail-main-photo-empty__icon {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.cat-detail-photo-actions,
+.cat-detail-admin-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.cat-detail-strip-card {
+    padding: 1rem;
+}
+
+.cat-detail-strip-card__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 0.8rem;
+}
+
+.cat-detail-strip-card__title,
+.cat-detail-section-title {
+    font-family: "Cormorant Garamond", serif;
+    font-size: 1.55rem;
+    line-height: 1.02;
+    color: var(--accent-deep);
+}
+
+.cat-detail-strip-card__link {
+    text-decoration: none;
+    font-weight: 700;
+    color: var(--accent);
+}
+
+.cat-detail-strip-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.7rem;
+}
+
+.cat-detail-strip-thumb {
+    display: block;
+    border-radius: 18px;
+    overflow: hidden;
+}
+
+.cat-detail-strip-thumb img {
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+    object-position: center;
+}
+
+.cat-detail-intro-card,
+.cat-detail-info-card {
+    padding: 1.15rem 1.1rem;
+}
+
+.cat-detail-intro-card {
+    background: linear-gradient(180deg, rgba(247,240,234,0.94) 0%, rgba(236,223,213,0.94) 100%);
+}
+
+.cat-detail-sex-badge {
+    display: inline-flex;
+    align-items: center;
+    min-height: 38px;
+    padding: 0.45rem 0.8rem;
+    border-radius: 999px;
+    margin-bottom: 0.8rem;
+    color: #fff;
+    font-size: 0.86rem;
+    font-weight: 700;
+}
+
+.cat-detail-sex-badge--male {
+    background: linear-gradient(180deg, rgba(66,92,129,0.92) 0%, rgba(44,63,92,0.94) 100%);
+}
+
+.cat-detail-sex-badge--female {
+    background: linear-gradient(180deg, rgba(143,76,99,0.92) 0%, rgba(108,52,73,0.94) 100%);
+}
+
+.cat-detail-title {
+    margin: 0;
+    font-family: "Cormorant Garamond", serif;
+    font-size: clamp(2rem, 4vw, 3.4rem);
+    line-height: 0.98;
+    color: var(--accent-deep);
+    text-shadow: 0 1px 0 #fff, 0 8px 18px rgba(91, 54, 40, 0.16);
+}
+
+.cat-detail-registered-name {
+    margin-top: 0.45rem;
+    color: var(--text-soft);
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.cat-detail-subtitle {
+    margin-top: 0.55rem;
+    color: var(--text-muted);
+    font-size: 1rem;
+    line-height: 1.55;
+}
+
+.cat-detail-ems-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    margin-top: 1rem;
+    padding: 0.55rem 0.8rem;
+    border-radius: 999px;
+    background: linear-gradient(180deg, #ead8cd 0%, #e1cabc 100%);
+    color: var(--accent-deep);
+    font-weight: 700;
+}
+
+.cat-detail-ems-badge__label {
+    opacity: 0.8;
+}
+
+.cat-detail-info-card--accent {
+    background: linear-gradient(180deg, #f4e7de 0%, #ecd9cc 100%);
+}
+
+.cat-detail-info-card--accent-muted {
+    background: linear-gradient(180deg, #f3ece7 0%, #ebdfd6 100%);
+}
+
+.cat-detail-info-card__row--top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.cat-detail-color-value {
+    color: var(--text-main);
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+.cat-detail-color-value--empty,
+.cat-detail-field-value.is-empty {
+    color: var(--text-soft);
+}
+
+.cat-detail-fields-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.8rem;
+    margin-top: 0.8rem;
+}
+
+.cat-detail-field {
+    padding: 0.85rem 0.9rem;
+    border-radius: 18px;
+    background: rgba(255,255,255,0.45);
+    border: 1px solid rgba(63, 37, 29, 0.06);
+}
+
+.cat-detail-field-label {
+    color: var(--text-soft);
+    font-size: 0.86rem;
+    margin-bottom: 0.25rem;
+}
+
+.cat-detail-field-value {
+    color: var(--text-main);
+    font-size: 0.98rem;
+    line-height: 1.55;
+    word-break: break-word;
+}
+
+.cat-detail-field-value a {
+    color: var(--accent-deep);
+    text-decoration: none;
+    font-weight: 700;
+}
+
+.cat-detail-status-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-top: 0.8rem;
+}
+
+.cat-detail-status-tag {
+    display: inline-flex;
+    align-items: center;
+    min-height: 34px;
+    padding: 0.4rem 0.7rem;
+    border-radius: 999px;
+    font-size: 0.84rem;
+    font-weight: 700;
+}
+
+.cat-detail-status-tag--green {
+    background: rgba(61, 122, 78, 0.12);
+    color: #2b6b42;
+}
+
+.cat-detail-status-tag--tan {
+    background: linear-gradient(180deg, #ead8cd 0%, #e1cabc 100%);
+    color: var(--accent-deep);
+}
+
+.cat-detail-status-tag--muted {
+    background: rgba(91,54,40,0.10);
+    color: var(--text-soft);
+}
+
+.cat-detail-status-tag--red {
+    background: rgba(163,45,45,0.10);
+    color: #8c2d2d;
+}

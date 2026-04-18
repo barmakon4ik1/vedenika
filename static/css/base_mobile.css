@@ -153,3 +153,55 @@
         min-height: 44px;
     }
 }
+
+/* =========================
+   Cat detail (MOBILE)
+   ========================= */
+
+@media (max-width: 991.98px) {
+    .cat-detail-layout {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .cat-detail-main-photo {
+        height: auto;
+        max-height: none;
+    }
+
+    .cat-detail-main-photo-empty {
+        min-height: 280px;
+    }
+
+    .cat-detail-strip-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .cat-detail-strip-thumb img {
+        height: 110px;
+    }
+
+    .cat-detail-info-card__row--top {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .cat-detail-fields-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .cat-detail-intro-card,
+    .cat-detail-info-card,
+    .cat-detail-strip-card {
+        padding: 1rem;
+    }
+
+    .cat-detail-title {
+        font-size: clamp(1.9rem, 8vw, 2.5rem);
+    }
+
+    .cat-detail-photo-actions,
+    .cat-detail-admin-actions {
+        flex-direction: column;
+    }
+}
