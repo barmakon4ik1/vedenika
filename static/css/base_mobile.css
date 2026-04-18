@@ -120,23 +120,15 @@
         font-size: 0.95rem;
     }
 
-    /* Cats list */
     .cats-showcase__grid {
         grid-template-columns: 1fr;
     }
 
     .cat-showcase-card__media,
-    .peek-card img {
+    .peek-grid--cats .peek-card img,
+    .peek-grid--cats .peek-card__empty {
         height: auto;
         max-height: min(42vh, 360px);
-    }
-
-    .cat-showcase-card__body {
-        padding: 0.95rem 0.9rem 0.9rem;
-    }
-
-    .cat-showcase-card__name {
-        font-size: 1.4rem;
     }
 
     .cats-bottom-actions {
@@ -152,13 +144,7 @@
         min-width: 44px;
         min-height: 44px;
     }
-}
 
-/* =========================
-   Cat detail (MOBILE)
-   ========================= */
-
-@media (max-width: 991.98px) {
     .cat-detail-layout {
         grid-template-columns: 1fr;
         gap: 1rem;
@@ -204,4 +190,79 @@
     .cat-detail-admin-actions {
         flex-direction: column;
     }
+
+    .cat-admin-hero {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .cat-admin-grid--2,
+    .cat-admin-grid--3 {
+        grid-template-columns: 1fr;
+    }
+
+    .cat-admin-field--wide,
+    .cat-admin-field--full {
+        grid-column: auto;
+    }
+
+    .cat-gallery-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .cat-gallery-item img {
+        height: 320px;
+    }
+
+    .cat-admin-actions,
+    .cat-gallery-actions,
+    .cat-admin-checks {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .gallery-grid {
+    columns: 2 !important;
+    column-gap: 12px !important;
 }
+
+    .gallery-item {
+        margin-bottom: 12px;
+    }
+
+    .gallery-item img {
+        width: 100%;
+        height: auto;
+        max-height: none;
+    }
+
+    .gallery-item-overlay {
+        opacity: 1;
+        position: static;
+        background: transparent;
+        padding: 0.75rem;
+    }
+
+    .gallery-item-actions {
+        justify-content: flex-start;
+        flex-wrap: wrap;
+        opacity: 1;
+        transform: none;
+    }
+
+    .gallery-header-actions {
+        width: 100%;
+    }
+}
+
+@media (max-width: 640px) {
+    .gallery-grid {
+        columns: 1 !important;
+        column-gap: 0 !important;
+    }
+
+    .gallery-item {
+        margin-bottom: 12px;
+    }
+}
+

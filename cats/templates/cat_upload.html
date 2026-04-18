@@ -1,146 +1,71 @@
 {% extends "base.html" %}
 {% load static %}
-{% load i18n %}
 
-{% block title %}{% trans "Загрузка фото" %} — {{ cat.registered_name }}{% endblock %}
+{% block title %}Foto hochladen — {{ cat.registered_name }}{% endblock %}
 
 {% block content %}
-
-<div class="form-page-wrap">
-
-  <!-- BREADCRUMB -->
-  <nav class="breadcrumb-warm">
-    <a href="{% url 'home' %}">{% trans "Главная" %}</a>
-    <span class="breadcrumb-sep">/</span>
-    <a href="{% url 'cat_list' %}">{% trans "Коты" %}</a>
-    <span class="breadcrumb-sep">/</span>
+<div class="cat-admin-page container">
+  <nav class="detail-breadcrumb">
+    <a href="{% url 'home' %}">Startseite</a>
+    <span>·</span>
+    <a href="{% url 'cat_list' %}">Katzen</a>
+    <span>·</span>
     <a href="{% url 'cat_detail' cat.pk %}">{{ cat.registered_name }}</a>
-    <span class="breadcrumb-sep">/</span>
-    <a href="{% url 'cat_gallery' cat.pk %}">{% trans "Галерея" %}</a>
-    <span class="breadcrumb-sep">/</span>
-    <span class="breadcrumb-current">{% trans "Загрузка фото" %}</span>
+    <span>·</span>
+    <a href="{% url 'cat_gallery' cat.pk %}">Galerie</a>
+    <span>·</span>
+    <span>Foto hochladen</span>
   </nav>
 
-  <!-- PAGE HEADER -->
-  <div class="page-header">
+  <div class="cat-admin-hero">
     <div>
-      <div class="eyebrow">{{ cat.registered_name }}</div>
-      <h1 class="page-title">{% trans "Загрузить" %} <em>{% trans "фото" %}</em></h1>
+      <div class="hero-cattery__eyebrow">{{ cat.registered_name }}</div>
+      <h1 class="hero-cattery__title cat-admin-title">Foto hochladen</h1>
     </div>
-    <a href="{% url 'cat_gallery' cat.pk %}" class="btn-sq btn-sq-outline">← {% trans "К галерее" %}</a>
+    <a href="{% url 'cat_gallery' cat.pk %}" class="button button--secondary">← Zur Galerie</a>
   </div>
 
-  <form method="post" enctype="multipart/form-data">
+  <form method="post" enctype="multipart/form-data" class="cat-admin-form">
     {% csrf_token %}
-
     {% if form.non_field_errors %}
-      <div class="form-errors">
-        {% for error in form.non_field_errors %}
-          <div class="form-error-item">{{ error }}</div>
-        {% endfor %}
-      </div>
+      <div class="cat-admin-errors">{% for error in form.non_field_errors %}<div class="cat-admin-error-item">{{ error }}</div>{% endfor %}</div>
     {% endif %}
 
-    <!-- SECTION: ФАЙЛ -->
-    <div class="form-section">
-      <div class="form-section-header">
-        <div class="form-section-title">{% trans "Файл" %}</div>
-      </div>
-      <div class="form-grid">
-
-        <div class="form-field col-full">
-          <label class="form-field-label" for="{{ form.image.id_for_label }}">
-            {% trans "Изображение" %} <span class="form-required">*</span>
-          </label>
+    <section class="cat-admin-section">
+      <div class="cat-admin-section__head"><h2>Datei</h2></div>
+      <div class="cat-admin-grid">
+        <div class="cat-admin-field cat-admin-field--full">
+          <label for="{{ form.image.id_for_label }}">Bild *</label>
           {{ form.image }}
-          {% if form.image.errors %}
-            <div class="form-field-errors">{{ form.image.errors }}</div>
-          {% endif %}
-          <div class="form-field-hint">{% trans "Форматы: JPG, PNG, WebP. Рекомендуемое соотношение сторон 4:5." %}</div>
+          {% if form.image.errors %}<div class="cat-admin-field__errors">{{ form.image.errors }}</div>{% endif %}
+          <div class="cat-admin-field__hint">Formate: JPG, PNG, WebP. Empfohlenes Seitenverhältnis: 4:5.</div>
         </div>
-
       </div>
+    </section>
+
+    <section class="cat-admin-section">
+      <div class="cat-admin-section__head"><h2>Beschreibung</h2></div>
+      <div class="cat-admin-grid">
+        <div class="cat-admin-field cat-admin-field--full"><label for="{{ form.title.id_for_label }}">Titel</label>{{ form.title }}{% if form.title.errors %}<div class="cat-admin-field__errors">{{ form.title.errors }}</div>{% endif %}</div>
+        <div class="cat-admin-field cat-admin-field--full"><label for="{{ form.description.id_for_label }}">Beschreibung</label>{{ form.description }}{% if form.description.errors %}<div class="cat-admin-field__errors">{{ form.description.errors }}</div>{% endif %}</div>
+      </div>
+    </section>
+
+    <section class="cat-admin-section">
+      <div class="cat-admin-section__head"><h2>Einstellungen</h2></div>
+      <div class="cat-admin-grid cat-admin-grid--2">
+        <div class="cat-admin-field"><label for="{{ form.sort_order.id_for_label }}">Sortierung</label>{{ form.sort_order }}{% if form.sort_order.errors %}<div class="cat-admin-field__errors">{{ form.sort_order.errors }}</div>{% endif %}<div class="cat-admin-field__hint">Kleinere Zahl = weiter oben in der Galerie.</div></div>
+      </div>
+      <div class="cat-admin-checks">
+        <label class="cat-admin-check">{{ form.is_primary }}<span>Hauptfoto</span></label>
+        <label class="cat-admin-check">{{ form.is_active }}<span>Aktiv</span></label>
+      </div>
+    </section>
+
+    <div class="cat-admin-actions">
+      <button type="submit" class="button button--primary">Foto hochladen</button>
+      <a href="{% url 'cat_gallery' cat.pk %}" class="button button--ghost">Abbrechen</a>
     </div>
-
-    <!-- SECTION: ОПИСАНИЕ -->
-    <div class="form-section">
-      <div class="form-section-header">
-        <div class="form-section-title">{% trans "Описание" %}</div>
-      </div>
-      <div class="form-grid">
-
-        <div class="form-field col-full">
-          <label class="form-field-label" for="{{ form.title.id_for_label }}">
-            {% trans "Название фото" %}
-          </label>
-          {{ form.title }}
-          {% if form.title.errors %}
-            <div class="form-field-errors">{{ form.title.errors }}</div>
-          {% endif %}
-        </div>
-
-        <div class="form-field col-full">
-          <label class="form-field-label" for="{{ form.description.id_for_label }}">
-            {% trans "Описание" %}
-          </label>
-          {{ form.description }}
-          {% if form.description.errors %}
-            <div class="form-field-errors">{{ form.description.errors }}</div>
-          {% endif %}
-        </div>
-
-      </div>
-    </div>
-
-    <!-- SECTION: НАСТРОЙКИ -->
-    <div class="form-section">
-      <div class="form-section-header">
-        <div class="form-section-title">{% trans "Настройки" %}</div>
-      </div>
-      <div class="form-grid">
-
-        <div class="form-field col-wide">
-          <label class="form-field-label" for="{{ form.sort_order.id_for_label }}">
-            {% trans "Порядок сортировки" %}
-          </label>
-          {{ form.sort_order }}
-          {% if form.sort_order.errors %}
-            <div class="form-field-errors">{{ form.sort_order.errors }}</div>
-          {% endif %}
-          <div class="form-field-hint">{% trans "Меньшее число — выше в галерее." %}</div>
-        </div>
-
-      </div>
-
-      <div class="form-checkboxes" style="margin-top: 18px;">
-
-        <label class="form-checkbox-card">
-          {{ form.is_primary }}
-          <div class="form-checkbox-body">
-            <div class="form-checkbox-title">{% trans "Главное фото" %}</div>
-            <div class="form-checkbox-desc">{% trans "Отображается на карточке кота" %}</div>
-          </div>
-        </label>
-
-        <label class="form-checkbox-card">
-          {{ form.is_active }}
-          <div class="form-checkbox-body">
-            <div class="form-checkbox-title">{% trans "Активно" %}</div>
-            <div class="form-checkbox-desc">{% trans "Фото показывается в галерее" %}</div>
-          </div>
-        </label>
-
-      </div>
-    </div>
-
-    <!-- ACTIONS -->
-    <div class="form-actions">
-      <button type="submit" class="btn-warm">{% trans "Загрузить фото" %}</button>
-      <a href="{% url 'cat_gallery' cat.pk %}" class="btn-sq btn-sq-muted">{% trans "Отмена" %}</a>
-    </div>
-
   </form>
-
 </div>
-
 {% endblock %}

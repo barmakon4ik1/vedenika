@@ -1,289 +1,129 @@
 {% extends "base.html" %}
 {% load static %}
-{% load i18n %}
 
 {% block title %}{{ page_title }} — Vedenika{% endblock %}
 
 {% block content %}
-
-<div class="form-page-wrap">
-
-  <!-- BREADCRUMB -->
-  <nav class="breadcrumb-warm">
-    <a href="{% url 'home' %}">{% trans "Главная" %}</a>
-    <span class="breadcrumb-sep">/</span>
-    <a href="{% url 'cat_list' %}">{% trans "Коты" %}</a>
-    <span class="breadcrumb-sep">/</span>
-    <span class="breadcrumb-current">{{ page_title }}</span>
+<div class="cat-admin-page container">
+  <nav class="detail-breadcrumb">
+    <a href="{% url 'home' %}">Startseite</a>
+    <span>·</span>
+    <a href="{% url 'cat_list' %}">Katzen</a>
+    <span>·</span>
+    <span>{{ page_title }}</span>
   </nav>
 
-  <!-- PAGE HEADER -->
-  <div class="page-header">
+  <div class="cat-admin-hero">
     <div>
-      <div class="eyebrow">{% trans "Питомник Vedenika" %}</div>
-      <h1 class="page-title">{{ page_title }}</h1>
+      <div class="hero-cattery__eyebrow">Vedenika Verwaltung</div>
+      <h1 class="hero-cattery__title cat-admin-title">{{ page_title }}</h1>
     </div>
-    <a href="{% url 'cat_list' %}" class="btn-sq btn-sq-outline">← {% trans "К списку" %}</a>
+    <a href="{% url 'cat_list' %}" class="button button--secondary">← Zur Übersicht</a>
   </div>
 
-  <!-- FORM -->
-  <form method="post">
+  <form method="post" class="cat-admin-form">
     {% csrf_token %}
 
     {% if form.non_field_errors %}
-      <div class="form-errors">
+      <div class="cat-admin-errors">
         {% for error in form.non_field_errors %}
-          <div class="form-error-item">{{ error }}</div>
+          <div class="cat-admin-error-item">{{ error }}</div>
         {% endfor %}
       </div>
     {% endif %}
 
-    <!-- SECTION: ОСНОВНАЯ ИНФОРМАЦИЯ -->
-    <div class="form-section">
-      <div class="form-section-header">
-        <div class="form-section-title">{% trans "Основная информация" %}</div>
+    <section class="cat-admin-section">
+      <div class="cat-admin-section__head">
+        <h2>Grunddaten</h2>
       </div>
-      <div class="form-grid">
-
-        <div class="form-field col-wide">
-          <label class="form-field-label" for="{{ form.registered_name.id_for_label }}">
-            {% trans "Официальное имя" %} <span class="form-required">*</span>
-          </label>
+      <div class="cat-admin-grid cat-admin-grid--3">
+        <div class="cat-admin-field cat-admin-field--wide">
+          <label for="{{ form.registered_name.id_for_label }}">Offizieller Name *</label>
           {{ form.registered_name }}
-          {% if form.registered_name.errors %}
-            <div class="form-field-errors">{{ form.registered_name.errors }}</div>
-          {% endif %}
+          {% if form.registered_name.errors %}<div class="cat-admin-field__errors">{{ form.registered_name.errors }}</div>{% endif %}
         </div>
-
-        <div class="form-field col-wide">
-          <label class="form-field-label" for="{{ form.call_name.id_for_label }}">
-            {% trans "Домашнее имя" %}
-          </label>
+        <div class="cat-admin-field cat-admin-field--wide">
+          <label for="{{ form.call_name.id_for_label }}">Rufname</label>
           {{ form.call_name }}
-          {% if form.call_name.errors %}
-            <div class="form-field-errors">{{ form.call_name.errors }}</div>
-          {% endif %}
+          {% if form.call_name.errors %}<div class="cat-admin-field__errors">{{ form.call_name.errors }}</div>{% endif %}
         </div>
-
-        <div class="form-field">
-          <label class="form-field-label" for="{{ form.sex.id_for_label }}">
-            {% trans "Пол" %} <span class="form-required">*</span>
-          </label>
+        <div class="cat-admin-field">
+          <label for="{{ form.sex.id_for_label }}">Geschlecht *</label>
           {{ form.sex }}
-          {% if form.sex.errors %}
-            <div class="form-field-errors">{{ form.sex.errors }}</div>
-          {% endif %}
+          {% if form.sex.errors %}<div class="cat-admin-field__errors">{{ form.sex.errors }}</div>{% endif %}
         </div>
-
-        <div class="form-field">
-          <label class="form-field-label" for="{{ form.birth_date.id_for_label }}">
-            {% trans "Дата рождения" %}
-          </label>
+        <div class="cat-admin-field">
+          <label for="{{ form.birth_date.id_for_label }}">Geburtsdatum</label>
           {{ form.birth_date }}
-          {% if form.birth_date.errors %}
-            <div class="form-field-errors">{{ form.birth_date.errors }}</div>
-          {% endif %}
+          {% if form.birth_date.errors %}<div class="cat-admin-field__errors">{{ form.birth_date.errors }}</div>{% endif %}
         </div>
-
-        <div class="form-field">
-          <label class="form-field-label" for="{{ form.death_date.id_for_label }}">
-            {% trans "Дата смерти" %}
-          </label>
+        <div class="cat-admin-field">
+          <label for="{{ form.death_date.id_for_label }}">Todestag</label>
           {{ form.death_date }}
-          {% if form.death_date.errors %}
-            <div class="form-field-errors">{{ form.death_date.errors }}</div>
-          {% endif %}
+          {% if form.death_date.errors %}<div class="cat-admin-field__errors">{{ form.death_date.errors }}</div>{% endif %}
         </div>
-
       </div>
-    </div>
+    </section>
 
-    <!-- SECTION: ПОРОДА И ОКРАС -->
-    <div class="form-section">
-      <div class="form-section-header">
-        <div class="form-section-title">{% trans "Порода и окрас" %}</div>
-      </div>
-      <div class="form-grid">
-
-        <div class="form-field col-wide">
-          <label class="form-field-label" for="{{ form.breed.id_for_label }}">
-            {% trans "Порода" %} <span class="form-required">*</span>
-          </label>
+    <section class="cat-admin-section">
+      <div class="cat-admin-section__head"><h2>Rasse und Farbe</h2></div>
+      <div class="cat-admin-grid cat-admin-grid--2">
+        <div class="cat-admin-field">
+          <label for="{{ form.breed.id_for_label }}">Rasse *</label>
           {{ form.breed }}
-          {% if form.breed.errors %}
-            <div class="form-field-errors">{{ form.breed.errors }}</div>
-          {% endif %}
+          {% if form.breed.errors %}<div class="cat-admin-field__errors">{{ form.breed.errors }}</div>{% endif %}
         </div>
-
-        <div class="form-field col-wide">
-          <label class="form-field-label" for="{{ form.color.id_for_label }}">
-            {% trans "Окрас" %}
-          </label>
+        <div class="cat-admin-field">
+          <label for="{{ form.color.id_for_label }}">Farbe</label>
           {{ form.color }}
-          {% if form.color.errors %}
-            <div class="form-field-errors">{{ form.color.errors }}</div>
-          {% endif %}
-          <div class="form-field-hint">
-            {% trans "Выберите из справочника или задайте окрас вручную после сохранения." %}
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- SECTION: ПРОИСХОЖДЕНИЕ -->
-    <div class="form-section">
-      <div class="form-section-header">
-        <div class="form-section-title">{% trans "Происхождение" %}</div>
-      </div>
-      <div class="form-grid">
-
-        <div class="form-field col-wide">
-          <label class="form-field-label" for="{{ form.cattery.id_for_label }}">
-            {% trans "Питомник рождения" %}
-          </label>
-          {{ form.cattery }}
-          {% if form.cattery.errors %}
-            <div class="form-field-errors">{{ form.cattery.errors }}</div>
-          {% endif %}
-        </div>
-
-        <div class="form-field col-wide">
-          <label class="form-field-label" for="{{ form.owner.id_for_label }}">
-            {% trans "Владелец" %}
-          </label>
-          {{ form.owner }}
-          {% if form.owner.errors %}
-            <div class="form-field-errors">{{ form.owner.errors }}</div>
-          {% endif %}
-        </div>
-
-        <div class="form-field col-wide">
-          <label class="form-field-label" for="{{ form.father.id_for_label }}">
-            {% trans "Отец" %}
-          </label>
-          {{ form.father }}
-          {% if form.father.errors %}
-            <div class="form-field-errors">{{ form.father.errors }}</div>
-          {% endif %}
-        </div>
-
-        <div class="form-field col-wide">
-          <label class="form-field-label" for="{{ form.mother.id_for_label }}">
-            {% trans "Мать" %}
-          </label>
-          {{ form.mother }}
-          {% if form.mother.errors %}
-            <div class="form-field-errors">{{ form.mother.errors }}</div>
-          {% endif %}
-        </div>
-
-        <div class="form-field col-wide">
-          <label class="form-field-label" for="{{ form.litter.id_for_label }}">
-            {% trans "Помёт" %}
-          </label>
-          {{ form.litter }}
-          {% if form.litter.errors %}
-            <div class="form-field-errors">{{ form.litter.errors }}</div>
-          {% endif %}
-        </div>
-
-      </div>
-    </div>
-
-    <!-- SECTION: ДОКУМЕНТЫ -->
-    <div class="form-section">
-      <div class="form-section-header">
-        <div class="form-section-title">{% trans "Документы" %}</div>
-      </div>
-      <div class="form-grid">
-
-        <div class="form-field col-wide">
-          <label class="form-field-label" for="{{ form.pedigree_number.id_for_label }}">
-            {% trans "Номер родословной" %}
-          </label>
-          {{ form.pedigree_number }}
-          {% if form.pedigree_number.errors %}
-            <div class="form-field-errors">{{ form.pedigree_number.errors }}</div>
-          {% endif %}
-        </div>
-
-        <div class="form-field col-wide">
-          <label class="form-field-label" for="{{ form.microchip.id_for_label }}">
-            {% trans "Номер микрочипа" %}
-          </label>
-          {{ form.microchip }}
-          {% if form.microchip.errors %}
-            <div class="form-field-errors">{{ form.microchip.errors }}</div>
-          {% endif %}
-        </div>
-
-      </div>
-    </div>
-
-    <!-- SECTION: ПРИМЕЧАНИЕ -->
-    <div class="form-section">
-      <div class="form-section-header">
-        <div class="form-section-title">{% trans "Примечание" %}</div>
-      </div>
-      <div class="form-grid">
-        <div class="form-field col-full">
-          <label class="form-field-label" for="{{ form.remark.id_for_label }}">
-            {% trans "Внутреннее примечание" %}
-          </label>
-          {{ form.remark }}
-          {% if form.remark.errors %}
-            <div class="form-field-errors">{{ form.remark.errors }}</div>
-          {% endif %}
+          {% if form.color.errors %}<div class="cat-admin-field__errors">{{ form.color.errors }}</div>{% endif %}
+          <div class="cat-admin-field__hint">Farbe aus dem Katalog wählen oder später manuell ergänzen.</div>
         </div>
       </div>
-    </div>
+    </section>
 
-    <!-- SECTION: СТАТУС -->
-    <div class="form-section">
-      <div class="form-section-header">
-        <div class="form-section-title">{% trans "Статус" %}</div>
+    <section class="cat-admin-section">
+      <div class="cat-admin-section__head"><h2>Herkunft</h2></div>
+      <div class="cat-admin-grid cat-admin-grid--2">
+        <div class="cat-admin-field"><label for="{{ form.cattery.id_for_label }}">Zuchtstätte</label>{{ form.cattery }}{% if form.cattery.errors %}<div class="cat-admin-field__errors">{{ form.cattery.errors }}</div>{% endif %}</div>
+        <div class="cat-admin-field"><label for="{{ form.owner.id_for_label }}">Besitzer</label>{{ form.owner }}{% if form.owner.errors %}<div class="cat-admin-field__errors">{{ form.owner.errors }}</div>{% endif %}</div>
+        <div class="cat-admin-field"><label for="{{ form.father.id_for_label }}">Vater</label>{{ form.father }}{% if form.father.errors %}<div class="cat-admin-field__errors">{{ form.father.errors }}</div>{% endif %}</div>
+        <div class="cat-admin-field"><label for="{{ form.mother.id_for_label }}">Mutter</label>{{ form.mother }}{% if form.mother.errors %}<div class="cat-admin-field__errors">{{ form.mother.errors }}</div>{% endif %}</div>
+        <div class="cat-admin-field cat-admin-field--wide"><label for="{{ form.litter.id_for_label }}">Wurf</label>{{ form.litter }}{% if form.litter.errors %}<div class="cat-admin-field__errors">{{ form.litter.errors }}</div>{% endif %}</div>
       </div>
-      <div class="form-checkboxes">
+    </section>
 
-        <label class="form-checkbox-card">
-          {{ form.is_active }}
-          <div class="form-checkbox-body">
-            <div class="form-checkbox-title">{% trans "Активен" %}</div>
-            <div class="form-checkbox-desc">{% trans "Кот отображается в системе" %}</div>
-          </div>
-        </label>
-
-        <label class="form-checkbox-card">
-          {{ form.is_for_breeding }}
-          <div class="form-checkbox-body">
-            <div class="form-checkbox-title">{% trans "Допущен к разведению" %}</div>
-            <div class="form-checkbox-desc">{% trans "Используется в племенной программе" %}</div>
-          </div>
-        </label>
-
-        <label class="form-checkbox-card">
-          {{ form.is_featured }}
-          <div class="form-checkbox-body">
-            <div class="form-checkbox-title">{% trans "На витрине" %}</div>
-            <div class="form-checkbox-desc">{% trans "Показывать на публичной странице котов" %}</div>
-          </div>
-        </label>
-
+    <section class="cat-admin-section">
+      <div class="cat-admin-section__head"><h2>Dokumente</h2></div>
+      <div class="cat-admin-grid cat-admin-grid--2">
+        <div class="cat-admin-field"><label for="{{ form.pedigree_number.id_for_label }}">Stammbaum-Nummer</label>{{ form.pedigree_number }}{% if form.pedigree_number.errors %}<div class="cat-admin-field__errors">{{ form.pedigree_number.errors }}</div>{% endif %}</div>
+        <div class="cat-admin-field"><label for="{{ form.microchip.id_for_label }}">Mikrochip</label>{{ form.microchip }}{% if form.microchip.errors %}<div class="cat-admin-field__errors">{{ form.microchip.errors }}</div>{% endif %}</div>
       </div>
-    </div>
+    </section>
 
-    <!-- FORM ACTIONS -->
-    <div class="form-actions">
-      <button type="submit" class="btn-warm">{% trans "Сохранить" %}</button>
-      <a href="{% url 'cat_list' %}" class="btn-sq btn-sq-muted">{% trans "Отмена" %}</a>
+    <section class="cat-admin-section">
+      <div class="cat-admin-section__head"><h2>Notiz</h2></div>
+      <div class="cat-admin-grid">
+        <div class="cat-admin-field cat-admin-field--full"><label for="{{ form.remark.id_for_label }}">Interne Notiz</label>{{ form.remark }}{% if form.remark.errors %}<div class="cat-admin-field__errors">{{ form.remark.errors }}</div>{% endif %}</div>
+      </div>
+    </section>
+
+    <section class="cat-admin-section">
+      <div class="cat-admin-section__head"><h2>Status</h2></div>
+      <div class="cat-admin-checks">
+        <label class="cat-admin-check">{{ form.is_active }}<span>Aktiv</span></label>
+        <label class="cat-admin-check">{{ form.is_for_breeding }}<span>Für Zucht</span></label>
+        <label class="cat-admin-check">{{ form.is_featured }}<span>Auf der Übersicht zeigen</span></label>
+      </div>
+    </section>
+
+    <div class="cat-admin-actions">
+      <button type="submit" class="button button--primary">Speichern</button>
+      <a href="{% url 'cat_list' %}" class="button button--ghost">Abbrechen</a>
       {% if is_edit and cat %}
-        <a href="{% url 'cat_detail' cat.pk %}" class="btn-sq btn-sq-outline">{% trans "К карточке кота" %}</a>
+        <a href="{% url 'cat_detail' cat.pk %}" class="button button--secondary">Zur Karteikarte</a>
       {% endif %}
     </div>
-
   </form>
-
 </div>
-
 {% endblock %}
