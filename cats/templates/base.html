@@ -90,13 +90,11 @@
                     {% if owner and owner.tiktok %}<li><a href="{{ owner.tiktok }}" target="_blank" rel="noopener">TikTok</a></li>{% endif %}
                     {% if owner and owner.whatsapp %}<li><a href="https://wa.me/{{ owner.whatsapp|cut:'+' }}" target="_blank" rel="noopener">WhatsApp</a></li>{% endif %}
                     <li><a href="{% url 'impressum' %}">Impressum</a></li>
+                    <li><a href="{% url 'profile' %}">Verwaltung</a></li>
                 </ul>
             </div>
         </div>
 
-        <div class="container footer-admin-row">
-            <a class="footer-admin-link" href="{% url 'account_login' %}">Verwaltung</a>
-        </div>
     </footer>
 
     <script>

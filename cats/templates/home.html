@@ -6,19 +6,6 @@
 {% block meta_description %}Vedenika Maine Coon Cattery in Pforzheim und Umgebung. Galerie, Einblicke in unsere Katzen und Informationen über die Rasse Maine Coon.{% endblock %}
 
 {% block content %}
-<section class="section-nav">
-    <div class="container">
-        <nav class="section-nav__row" aria-label="Abschnittsnavigation">
-            <a href="#intro">Start</a>
-            <a href="#peek">Cattery</a>
-            <a href="#breed">Die Rasse</a>
-            <a href="#character">Charakter</a>
-            <a href="#care">Pflege</a>
-            <a href="#about-us">Über uns</a>
-        </nav>
-    </div>
-</section>
-
 <section class="hero-cattery" id="intro">
     <div class="container">
         <div class="hero-cattery__grid">
@@ -56,6 +43,19 @@
     </div>
 </section>
 
+<section class="section-nav">
+    <div class="container">
+        <nav class="section-nav__row" aria-label="Abschnittsnavigation">
+            <a href="#intro">Start</a>
+            <a href="#peek">Cattery</a>
+            <a href="#breed">Die Rasse</a>
+            <a href="#character">Charakter</a>
+            <a href="#care">Pflege</a>
+            <a href="#about-us">Über uns</a>
+        </nav>
+    </div>
+</section>
+
 <section class="cattery-peek" id="peek">
     <div class="container">
         <div class="section-heading section-heading--compact">
@@ -82,30 +82,6 @@
         </div>
     </div>
 </section>
-
-{% if belt_photos %}
-<section class="gallery-belt-section">
-    <div class="gallery-belt-wrap">
-        <div class="gallery-belt" aria-label="Fotoband aus dem Album 3">
-            {% for photo in belt_photos %}
-                <a href="{% url 'gallery_list' %}" class="gallery-belt__item">
-                    <img src="{{ photo.image.url }}" alt="{{ photo.title|default:'Vedenika Galerie' }}">
-                </a>
-            {% endfor %}
-            {% for photo in belt_photos %}
-                <a href="{% url 'gallery_list' %}" class="gallery-belt__item gallery-belt__item--repeat" aria-hidden="true" tabindex="-1">
-                    <img src="{{ photo.image.url }}" alt="">
-                </a>
-            {% endfor %}
-            {% for photo in belt_photos %}
-                <a href="{% url 'gallery_list' %}" class="gallery-belt__item gallery-belt__item--repeat" aria-hidden="true" tabindex="-1">
-                    <img src="{{ photo.image.url }}" alt="">
-                </a>
-            {% endfor %}
-        </div>
-    </div>
-</section>
-{% endif %}
 
 <section class="breed-story" id="breed">
     <div class="container">
@@ -210,6 +186,30 @@
     </div>
 </section>
 
+{% if belt_photos %}
+<section class="gallery-belt-section">
+    <div class="gallery-belt-wrap">
+        <div class="gallery-belt" aria-label="Fotoband aus dem Album 3">
+            {% for photo in belt_photos %}
+                <a href="{% url 'gallery_list' %}" class="gallery-belt__item">
+                    <img src="{{ photo.image.url }}" alt="{{ photo.title|default:'Vedenika Galerie' }}">
+                </a>
+            {% endfor %}
+            {% for photo in belt_photos %}
+                <a href="{% url 'gallery_list' %}" class="gallery-belt__item gallery-belt__item--repeat" aria-hidden="true" tabindex="-1">
+                    <img src="{{ photo.image.url }}" alt="">
+                </a>
+            {% endfor %}
+            {% for photo in belt_photos %}
+                <a href="{% url 'gallery_list' %}" class="gallery-belt__item gallery-belt__item--repeat" aria-hidden="true" tabindex="-1">
+                    <img src="{{ photo.image.url }}" alt="">
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
 <section class="care-grid-section" id="care">
     <div class="container">
         <div class="section-heading">
@@ -279,6 +279,30 @@
         </div>
     </div>
 </section>
+
+{% if belt_photos %}
+<section class="gallery-belt-section">
+    <div class="gallery-belt-wrap">
+        <div class="gallery-belt" aria-label="Fotoband aus dem Album 3">
+            {% for photo in belt_photos %}
+                <a href="{% url 'gallery_list' %}" class="gallery-belt__item">
+                    <img src="{{ photo.image.url }}" alt="{{ photo.title|default:'Vedenika Galerie' }}">
+                </a>
+            {% endfor %}
+            {% for photo in belt_photos %}
+                <a href="{% url 'gallery_list' %}" class="gallery-belt__item gallery-belt__item--repeat" aria-hidden="true" tabindex="-1">
+                    <img src="{{ photo.image.url }}" alt="">
+                </a>
+            {% endfor %}
+            {% for photo in belt_photos %}
+                <a href="{% url 'gallery_list' %}" class="gallery-belt__item gallery-belt__item--repeat" aria-hidden="true" tabindex="-1">
+                    <img src="{{ photo.image.url }}" alt="">
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
 
 <section class="story-blocks">
     <div class="container">
