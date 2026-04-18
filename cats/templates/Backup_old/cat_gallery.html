@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "Галерея" %} — {{ cat.registered_name }}{% endblock %}
+
+{% block content %}
+
+
+<div class="gallery-wrap">
+
+  <!-- BREADCRUMB -->
+  <nav class="breadcrumb-warm">
+    <a href="{% url 'home' %}">{% trans "Главная" %}</a>
+    <span class="breadcrumb-sep">/</span>
+    <a href="{% url 'cat_list' %}">{% trans "Коты" %}</a>
+    <span class="breadcrumb-sep">/</span>
+    <a href="{% url 'cat_detail' cat.pk %}">{{ cat.registered_name }}</a>
+    <span class="breadcrumb-sep">/</span>
+    <span class="text-muted-warm">{% trans "Галерея" %}</span>
+  </nav>
+
+  <!-- PAGE HEADER -->
+  <div class="gallery-header">
+    <div class="gallery-header-left">
+      <div class="gallery-eyebrow">{{ cat.registered_name }}</div>
+      <h1 class="gallery-title">{% trans "Фото<em>галерея</em>" %}</h1>
+    </div>
+
+    <div class="gallery-header-actions">
+      <a href="{% url 'cat_detail' cat.pk %}" class="btn-sq btn-sq-outline">
+        ← {% trans "К карточке" %}
+      </a>
+      {% if request.user.is_staff %}
+        <a href="{% url 'cat_upload_photo' cat.pk %}" class="btn-sq btn-sq-primary">
+          + {% trans "Добавить фото" %}
+        </a>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- PHOTOS -->
+  {% if photos %}
+
+    <div class="gallery-grid" id="galleryGrid">
+      {% for photo in photos %}
+        <div class="gallery-item" data-index="{{ forloop.counter0 }}" data-src="{{ photo.image.url }}">
+          <img src="{{ photo.image.url }}" alt="{{ cat.registered_name }}{% if photo.title %} — {{ photo.title }}{% endif %}">
+
+          {% if photo.is_primary %}
+            <div class="gallery-primary-badge">★ {% trans "Главное" %}</div>
+          {% endif %}
+
+          <div class="gallery-item-overlay">
+            {% if request.user.is_staff %}
+              <div class="gallery-item-actions">
+
+                {% if not photo.is_primary %}
+                  <form method="post" action="{% url 'set_main_photo' cat.pk photo.pk %}" class="flex-1">
+                    {% csrf_token %}
+                    <button type="submit" class="gallery-action-btn make-primary w-100">
+                      ★ {% trans "Главным" %}
+                    </button>
+                  </form>
+                {% else %}
+                  <button class="gallery-action-btn is-primary" class="flex-1">
+                    ★ {% trans "Главное фото" %}
+                  </button>
+                {% endif %}
+
+                <form method="post" action="{% url 'delete_cat_photo' cat.pk photo.pk %}"
+                      onsubmit="return confirm('{% trans "Удалить это фото?" %}');">
+                  {% csrf_token %}
+                  <button type="submit" class="gallery-action-btn delete">✕</button>
+                </form>
+
+              </div>
+            {% endif %}
+          </div>
+
+        </div>
+      {% endfor %}
+    </div>
+
+    <!-- LIGHTBOX -->
+    <div class="lightbox-backdrop" id="lightbox">
+      <button class="lightbox-close" id="lightboxClose">✕</button>
+      <button class="lightbox-nav prev" id="lightboxPrev">‹</button>
+      <div class="lightbox-inner">
+        <img src="" alt="" class="lightbox-img" id="lightboxImg">
+      </div>
+      <button class="lightbox-nav next" id="lightboxNext">›</button>
+      <div class="lightbox-counter" id="lightboxCounter"></div>
+    </div>
+
+    <script>
+      (function() {
+        var items = document.querySelectorAll('.gallery-item');
+        var lightbox = document.getElementById('lightbox');
+        var lightboxImg = document.getElementById('lightboxImg');
+        var lightboxCounter = document.getElementById('lightboxCounter');
+        var total = items.length;
+        var current = 0;
+
+        function open(idx) {
+          current = idx;
+          var src = items[idx].dataset.src;
+          lightboxImg.src = src;
+          lightboxCounter.textContent = (idx + 1) + ' / ' + total;
+          lightbox.classList.add('open');
+          document.body.style.overflow = 'hidden';
+        }
+
+        function close() {
+          lightbox.classList.remove('open');
+          document.body.style.overflow = '';
+        }
+
+        function prev() { open((current - 1 + total) % total); }
+        function next() { open((current + 1) % total); }
+
+        items.forEach(function(item) {
+          item.addEventListener('click', function(e) {
+            if (e.target.closest('form') || e.target.closest('button')) return;
+            open(parseInt(item.dataset.index));
+          });
+        });
+
+        document.getElementById('lightboxClose').addEventListener('click', close);
+        document.getElementById('lightboxPrev').addEventListener('click', prev);
+        document.getElementById('lightboxNext').addEventListener('click', next);
+
+        lightbox.addEventListener('click', function(e) {
+          if (e.target === lightbox) close();
+        });
+
+        document.addEventListener('keydown', function(e) {
+          if (!lightbox.classList.contains('open')) return;
+          if (e.key === 'Escape') close();
+          if (e.key === 'ArrowLeft') prev();
+          if (e.key === 'ArrowRight') next();
+        });
+      })();
+    </script>
+
+  {% else %}
+
+    <div class="empty-gallery">
+      <div class="empty-gallery-icon">📷</div>
+      <div class="empty-gallery-title">{% trans "Фотографий пока нет" %}</div>
+      <p class="empty-gallery-desc">
+        {% trans "Для этого кота ещё не добавлено ни одной фотографии." %}
+      </p>
+      {% if request.user.is_staff %}
+        <a href="{% url 'cat_upload_photo' cat.pk %}" class="btn-sq btn-sq-primary">
+          + {% trans "Добавить первое фото" %}
+        </a>
+      {% endif %}
+    </div>
+
+  {% endif %}
+
+</div>
+
+{% endblock %}

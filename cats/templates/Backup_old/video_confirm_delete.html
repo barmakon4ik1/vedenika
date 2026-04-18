@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load cats_extras %}
+
+{% block title %}{% trans "Удалить видео" %} — Vedenika{% endblock %}
+
+{% block content %}
+<div class="form-page-wrap" style="max-width: 560px;">
+  <div class="confirm-delete-box">
+
+    {% if video.thumbnail %}
+      <img src="{{ video.thumbnail.url }}" alt=""
+           style="width: 100%; max-height: 180px; object-fit: cover; border-radius: 12px; margin-bottom: 20px; display: block;">
+    {% else %}
+      <div class="confirm-delete-icon">🎬</div>
+    {% endif %}
+
+    <h2 class="confirm-delete-title">{% trans "Удалить видео?" %}</h2>
+    <p class="confirm-delete-desc">
+      <strong>«{{ video|trans_title }}»</strong><br>
+      {% if video.video_file %}
+        {% trans "Видеофайл будет удалён с сервера безвозвратно." %}
+      {% else %}
+        {% trans "Запись о видео будет удалена. Файл на YouTube/Vimeo останется." %}
+      {% endif %}
+    </p>
+
+    <div class="form-actions" style="justify-content: center;">
+      <form method="post" style="display: contents;">
+        {% csrf_token %}
+        <button type="submit" class="btn-sq btn-sq-primary"
+                style="background: #a32d2d; border-color: #a32d2d;">
+          {% trans "Да, удалить" %}
+        </button>
+      </form>
+      <a href="{% url 'video_manage' %}" class="btn-sq btn-sq-outline">{% trans "Отмена" %}</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

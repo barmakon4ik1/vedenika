@@ -1,0 +1,36 @@
+{% load i18n %}
+{% load cats_extras %}
+
+<a href="{% url 'gallery_album' album.pk %}" class="album-card-link">
+  <div class="album-card">
+
+    <div class="album-card-cover">
+      {% with cover=album.get_cover %}
+        {% if cover %}
+          <img src="{{ cover.url }}" alt="{{ album|trans_title }}">
+        {% else %}
+          <div class="album-no-cover">
+            <span>📷</span>
+          </div>
+        {% endif %}
+      {% endwith %}
+
+      <div class="album-card-count">{{ album.photos_count }}</div>
+    </div>
+
+    <div class="album-card-body">
+      <div class="album-card-title">
+        {{ album|trans_title }}
+      </div>
+      {% if album.date %}
+        <div class="album-card-date">{{ album.date|date:"d.m.Y" }}</div>
+      {% endif %}
+      {% with desc=album|trans_description %}
+        {% if desc %}
+          <div class="album-card-desc">{{ desc|truncatechars:80 }}</div>
+        {% endif %}
+      {% endwith %}
+    </div>
+
+  </div>
+</a>

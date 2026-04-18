@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}Impressum — Vedenika{% endblock %}
+
+{% block content %}
+
+<div class="form-page-wrap">
+
+  <nav class="breadcrumb-warm">
+    <a href="{% url 'home' %}">{% trans "Главная" %}</a>
+    <span class="breadcrumb-sep">/</span>
+    <span class="breadcrumb-current">Impressum</span>
+  </nav>
+
+  <div class="page-header">
+    <div>
+      <div class="eyebrow">{% trans "Правовая информация" %}</div>
+      <h1 class="page-title"><em>Impressum</em></h1>
+    </div>
+  </div>
+
+  <!-- § 5 TMG -->
+  <div class="form-section">
+    <div class="form-section-header">
+      <div class="form-section-title">Angaben gemäß § 5 TMG</div>
+    </div>
+
+    {% if owner %}
+      <div class="impressum-block">
+        <div class="impressum-name">{{ owner.first_name }} {{ owner.last_name }}</div>
+        <div class="impressum-label">{% trans "Privatperson / Частное лицо" %}</div>
+      </div>
+
+      <div class="impressum-block">
+        <div class="impressum-section-title">{% trans "Standort / Местонахождение" %}</div>
+        <div class="impressum-text">
+          {% if owner.address and owner.address.city %}
+            {{ owner.address.city }}{% if owner.address.country %}, {{ owner.address.country }}{% endif %}
+          {% else %}
+            <span class="impressum-placeholder">Pforzheim, Deutschland</span>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="impressum-block">
+        <div class="impressum-section-title">{% trans "Kontakt / Контакт" %}</div>
+        <div class="impressum-contacts">
+          {% if owner.email %}
+            <div class="impressum-contact-row">
+              <span class="impressum-contact-label">E-Mail</span>
+              <a href="mailto:{{ owner.email }}" class="impressum-contact-value">{{ owner.email }}</a>
+            </div>
+          {% endif %}
+        </div>
+        <div class="impressum-note">
+          {% trans "Полный почтовый адрес предоставляется по запросу по электронной почте." %}
+        </div>
+      </div>
+
+    {% else %}
+      <div class="impressum-placeholder">— {% trans "Данные не найдены" %} —</div>
+    {% endif %}
+  </div>
+
+  <!-- Hinweis -->
+  <div class="form-section">
+    <div class="form-section-header">
+      <div class="form-section-title">Hinweis / Примечание</div>
+    </div>
+    <div class="impressum-legal-text">
+      <p>
+        {% trans "Данный сайт является частным некоммерческим проектом любителей породы мейн-кун. Никакая коммерческая деятельность на сайте не ведётся." %}
+      </p>
+      <p>
+        <strong>Privatpersonen</strong> sind nach dem Urteil des LG München I (Az. 21 O 6872/22) nicht verpflichtet,
+        ihre vollständige Privatadresse im Impressum anzugeben, sofern eine andere zuverlässige Kontaktmöglichkeit
+        (z.B. E-Mail-Adresse) vorhanden ist.
+      </p>
+    </div>
+  </div>
+
+  <!-- Haftungsausschluss -->
+  <div class="form-section">
+    <div class="form-section-header">
+      <div class="form-section-title">Haftungsausschluss</div>
+    </div>
+    <div class="impressum-legal-text">
+      <p>
+        <strong>Haftung für Inhalte:</strong>
+        Die Inhalte dieser Seiten wurden mit größter Sorgfalt erstellt.
+        Für die Richtigkeit, Vollständigkeit und Aktualität können wir keine Gewähr übernehmen.
+      </p>
+      <p>
+        <strong>Urheberrecht:</strong>
+        Die erstellten Inhalte und Werke unterliegen dem deutschen Urheberrecht.
+        Die Vervielfältigung bedarf der schriftlichen Zustimmung.
+      </p>
+    </div>
+  </div>
+
+  <!-- Datenschutz -->
+  <div class="form-section">
+    <div class="form-section-header">
+      <div class="form-section-title">Datenschutzerklärung</div>
+    </div>
+    <div class="impressum-legal-text">
+      <p>
+        <strong>Datenschutz:</strong>
+        Diese Website erhebt keine personenbezogenen Daten ohne ausdrückliche Einwilligung.
+        Es werden keine Cookies zu Werbezwecken eingesetzt.
+      </p>
+      <p>
+        Bei Fragen zum Datenschutz wenden Sie sich bitte per E-Mail an uns.
+      </p>
+    </div>
+  </div>
+
+</div>
+
+{% endblock %}

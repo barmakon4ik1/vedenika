@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{{ page_title }} — Vedenika{% endblock %}
+
+{% block content %}
+<div class="form-page-wrap">
+
+  <nav class="breadcrumb-warm">
+    <a href="{% url 'home' %}">{% trans "Главная" %}</a>
+    <span class="breadcrumb-sep">/</span>
+    <a href="{% url 'gallery_list' %}">{% trans "Галерея" %}</a>
+    <span class="breadcrumb-sep">/</span>
+    <a href="{% url 'gallery_manage' %}">{% trans "Управление" %}</a>
+    <span class="breadcrumb-sep">/</span>
+    <span class="breadcrumb-current">{{ page_title }}</span>
+  </nav>
+
+  <div class="page-header">
+    <div>
+      <div class="eyebrow">{% trans "Галерея" %}</div>
+      <h1 class="page-title">
+        {% if is_edit %}{% trans "Редактировать" %}{% else %}{% trans "Создать" %}{% endif %}
+        <em>{% trans "альбом" %}</em>
+      </h1>
+    </div>
+    <a href="{% url 'gallery_manage' %}" class="btn-sq btn-sq-outline">← {% trans "К списку" %}</a>
+  </div>
+
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    {% if form.non_field_errors %}
+      <div class="form-errors">
+        {% for error in form.non_field_errors %}
+          <div class="form-error-item">{{ error }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <!-- ОСНОВНАЯ ИНФОРМАЦИЯ -->
+    <div class="form-section">
+      <div class="form-section-header">
+        <div class="form-section-title">{% trans "Название и описание" %}</div>
+      </div>
+      <div class="form-grid">
+
+        <div class="form-field col-full">
+          <label class="form-field-label">{% trans "Название альбома" %} <span class="form-required">*</span></label>
+          {{ form.title }}
+          {% if form.title.errors %}<div class="form-field-errors">{{ form.title.errors }}</div>{% endif %}
+        </div>
+
+        <div class="form-field col-full">
+          <label class="form-field-label">{% trans "Описание" %}</label>
+          {{ form.description }}
+          {% if form.description.errors %}<div class="form-field-errors">{{ form.description.errors }}</div>{% endif %}
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ПАРАМЕТРЫ -->
+    <div class="form-section">
+      <div class="form-section-header">
+        <div class="form-section-title">{% trans "Параметры" %}</div>
+      </div>
+      <div class="form-grid">
+
+        <div class="form-field col-wide">
+          <label class="form-field-label">{% trans "Категория" %} <span class="form-required">*</span></label>
+          {{ form.category }}
+          {% if form.category.errors %}<div class="form-field-errors">{{ form.category.errors }}</div>{% endif %}
+        </div>
+
+        <div class="form-field col-wide">
+          <label class="form-field-label">{% trans "Дата" %}</label>
+          {{ form.date }}
+          {% if form.date.errors %}<div class="form-field-errors">{{ form.date.errors }}</div>{% endif %}
+        </div>
+
+        <div class="form-field col-wide">
+          <label class="form-field-label">{% trans "Помёт (для категории «Помёты»)" %}</label>
+          {{ form.litter }}
+          {% if form.litter.errors %}<div class="form-field-errors">{{ form.litter.errors }}</div>{% endif %}
+        </div>
+
+        <div class="form-field col-wide">
+          <label class="form-field-label">{% trans "Порядок сортировки" %}</label>
+          {{ form.sort_order }}
+          {% if form.sort_order.errors %}<div class="form-field-errors">{{ form.sort_order.errors }}</div>{% endif %}
+        </div>
+
+        <div class="form-field col-full">
+          <label class="form-field-label">{% trans "Обложка альбома" %}</label>
+          {% if is_edit and album.cover %}
+            <div class="manage-current-image">
+              <img src="{{ album.cover.url }}" alt="" style="height: 80px; border-radius: 8px; margin-bottom: 8px; display: block;">
+              <div class="form-field-hint">{% trans "Текущая обложка. Загрузите новую чтобы заменить." %}</div>
+            </div>
+          {% endif %}
+          {{ form.cover }}
+          {% if form.cover.errors %}<div class="form-field-errors">{{ form.cover.errors }}</div>{% endif %}
+          <div class="form-field-hint">{% trans "Если не задана — будет использовано первое фото альбома." %}</div>
+        </div>
+
+      </div>
+
+      <div class="form-checkboxes" style="margin-top: 18px;">
+        <label class="form-checkbox-card">
+          {{ form.is_active }}
+          <div class="form-checkbox-body">
+            <div class="form-checkbox-title">{% trans "Активен" %}</div>
+            <div class="form-checkbox-desc">{% trans "Альбом отображается в галерее" %}</div>
+          </div>
+        </label>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn-warm">{% trans "Сохранить" %}</button>
+      <a href="{% url 'gallery_manage' %}" class="btn-sq btn-sq-muted">{% trans "Отмена" %}</a>
+      {% if is_edit and album %}
+        <a href="{% url 'gallery_album_photos' album.pk %}" class="btn-sq btn-sq-outline">
+          {% trans "Фотографии альбома" %}
+        </a>
+      {% endif %}
+    </div>
+
+  </form>
+</div>
+{% endblock %}

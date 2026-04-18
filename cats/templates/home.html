@@ -65,17 +65,11 @@
         </div>
 
         <div class="peek-grid">
-            {% if featured_cats %}
-                {% for cat in featured_cats|slice:":3" %}
-                    <a class="peek-card" href="{% url 'cat_detail' cat.pk %}">
-                        {% with main_image=cat.get_main_image %}
-                            {% if main_image %}
-                                <img src="{{ main_image.image.url }}" alt="{{ cat.call_name|default:cat.registered_name }}">
-                            {% else %}
-                                <div class="peek-card__empty">{{ cat.call_name|default:cat.registered_name }}</div>
-                            {% endif %}
-                        {% endwith %}
-                        <span class="peek-card__title">{{ cat.call_name|default:cat.registered_name }}</span>
+            {% if belt_photos %}
+                {% for photo in belt_photos|slice:":3" %}
+                    <a class="peek-card" href="{% url 'gallery_list' %}">
+                        <img src="{{ photo.image.url }}" alt="{{ photo.title|default:'Vedenika Galerie' }}">
+                        <span class="peek-card__title">{{ photo.title|default:'Vedenika Galerie' }}</span>
                     </a>
                 {% endfor %}
             {% endif %}

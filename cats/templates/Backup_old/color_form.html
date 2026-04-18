@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{{ page_title }} — Vedenika{% endblock %}
+
+{% block content %}
+
+<div class="form-page-wrap">
+
+  <!-- BREADCRUMB -->
+  <nav class="breadcrumb-warm">
+    <a href="{% url 'home' %}">{% trans "Главная" %}</a>
+    <span class="breadcrumb-sep">/</span>
+    <a href="{% url 'cat_list' %}">{% trans "Коты" %}</a>
+    <span class="breadcrumb-sep">/</span>
+    <a href="{% url 'cat_detail' cat.pk %}">{{ cat.registered_name }}</a>
+    <span class="breadcrumb-sep">/</span>
+    <span class="breadcrumb-current">{{ page_title }}</span>
+  </nav>
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div>
+      <div class="eyebrow">{{ cat.registered_name }}</div>
+      <h1 class="page-title">
+        {% if is_edit %}{% trans "Редактировать" %}{% else %}{% trans "Добавить" %}{% endif %}
+        <em>{% trans "окрас" %}</em>
+      </h1>
+    </div>
+    <a href="{% url 'cat_detail' cat.pk %}" class="btn-sq btn-sq-outline">← {% trans "К карточке" %}</a>
+  </div>
+
+  <form method="post">
+    {% csrf_token %}
+
+    {% if form.non_field_errors %}
+      <div class="form-errors">
+        {% for error in form.non_field_errors %}
+          <div class="form-error-item">{{ error }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <!-- SECTION: ТЕКУЩИЙ ОКРАС (только при редактировании) -->
+    {% if is_edit and color %}
+      <div class="color-block" style="margin-bottom: 20px;">
+        <div>
+          <div class="color-block-label">{% trans "Текущий окрас" %}</div>
+          <div class="color-block-value">{{ color }}</div>
+        </div>
+      </div>
+    {% endif %}
+
+    <!-- SECTION: КОМПОНЕНТЫ -->
+    <div class="form-section">
+      <div class="form-section-header">
+        <div class="form-section-title">{% trans "Компоненты окраса EMS" %}</div>
+      </div>
+
+      <div class="color-form-hint">
+        <div class="color-form-hint-icon">ℹ</div>
+        <div class="color-form-hint-text">
+          {% trans "Название окраса и EMS-код формируются автоматически из выбранных компонентов в соответствии со стандартом FIFe." %}
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label class="form-field-label" for="{{ form.components.id_for_label }}">
+          {% trans "Компоненты" %} <span class="form-required">*</span>
+        </label>
+        {{ form.components }}
+        {% if form.components.errors %}
+          <div class="form-field-errors">{{ form.components.errors }}</div>
+        {% endif %}
+        <div class="form-field-hint">
+          {% trans "Удерживайте Ctrl (или Cmd на Mac) для выбора нескольких компонентов." %}
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION: ДОПОЛНИТЕЛЬНО -->
+    <div class="form-section">
+      <div class="form-section-header">
+        <div class="form-section-title">{% trans "Дополнительно" %}</div>
+      </div>
+      <div class="form-grid">
+
+        <div class="form-field col-full">
+          <label class="form-field-label" for="{{ form.remark.id_for_label }}">
+            {% trans "Примечание" %}
+          </label>
+          {{ form.remark }}
+          {% if form.remark.errors %}
+            <div class="form-field-errors">{{ form.remark.errors }}</div>
+          {% endif %}
+        </div>
+
+      </div>
+
+      <div class="form-checkboxes" style="margin-top: 18px;">
+        <label class="form-checkbox-card">
+          {{ form.is_active }}
+          <div class="form-checkbox-body">
+            <div class="form-checkbox-title">{% trans "Активен" %}</div>
+            <div class="form-checkbox-desc">{% trans "Окрас доступен для выбора" %}</div>
+          </div>
+        </label>
+      </div>
+    </div>
+
+    <!-- ACTIONS -->
+    <div class="form-actions">
+      <button type="submit" class="btn-warm">{% trans "Сохранить окрас" %}</button>
+      <a href="{% url 'cat_detail' cat.pk %}" class="btn-sq btn-sq-muted">{% trans "Отмена" %}</a>
+    </div>
+
+  </form>
+
+</div>
+
+{% endblock %}

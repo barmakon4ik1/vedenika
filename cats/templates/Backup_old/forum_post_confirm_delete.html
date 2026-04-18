@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Удалить сообщение" %}{% endblock %}
+{% block content %}
+<div class="form-page-wrap" style="max-width: 520px;">
+  <div class="confirm-delete-box">
+    <div class="confirm-delete-icon">🗑️</div>
+    <h2 class="confirm-delete-title">{% trans "Удалить сообщение?" %}</h2>
+    <p class="confirm-delete-desc">{{ post.body|truncatechars:120 }}</p>
+    <div class="form-actions" style="justify-content:center;">
+      <form method="post" style="display:contents;">
+        {% csrf_token %}
+        <button type="submit" class="btn-sq btn-sq-primary" style="background:#a32d2d;border-color:#a32d2d;">
+          {% trans "Удалить" %}
+        </button>
+      </form>
+      <a href="{{ post.topic.get_absolute_url }}" class="btn-sq btn-sq-outline">{% trans "Отмена" %}</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

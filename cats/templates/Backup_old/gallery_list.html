@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "Галерея" %} — Vedenika{% endblock %}
+
+{% block content %}
+
+<div class="gallery-page-wrap">
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div>
+      <div class="eyebrow">{% trans "Питомник Vedenika" %}</div>
+      <h1 class="page-title">{% trans "Наша" %} <em>{% trans "галерея" %}</em></h1>
+    </div>
+  </div>
+
+  <!-- CATEGORY TABS -->
+  <div class="gallery-tabs">
+    <a href="{% url 'gallery_list' %}"
+       class="gallery-tab {% if not selected_category %}gallery-tab--active{% endif %}">
+      {% trans "Все" %}
+    </a>
+    <a href="?category=LIFE"
+       class="gallery-tab {% if selected_category == 'LIFE' %}gallery-tab--active{% endif %}">
+      {% trans "Повседневная жизнь" %}
+    </a>
+    <a href="?category=LITTER"
+       class="gallery-tab {% if selected_category == 'LITTER' %}gallery-tab--active{% endif %}">
+      {% trans "Помёты" %}
+    </a>
+    <a href="?category=ART"
+       class="gallery-tab {% if selected_category == 'ART' %}gallery-tab--active{% endif %}">
+      {% trans "Художественные" %}
+    </a>
+  </div>
+
+  <!-- ALBUMS GRID -->
+  {% with albums_to_show=albums %}
+    {% if selected_category == 'LIFE' %}
+      {% with albums_to_show=albums_life %}
+        {% include "gallery_albums_grid.html" %}
+      {% endwith %}
+    {% elif selected_category == 'LITTER' %}
+      {% with albums_to_show=albums_litter %}
+        {% include "gallery_albums_grid.html" %}
+      {% endwith %}
+    {% elif selected_category == 'ART' %}
+      {% with albums_to_show=albums_art %}
+        {% include "gallery_albums_grid.html" %}
+      {% endwith %}
+    {% else %}
+
+      {% if albums_life %}
+        <div class="gallery-section">
+          <div class="gallery-section-header">
+            <div class="gallery-section-title">{% trans "Повседневная жизнь" %}</div>
+          </div>
+          <div class="albums-grid">
+            {% for album in albums_life %}
+              {% include "gallery_album_card.html" %}
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+
+      {% if albums_litter %}
+        <div class="gallery-section">
+          <div class="gallery-section-header">
+            <div class="gallery-section-title">{% trans "Помёты" %}</div>
+          </div>
+          <div class="albums-grid">
+            {% for album in albums_litter %}
+              {% include "gallery_album_card.html" %}
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+
+      {% if albums_art %}
+        <div class="gallery-section">
+          <div class="gallery-section-header">
+            <div class="gallery-section-title">{% trans "Художественные" %}</div>
+          </div>
+          <div class="albums-grid">
+            {% for album in albums_art %}
+              {% include "gallery_album_card.html" %}
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+
+      {% if not albums %}
+        <div class="empty-state">
+          <div class="empty-state-icon">📷</div>
+          <div class="empty-state-title">{% trans "Альбомы пока не добавлены" %}</div>
+          <p class="empty-state-desc">{% trans "Скоро здесь появятся фотографии." %}</p>
+        </div>
+      {% endif %}
+
+    {% endif %}
+  {% endwith %}
+
+</div>
+
+{% endblock %}

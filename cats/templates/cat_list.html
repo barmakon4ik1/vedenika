@@ -1,272 +1,79 @@
 {% extends "base.html" %}
 {% load static %}
-{% load i18n %}
 
-{% block title %}{% trans "Коты" %} — Vedenika{% endblock %}
+{% block title %}Katzen — Vedenika{% endblock %}
 
 {% block content %}
+<section class="cats-landing">
+    <div class="container">
 
+        <section class="cats-hero">
+            <div class="cats-hero__content">
+                <div class="hero-cattery__eyebrow">Vedenika Maine Coon Cattery</div>
+                <h1 class="hero-cattery__title">Unsere Katzen</h1>
+                <p class="hero-cattery__lead">Lernen Sie die Katzen unserer Zuchtstätte kennen.</p>
+            </div>
+        </section>
 
-<div class="catlist-wrap">
+        {% if cats_active or cats_inactive %}
+        <section class="cattery-peek cats-peek-section">
+            <div class="peek-grid peek-grid--cats">
+                {% for cat in cats_active %}
+                    <a class="peek-card" href="{% url 'cat_detail' cat.pk %}">
+                        {% with main_image=cat.get_main_image %}
+                            {% if main_image %}
+                                <img src="{{ main_image.image.url }}" alt="{{ cat.call_name|default:cat.registered_name }}">
+                            {% else %}
+                                <div class="peek-card__empty">{{ cat.call_name|default:cat.registered_name }}</div>
+                            {% endif %}
+                        {% endwith %}
+                        <span class="peek-card__title">{{ cat.call_name|default:cat.registered_name }}</span>
+                    </a>
+                {% endfor %}
 
-  <!-- PAGE HEADER -->
-  <div class="page-header">
-    <div class="page-header-left">
-      <div class="page-eyebrow">{% trans "Питомник Vedenika" %}</div>
-      <h1 class="page-title">{% trans "Наши <em>коты</em>" %}</h1>
-    </div>
-    {% if request.user.is_staff %}
-      <a href="{% url 'cat_add' %}" class="btn-warm">+ {% trans "Добавить кота" %}</a>
-    {% endif %}
-  </div>
-
-  <!-- FILTERS -->
-  <form method="get" action="">
-    <div class="filter-bar">
-
-      <div class="filter-group">
-        <label class="filter-label">{% trans "Порода" %}</label>
-        <select name="breed" class="filter-select">
-          <option value="">{% trans "Все породы" %}</option>
-          {% for b in breeds %}
-            <option value="{{ b.pk }}" {% if selected_breed == b.pk|stringformat:"s" %}selected{% endif %}>
-              {{ b }}
-            </option>
-          {% endfor %}
-        </select>
-      </div>
-
-      <div class="filter-group">
-        <label class="filter-label">{% trans "Пол" %}</label>
-        <select name="sex" class="filter-select">
-          <option value="">{% trans "Любой" %}</option>
-          <option value="M" {% if selected_sex == "M" %}selected{% endif %}>{% trans "Кот" %}</option>
-          <option value="F" {% if selected_sex == "F" %}selected{% endif %}>{% trans "Кошка" %}</option>
-        </select>
-      </div>
-
-      <div class="filter-group">
-        <label class="filter-label">{% trans "Окрас" %}</label>
-        <select name="color" class="filter-select">
-          <option value="">{% trans "Любой" %}</option>
-          {% for c in colors %}
-            <option value="{{ c.pk }}" {% if selected_color == c.pk|stringformat:"s" %}selected{% endif %}>
-              {{ c }}
-            </option>
-          {% endfor %}
-        </select>
-      </div>
-
-      <div class="filter-actions">
-        <button type="submit" class="btn-filter-apply">{% trans "Найти" %}</button>
-        {% if selected_breed or selected_sex or selected_color %}
-          <a href="{% url 'cat_list' %}" class="btn-filter-reset">{% trans "Сбросить" %}</a>
+                {% for cat in cats_inactive %}
+                    <a class="peek-card peek-card--inactive" href="{% url 'cat_detail' cat.pk %}">
+                        {% with main_image=cat.get_main_image %}
+                            {% if main_image %}
+                                <img src="{{ main_image.image.url }}" alt="{{ cat.call_name|default:cat.registered_name }}">
+                            {% else %}
+                                <div class="peek-card__empty">{{ cat.call_name|default:cat.registered_name }}</div>
+                            {% endif %}
+                        {% endwith %}
+                        <span class="peek-card__title">{{ cat.call_name|default:cat.registered_name }}</span>
+                    </a>
+                {% endfor %}
+            </div>
+        </section>
+        {% else %}
+        <section class="cattery-peek cats-peek-section">
+            <div class="empty-state">
+                <div class="empty-state-icon">🐾</div>
+                <div class="empty-state-title">Noch keine Katzen eingetragen</div>
+            </div>
+        </section>
         {% endif %}
-      </div>
 
-    </div>
-  </form>
-
-  <!-- RESULTS META -->
-  {% if cats %}
-    <div class="results-meta">
-      <div class="results-count">
-        {% trans "Найдено" %}: <strong>{{ paginator.count }}</strong>
-      </div>
-    </div>
-  {% endif %}
-
-  <!-- CATS GRID -->
-{% if cats_active %}
-  <div class="cats-grid">
-    {% for cat in cats_active %}
-      <a href="{% url 'cat_detail' cat.pk %}" class="cat-card-link">
-        <div class="cat-card-warm">
-
-          <div class="cat-card-image">
-            {% with img=cat.get_main_image %}
-              {% if img %}
-                <img src="{{ img.image.url }}" alt="{{ cat.registered_name }}">
-              {% else %}
-                <div class="cat-no-image">
-                  <div class="cat-no-image-icon">🐱</div>
-                  <div class="cat-no-image-text">{% trans "Нет фото" %}</div>
-                </div>
-              {% endif %}
-            {% endwith %}
-
-            {% if cat.sex == "M" %}
-              <span class="cat-sex-badge male">♂ {% trans "Кот" %}</span>
-            {% else %}
-              <span class="cat-sex-badge female">♀ {% trans "Кошка" %}</span>
-            {% endif %}
-          </div>
-
-          <div class="cat-card-body">
-            <div class="cat-card-name">{{ cat.registered_name }}</div>
-            {% if cat.call_name %}
-              <div class="cat-card-callname">«{{ cat.call_name }}»</div>
+        {% if is_paginated %}
+        <div class="pagination-wrap">
+            {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}" class="pagination-btn">←</a>
             {% endif %}
 
-            <div class="cat-card-meta">
-              <div class="cat-card-meta-row">
-                <span>{% trans "Порода" %}</span>
-                <span>{{ cat.breed }}</span>
-              </div>
-              {% if cat.cattery %}
-                <div class="cat-card-meta-row">
-                  <span>{% trans "Питомник" %}</span>
-                  <span>{{ cat.cattery }}</span>
-                </div>
-              {% endif %}
-              {% if cat.ems_code %}
-                <div class="cat-card-meta-row">
-                  <span>EMS</span>
-                  <span>{{ cat.ems_code }}</span>
-                </div>
-              {% endif %}
-            </div>
+            <span class="pagination-current">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
 
-            <div class="cat-card-footer">
-              {% if cat.is_for_breeding %}
-                <span class="cat-tag">{% trans "Разведение" %}</span>
-              {% endif %}
-              {% if cat.pedigree_number %}
-                <span class="cat-tag">{% trans "Родословная" %}</span>
-              {% endif %}
-            </div>
-
-          </div>
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}" class="pagination-btn">→</a>
+            {% endif %}
         </div>
-      </a>
-    {% endfor %}
-  </div>
-
-{% elif not cats_inactive %}
-  <div class="empty-state">
-    <div class="empty-state-icon">🐾</div>
-    <div class="empty-state-title">{% trans "Коты не найдены" %}</div>
-    <p class="empty-state-desc">
-      {% if selected_breed or selected_sex or selected_color %}
-        {% trans "Попробуйте изменить или сбросить фильтры." %}
-      {% else %}
-        {% trans "Пока ни одного кота не добавлено." %}
-      {% endif %}
-    </p>
-    {% if selected_breed or selected_sex or selected_color %}
-      <a href="{% url 'cat_list' %}" class="btn-filter-reset mt-3 d-inline-block">
-        {% trans "Сбросить фильтры" %}
-      </a>
-    {% endif %}
-  </div>
-{% endif %}
-
-{% if cats_inactive %}
-  <div class="litter-section-header" style="margin-top: 48px; margin-bottom: 24px;">
-    <div class="litter-section-title" style="color: var(--muted);">
-      {% trans "Ранее в питомнике" %}
-    </div>
-    <div class="litter-section-count">{{ cats_inactive|length }}</div>
-  </div>
-
-  <div class="cats-grid">
-    {% for cat in cats_inactive %}
-      <a href="{% url 'cat_detail' cat.pk %}" class="cat-card-link">
-        <div class="cat-card-warm cat-card-warm--inactive">
-
-          <div class="cat-card-image">
-            {% with img=cat.get_main_image %}
-              {% if img %}
-                <img src="{{ img.image.url }}" alt="{{ cat.registered_name }}">
-              {% else %}
-                <div class="cat-no-image">
-                  <div class="cat-no-image-icon">🐱</div>
-                  <div class="cat-no-image-text">{% trans "Нет фото" %}</div>
-                </div>
-              {% endif %}
-            {% endwith %}
-
-            {% if cat.sex == "M" %}
-              <span class="cat-sex-badge male">♂ {% trans "Кот" %}</span>
-            {% else %}
-              <span class="cat-sex-badge female">♀ {% trans "Кошка" %}</span>
-            {% endif %}
-          </div>
-
-          <div class="cat-card-body">
-            <div class="cat-card-name">{{ cat.registered_name }}</div>
-            {% if cat.call_name %}
-              <div class="cat-card-callname">«{{ cat.call_name }}»</div>
-            {% endif %}
-
-            <div class="cat-card-meta">
-              <div class="cat-card-meta-row">
-                <span>{% trans "Порода" %}</span>
-                <span>{{ cat.breed }}</span>
-              </div>
-              {% if cat.cattery %}
-                <div class="cat-card-meta-row">
-                  <span>{% trans "Питомник" %}</span>
-                  <span>{{ cat.cattery }}</span>
-                </div>
-              {% endif %}
-              {% if cat.ems_code %}
-                <div class="cat-card-meta-row">
-                  <span>EMS</span>
-                  <span>{{ cat.ems_code }}</span>
-                </div>
-              {% endif %}
-            </div>
-
-            <div class="cat-card-footer">
-              {% if cat.pedigree_number %}
-                <span class="cat-tag">{% trans "Родословная" %}</span>
-              {% endif %}
-            </div>
-
-          </div>
-        </div>
-      </a>
-    {% endfor %}
-  </div>
-{% endif %}
-
-  <!-- PAGINATION -->
-  {% if is_paginated %}
-    <div class="pagination-wrap">
-
-      {% if page_obj.has_previous %}
-        <a href="?page=1{% if selected_breed %}&breed={{ selected_breed }}{% endif %}{% if selected_sex %}&sex={{ selected_sex }}{% endif %}{% if selected_color %}&color={{ selected_color }}{% endif %}"
-           class="page-btn">«</a>
-        <a href="?page={{ page_obj.previous_page_number }}{% if selected_breed %}&breed={{ selected_breed }}{% endif %}{% if selected_sex %}&sex={{ selected_sex }}{% endif %}{% if selected_color %}&color={{ selected_color }}{% endif %}"
-           class="page-btn">‹</a>
-      {% else %}
-        <span class="page-btn disabled">«</span>
-        <span class="page-btn disabled">‹</span>
-      {% endif %}
-
-      {% for num in paginator.page_range %}
-        {% if page_obj.number == num %}
-          <span class="page-btn active">{{ num }}</span>
-        {% elif num > page_obj.number|add:"-3" and num < page_obj.number|add:"3" %}
-          <a href="?page={{ num }}{% if selected_breed %}&breed={{ selected_breed }}{% endif %}{% if selected_sex %}&sex={{ selected_sex }}{% endif %}{% if selected_color %}&color={{ selected_color }}{% endif %}"
-             class="page-btn">{{ num }}</a>
         {% endif %}
-      {% endfor %}
 
-      {% if page_obj.has_next %}
-        <a href="?page={{ page_obj.next_page_number }}{% if selected_breed %}&breed={{ selected_breed }}{% endif %}{% if selected_sex %}&sex={{ selected_sex }}{% endif %}{% if selected_color %}&color={{ selected_color }}{% endif %}"
-           class="page-btn">›</a>
-        <a href="?page={{ paginator.num_pages }}{% if selected_breed %}&breed={{ selected_breed }}{% endif %}{% if selected_sex %}&sex={{ selected_sex }}{% endif %}{% if selected_color %}&color={{ selected_color }}{% endif %}"
-           class="page-btn">»</a>
-      {% else %}
-        <span class="page-btn disabled">›</span>
-        <span class="page-btn disabled">»</span>
-      {% endif %}
+        {% if request.user.is_staff %}
+        <div class="cats-bottom-actions">
+            <a href="{% url 'cat_add' %}" class="button button--primary">+ Katze hinzufügen</a>
+        </div>
+        {% endif %}
 
     </div>
-  {% endif %}
-
-</div>
-
+</section>
 {% endblock %}

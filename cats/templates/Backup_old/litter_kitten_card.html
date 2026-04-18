@@ -1,0 +1,50 @@
+{% load i18n %}
+{% load cats_extras %}
+
+<a href="{% url 'cat_detail' kitten.pk %}" class="kitten-card-link">
+  <div class="kitten-card {% if kitten.sex == 'M' %}kitten-card--male{% else %}kitten-card--female{% endif %}">
+
+    <div class="kitten-card-photo">
+      {% with img=kitten.get_main_image %}
+        {% if img %}
+          <img src="{{ img.image.url }}" alt="{{ kitten.registered_name }}">
+        {% else %}
+          <div class="kitten-no-photo">
+            {% if kitten.sex == "M" %}♂{% else %}♀{% endif %}
+          </div>
+        {% endif %}
+      {% endwith %}
+
+      <div class="kitten-sex-dot {% if kitten.sex == 'M' %}male{% else %}female{% endif %}"></div>
+    </div>
+
+    <div class="kitten-card-body">
+      <div class="kitten-card-name">{{ kitten.registered_name }}</div>
+
+      {% if kitten.call_name %}
+        <div class="kitten-card-callname">«{{ kitten.call_name }}»</div>
+      {% endif %}
+
+      {% if kitten.ems_code %}
+        <div class="kitten-card-ems">{{ kitten.ems_code }}</div>
+      {% endif %}
+
+      {% if location %}
+        <div class="kitten-card-location">
+          <span class="kitten-card-location-icon">📍</span>
+          {{ location }}
+        </div>
+      {% endif %}
+
+      <div class="kitten-card-footer">
+        {% if kitten.pedigree_number %}
+          <span class="cat-tag">{% trans "Родословная" %}</span>
+        {% endif %}
+        {% if not kitten.is_active %}
+          <span class="cat-tag cat-tag--inactive">{% trans "Уехал" %}</span>
+        {% endif %}
+      </div>
+    </div>
+
+  </div>
+</a>

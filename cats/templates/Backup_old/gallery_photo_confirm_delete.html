@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Удалить фото" %} — Vedenika{% endblock %}
+{% block content %}
+<div class="form-page-wrap" style="max-width: 560px;">
+  <div class="confirm-delete-box">
+    <div class="manage-photo-preview-box" style="margin-bottom: 24px;">
+      <img src="{{ photo.image.url }}" alt="{{ photo.title }}" style="max-height: 220px; width: auto; margin: 0 auto; display: block; border-radius: 12px;">
+    </div>
+    <div class="confirm-delete-icon">🗑️</div>
+    <h2 class="confirm-delete-title">{% trans "Удалить фото?" %}</h2>
+    <p class="confirm-delete-desc">
+      {% if photo.title %}
+        <strong>«{{ photo.title }}»</strong> —
+      {% endif %}
+      {% trans "фото будет удалено безвозвратно." %}
+    </p>
+    <div class="form-actions" style="justify-content: center;">
+      <form method="post" style="display: contents;">
+        {% csrf_token %}
+        <button type="submit" class="btn-sq btn-sq-primary" style="background: #a32d2d; border-color: #a32d2d;">
+          {% trans "Да, удалить" %}
+        </button>
+      </form>
+      <a href="{% url 'gallery_album_photos' album.pk %}" class="btn-sq btn-sq-outline">{% trans "Отмена" %}</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

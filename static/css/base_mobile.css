@@ -1,0 +1,155 @@
+/* =========================================================
+   Vedenika mobile overrides
+   ========================================================= */
+
+@media (max-width: 991.98px) {
+    .mobile-menu-toggle {
+        display: inline-grid;
+        place-items: center;
+    }
+
+    .site-header__panel {
+        position: absolute;
+        left: 0.75rem;
+        right: 0.75rem;
+        top: calc(100% + 0.5rem);
+        display: none;
+        padding: 0.9rem;
+        border-radius: 20px;
+        background: rgba(247, 240, 234, 0.98);
+        box-shadow: 0 20px 45px rgba(28, 20, 16, 0.12);
+        border: 1px solid rgba(63, 37, 29, 0.08);
+    }
+
+    .site-header__panel.is-open {
+        display: block;
+    }
+
+    .main-nav {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .main-nav a {
+        text-align: center;
+    }
+
+    .hero-cattery__grid,
+    .feature-panel-grid--balanced,
+    .peek-grid,
+    .character-grid,
+    .care-grid,
+    .about-us-grid,
+    .story-blocks__grid,
+    .facts-grid,
+    .site-footer__grid {
+        grid-template-columns: 1fr;
+    }
+
+    .hero-photo-card,
+    .hero-cattery__panel {
+        min-height: auto;
+        max-height: none;
+    }
+
+    .hero-photo-card {
+        max-height: none;
+    }
+
+    .hero-photo-card__img {
+        height: auto;
+        max-height: none;
+    }
+
+    .hero-cattery__panel {
+        padding: 1.15rem;
+    }
+
+    .hero-cattery__title {
+        font-size: clamp(1.8rem, 8vw, 2.6rem);
+    }
+
+    .peek-card img {
+        max-height: min(42vh, 360px);
+    }
+
+    .gallery-belt {
+        animation-duration: 34s;
+    }
+
+    .gallery-belt__item {
+        height: min(14vh, 110px);
+    }
+
+    .facts-strip {
+        flex-direction: column;
+    }
+
+    .fact-pill {
+        width: 100%;
+    }
+
+    .character-grid-section,
+    .about-us-section {
+        border-radius: 24px;
+        margin: 0.5rem 0 0.9rem;
+    }
+
+    .footer-admin-row {
+        justify-content: flex-start;
+        text-align: left;
+    }
+
+    .admin-floating-link {
+        left: 0.8rem;
+        bottom: 0.8rem;
+        min-height: 42px;
+        padding: 0.65rem 0.9rem;
+        font-size: 0.82rem;
+    }
+
+    .scroll-top {
+        right: 0.8rem;
+        bottom: 0.8rem;
+        width: 48px;
+        height: 48px;
+    }
+
+    .peek-card__title {
+        padding: 0.65rem 0.85rem;
+        font-size: 0.95rem;
+    }
+
+    /* Cats list */
+    .cats-showcase__grid {
+        grid-template-columns: 1fr;
+    }
+
+    .cat-showcase-card__media,
+    .peek-card img {
+        height: auto;
+        max-height: min(42vh, 360px);
+    }
+
+    .cat-showcase-card__body {
+        padding: 0.95rem 0.9rem 0.9rem;
+    }
+
+    .cat-showcase-card__name {
+        font-size: 1.4rem;
+    }
+
+    .cats-bottom-actions {
+        padding-top: 0.9rem;
+    }
+
+    .pagination-wrap {
+        gap: 0.65rem;
+    }
+
+    .pagination-btn,
+    .pagination-current {
+        min-width: 44px;
+        min-height: 44px;
+    }
+}

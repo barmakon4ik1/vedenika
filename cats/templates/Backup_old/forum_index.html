@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "Форум" %} — Vedenika{% endblock %}
+
+{% block content %}
+<div class="forum-wrap">
+
+  <div class="page-header">
+    <div>
+      <div class="eyebrow">Vedenika</div>
+      <h1 class="page-title">{% trans "Форум" %}</h1>
+    </div>
+  </div>
+
+  <!-- Баннер правил -->
+  <div class="forum-rules-banner">
+    <div class="forum-rules-banner-icon">📋</div>
+    <div class="forum-rules-banner-text">
+      {% trans "Общаясь на форуме, вы соглашаетесь с" %}
+      <a href="{% url 'forum_rules' %}">{% trans "правилами форума" %}</a>.
+      {% trans "Политика, межнациональная рознь и оскорбления запрещены." %}
+    </div>
+  </div>
+
+  <div class="forum-categories">
+    {% for category in categories %}
+      <a href="{% url 'forum_category' category.slug %}" class="forum-category-card">
+
+        <div class="forum-category-icon">{{ category.icon|default:"💬" }}</div>
+
+        <div class="forum-category-body">
+          <div class="forum-category-name">{{ category.name }}</div>
+          {% if category.description %}
+            <div class="forum-category-desc">{{ category.description }}</div>
+          {% endif %}
+        </div>
+
+        <div class="forum-category-stats">
+          <div class="forum-stat">
+            <div class="forum-stat-num">{{ category.topics_count }}</div>
+            <div class="forum-stat-label">{% trans "тем" %}</div>
+          </div>
+          {% with last=category.last_post %}
+            {% if last %}
+              <div class="forum-last-post">
+                <div class="forum-last-label">{% trans "Последнее" %}</div>
+                <div class="forum-last-author">{{ last.author.profile.display_name }}</div>
+                <div class="forum-last-time">{{ last.created_at|timesince }} {% trans "назад" %}</div>
+              </div>
+            {% endif %}
+          {% endwith %}
+        </div>
+
+      </a>
+    {% empty %}
+      <div class="empty-state">
+        <div class="empty-state-icon">💬</div>
+        <div class="empty-state-title">{% trans "Форум пока пуст" %}</div>
+        <p class="empty-state-desc">{% trans "Разделы появятся здесь после настройки." %}</p>
+      </div>
+    {% endfor %}
+  </div>
+
+</div>
+{% endblock %}

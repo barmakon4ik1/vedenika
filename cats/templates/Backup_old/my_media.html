@@ -1,0 +1,12 @@
+<h1>My Media</h1>
+
+<a href="/media/upload/">Upload</a>
+
+<ul>
+{% for m in media %}
+    <li>
+        {{ m.file }}
+        <a href="/media/delete/{{ m.id }}/">Delete</a>
+    </li>
+{% endfor %}
+</ul>

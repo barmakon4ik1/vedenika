@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "Редактировать фото" %} — Vedenika{% endblock %}
+
+{% block content %}
+<div class="form-page-wrap">
+
+  <nav class="breadcrumb-warm">
+    <a href="{% url 'gallery_manage' %}">{% trans "Управление галереей" %}</a>
+    <span class="breadcrumb-sep">/</span>
+    <a href="{% url 'gallery_album_photos' album.pk %}">{{ album_title }}</a>
+    <span class="breadcrumb-sep">/</span>
+    <span class="breadcrumb-current">{% trans "Редактировать фото" %}</span>
+  </nav>
+
+  <div class="page-header">
+    <div>
+      <div class="eyebrow">{{ album_title }}</div>
+      <h1 class="page-title">{% trans "Редактировать" %} <em>{% trans "фото" %}</em></h1>
+    </div>
+    <a href="{% url 'gallery_album_photos' album.pk %}" class="btn-sq btn-sq-outline">← {% trans "К альбому" %}</a>
+  </div>
+
+  <div class="manage-photo-edit-layout">
+
+    <!-- Текущее фото -->
+    <div class="manage-photo-preview-box">
+      <img src="{{ photo.image.url }}" alt="{{ photo.title }}">
+    </div>
+
+    <!-- Форма -->
+    <div>
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="form-section">
+          <div class="form-section-header">
+            <div class="form-section-title">{% trans "Данные фото" %}</div>
+          </div>
+          <div class="form-grid">
+
+            <div class="form-field col-full">
+              <label class="form-field-label">{% trans "Заменить изображение" %}</label>
+              {{ form.image }}
+              {% if form.image.errors %}<div class="form-field-errors">{{ form.image.errors }}</div>{% endif %}
+              <div class="form-field-hint">{% trans "Оставьте пустым чтобы сохранить текущее фото." %}</div>
+            </div>
+
+            <div class="form-field col-full">
+              <label class="form-field-label">{% trans "Подпись" %}</label>
+              {{ form.title }}
+              {% if form.title.errors %}<div class="form-field-errors">{{ form.title.errors }}</div>{% endif %}
+            </div>
+
+            <div class="form-field col-full">
+              <label class="form-field-label">{% trans "Ссылка Instagram" %}</label>
+              {{ form.instagram_url }}
+              {% if form.instagram_url.errors %}<div class="form-field-errors">{{ form.instagram_url.errors }}</div>{% endif %}
+            </div>
+
+            <div class="form-field col-wide">
+              <label class="form-field-label">{% trans "Порядок" %}</label>
+              {{ form.sort_order }}
+            </div>
+
+          </div>
+
+          <div class="form-checkboxes" style="margin-top: 18px;">
+            <label class="form-checkbox-card">
+              {{ form.is_active }}
+              <div class="form-checkbox-body">
+                <div class="form-checkbox-title">{% trans "Активно" %}</div>
+                <div class="form-checkbox-desc">{% trans "Фото показывается в галерее" %}</div>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn-warm">{% trans "Сохранить" %}</button>
+          <a href="{% url 'gallery_album_photos' album.pk %}" class="btn-sq btn-sq-muted">{% trans "Отмена" %}</a>
+          <a href="{% url 'gallery_photo_delete' photo.pk %}" class="btn-sq btn-sq-muted" style="margin-left: auto; color: #a32d2d;">
+            {% trans "Удалить фото" %}
+          </a>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

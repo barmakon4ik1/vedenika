@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+{% load cats_extras %}
+
+{% block title %}{% trans "Управление галереей" %} — Vedenika{% endblock %}
+
+{% block content %}
+<div class="form-page-wrap" style="max-width: 960px;">
+
+  <nav class="breadcrumb-warm">
+    <a href="{% url 'home' %}">{% trans "Главная" %}</a>
+    <span class="breadcrumb-sep">/</span>
+    <a href="{% url 'gallery_list' %}">{% trans "Галерея" %}</a>
+    <span class="breadcrumb-sep">/</span>
+    <span class="breadcrumb-current">{% trans "Управление" %}</span>
+  </nav>
+
+  <div class="page-header">
+    <div>
+      <div class="eyebrow">{% trans "Администрирование" %}</div>
+      <h1 class="page-title">{% trans "Галерея" %} <em>{% trans "управление" %}</em></h1>
+    </div>
+    <a href="{% url 'gallery_album_create' %}" class="btn-warm">
+      + {% trans "Создать альбом" %}
+    </a>
+  </div>
+
+  {% if albums %}
+    <div class="manage-albums-list">
+      {% for album in albums %}
+        <div class="manage-album-row">
+
+          <!-- Обложка -->
+          <div class="manage-album-thumb">
+            {% with cover=album.get_cover %}
+              {% if cover %}
+                <img src="{{ cover.url }}" alt="">
+              {% else %}
+                <div class="manage-album-no-thumb">📷</div>
+              {% endif %}
+            {% endwith %}
+          </div>
+
+          <!-- Инфо -->
+          <div class="manage-album-info">
+            <div class="manage-album-title">
+              {{ album|trans_title|default:"— без названия —" }}
+            </div>
+            <div class="manage-album-meta">
+              <span class="cat-tag">{{ album.get_category_display }}</span>
+              {% if album.date %}
+                <span class="manage-album-date">{{ album.date|date:"d.m.Y" }}</span>
+              {% endif %}
+              <span class="manage-album-count">{{ album.photos_count }} {% trans "фото" %}</span>
+              {% if not album.is_active %}
+                <span class="cat-tag cat-tag--inactive">{% trans "Скрыт" %}</span>
+              {% endif %}
+            </div>
+          </div>
+
+          <!-- Действия -->
+          <div class="manage-album-actions">
+            <a href="{% url 'gallery_album_photos' album.pk %}" class="btn-sq btn-sq-outline btn-sm">
+              {% trans "Фото" %}
+            </a>
+            <a href="{% url 'gallery_photo_upload' album.pk %}" class="btn-sq btn-sq-primary btn-sm">
+              + {% trans "Загрузить" %}
+            </a>
+            <a href="{% url 'gallery_album_edit' album.pk %}" class="btn-sq btn-sq-outline btn-sm">
+              {% trans "Изменить" %}
+            </a>
+            <a href="{% url 'gallery_album_delete' album.pk %}" class="btn-sq btn-sq-muted btn-sm">
+              {% trans "Удалить" %}
+            </a>
+          </div>
+
+        </div>
+      {% endfor %}
+    </div>
+
+  {% else %}
+    <div class="empty-state">
+      <div class="empty-state-icon">📷</div>
+      <div class="empty-state-title">{% trans "Альбомов пока нет" %}</div>
+      <p class="empty-state-desc">{% trans "Создайте первый альбом." %}</p>
+      <a href="{% url 'gallery_album_create' %}" class="btn-warm" style="margin-top: 16px; display: inline-block;">
+        + {% trans "Создать альбом" %}
+      </a>
+    </div>
+  {% endif %}
+
+</div>
+{% endblock %}

@@ -1,0 +1,167 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+{% load cats_extras %}
+
+{% block title %}{% trans "Помёт" %} {{ litter.litter_code }} — Vedenika{% endblock %}
+
+{% block content %}
+
+<div class="litter-detail-wrap">
+
+  <!-- BREADCRUMB -->
+  <nav class="breadcrumb-warm">
+    <a href="{% url 'home' %}">{% trans "Главная" %}</a>
+    <span class="breadcrumb-sep">/</span>
+    <a href="{% url 'litter_list' %}">{% trans "Помёты" %}</a>
+    <span class="breadcrumb-sep">/</span>
+    <span class="breadcrumb-current">{% trans "Помёт" %} {{ litter.litter_code }}</span>
+  </nav>
+
+  <!-- PAGE HEADER -->
+  <div class="page-header" style="margin-bottom: 40px;">
+    <div>
+      <div class="eyebrow">
+        {% if is_active %}{% trans "Активный помёт" %}{% else %}{% trans "Помёт завершён" %}{% endif %}
+        · {{ litter.birth_date|date:"Y" }}
+      </div>
+      <h1 class="page-title">
+        {% trans "Помёт" %} <em>«{{ litter.litter_code }}»</em>
+      </h1>
+    </div>
+    <a href="{% url 'litter_list' %}" class="btn-sq btn-sq-outline">← {% trans "Все помёты" %}</a>
+  </div>
+
+  <!-- ===== HERO: PARENTS + STATS ===== -->
+  <div class="litter-hero">
+
+    <!-- Parents -->
+    <div class="litter-hero-parents">
+      <div class="litter-hero-parent">
+        <a href="{% url 'cat_detail' litter.mother.pk %}" class="litter-hero-parent-photo">
+          {% with img=litter.mother.get_main_image %}
+            {% if img %}
+              <img src="{{ img.image.url }}" alt="{{ litter.mother.registered_name }}">
+            {% else %}
+              <div class="litter-hero-no-photo">♀</div>
+            {% endif %}
+          {% endwith %}
+        </a>
+        <div class="litter-hero-parent-role female">{% trans "Мама" %}</div>
+        <a href="{% url 'cat_detail' litter.mother.pk %}" class="litter-hero-parent-name">
+          {{ litter.mother.registered_name }}
+        </a>
+        {% if litter.mother.ems_code %}
+          <div class="litter-hero-parent-ems">{{ litter.mother.ems_code }}</div>
+        {% endif %}
+      </div>
+
+      <div class="litter-hero-cross">
+        <div class="litter-hero-cross-icon">×</div>
+        <div class="litter-hero-cross-date">{{ litter.birth_date|date:"d.m.Y" }}</div>
+      </div>
+
+      <div class="litter-hero-parent">
+        <a href="{% url 'cat_detail' litter.father.pk %}" class="litter-hero-parent-photo">
+          {% with img=litter.father.get_main_image %}
+            {% if img %}
+              <img src="{{ img.image.url }}" alt="{{ litter.father.registered_name }}">
+            {% else %}
+              <div class="litter-hero-no-photo">♂</div>
+            {% endif %}
+          {% endwith %}
+        </a>
+        <div class="litter-hero-parent-role male">{% trans "Папа" %}</div>
+        <a href="{% url 'cat_detail' litter.father.pk %}" class="litter-hero-parent-name">
+          {{ litter.father.registered_name }}
+        </a>
+        {% if litter.father.ems_code %}
+          <div class="litter-hero-parent-ems">{{ litter.father.ems_code }}</div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Stats sidebar -->
+    <div class="litter-hero-stats">
+      <div class="litter-hero-stat">
+        <div class="litter-hero-stat-num">{{ kittens|length }}</div>
+        <div class="litter-hero-stat-label">{% trans "котят всего" %}</div>
+      </div>
+      <div class="litter-hero-stat">
+        <div class="litter-hero-stat-num">{{ males|length }}</div>
+        <div class="litter-hero-stat-label">{% trans "котов" %}</div>
+      </div>
+      <div class="litter-hero-stat">
+        <div class="litter-hero-stat-num">{{ females|length }}</div>
+        <div class="litter-hero-stat-label">{% trans "кошек" %}</div>
+      </div>
+
+      <div class="litter-hero-divider"></div>
+
+      <div class="litter-hero-info-row">
+        <span class="litter-hero-info-label">{% trans "Дата рождения" %}</span>
+        <span class="litter-hero-info-value">{{ litter.birth_date|date:"d.m.Y" }}</span>
+      </div>
+
+      {% if is_active %}
+        <div class="litter-hero-info-row">
+          <span class="litter-hero-info-label">{% trans "Возраст" %}</span>
+          <span class="litter-hero-info-value">
+            {% if age_months < 1 %}
+              {{ age_weeks }} {% trans "нед." %}
+            {% else %}
+              {{ age_months }} {% trans "мес." %}
+            {% endif %}
+          </span>
+        </div>
+      {% endif %}
+
+      {% if litter.cattery %}
+        <div class="litter-hero-info-row">
+          <span class="litter-hero-info-label">{% trans "Питомник" %}</span>
+          <span class="litter-hero-info-value">{{ litter.cattery }}</span>
+        </div>
+      {% endif %}
+
+      {% if litter.remark %}
+        <div class="litter-hero-remark">{{ litter.remark }}</div>
+      {% endif %}
+
+    </div>
+  </div>
+
+  <!-- ===== MALES ===== -->
+  {% if males %}
+    <div class="litter-section">
+      <div class="litter-section-header">
+        <div class="litter-section-title male">♂ {% trans "Коты" %}</div>
+        <div class="litter-section-count">{{ males|length }}</div>
+      </div>
+
+      <div class="litter-kittens-grid">
+        {% for kitten in males %}
+          {% include "litter_kitten_card.html" with kitten=kitten location=kitten_locations|get_item:kitten.pk %}
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
+
+  <!-- ===== FEMALES ===== -->
+  {% if females %}
+    <div class="litter-section">
+      <div class="litter-section-header">
+        <div class="litter-section-title female">♀ {% trans "Кошки" %}</div>
+        <div class="litter-section-count">{{ females|length }}</div>
+      </div>
+
+      <div class="litter-kittens-grid">
+        {% for kitten in females %}
+          {% include "litter_kitten_card.html" with kitten=kitten location=kitten_locations|get_item:kitten.pk %}
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
+
+</div>
+
+{% endblock %}

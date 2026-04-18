@@ -1,0 +1,14 @@
+{% load i18n %}
+
+{% if albums_to_show %}
+  <div class="albums-grid">
+    {% for album in albums_to_show %}
+      {% include "gallery_album_card.html" %}
+    {% endfor %}
+  </div>
+{% else %}
+  <div class="empty-state">
+    <div class="empty-state-icon">📷</div>
+    <div class="empty-state-title">{% trans "Альбомов пока нет" %}</div>
+  </div>
+{% endif %}

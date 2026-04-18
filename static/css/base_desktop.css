@@ -800,125 +800,88 @@ a {
     pointer-events: auto;
 }
 
-/* =========================
-   Responsive
-   ========================= */
+/* =========================================================
+   Cats page cards aligned with home peek cards
+   ========================================================= */
 
-@media (max-width: 991.98px) {
-    .mobile-menu-toggle {
-        display: inline-grid;
-        place-items: center;
-    }
+.cats-landing {
+    padding: 1rem 0 2rem;
+}
 
-    .site-header__panel {
-        position: absolute;
-        left: 0.75rem;
-        right: 0.75rem;
-        top: calc(100% + 0.5rem);
-        display: none;
-        padding: 0.9rem;
-        border-radius: 20px;
-        background: rgba(247, 240, 234, 0.98);
-        box-shadow: 0 20px 45px rgba(28, 20, 16, 0.12);
-        border: 1px solid rgba(63, 37, 29, 0.08);
-    }
+.cats-hero {
+    padding: 0.45rem 0 1.35rem;
+}
 
-    .site-header__panel.is-open {
-        display: block;
-    }
+.cats-hero__content {
+    padding: clamp(1.2rem, 3vw, 2rem);
+    border-radius: var(--radius-lg);
+    background: linear-gradient(180deg, rgba(247,240,234,0.94) 0%, rgba(236,223,213,0.94) 100%);
+    box-shadow: var(--shadow-soft);
+}
 
-    .main-nav {
-        flex-direction: column;
-        align-items: stretch;
-    }
+.cats-peek-section {
+    padding-top: 0.2rem;
+}
 
-    .main-nav a {
-        text-align: center;
-    }
+.peek-grid--cats {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
 
-    .hero-cattery__grid,
-    .feature-panel-grid--balanced,
-    .peek-grid,
-    .character-grid,
-    .care-grid,
-    .about-us-grid,
-    .story-blocks__grid,
-    .facts-grid,
-    .site-footer__grid {
-        grid-template-columns: 1fr;
+@media (min-width: 1500px) {
+    .peek-grid--cats {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
     }
+}
 
-    .hero-photo-card,
-    .hero-cattery__panel {
-        min-height: auto;
-        max-height: none;
-    }
+.peek-grid--cats .peek-card {
+    height: 100%;
+}
 
-    .hero-photo-card {
-        max-height: none;
-    }
+.peek-grid--cats .peek-card img,
+.peek-grid--cats .peek-card__empty {
+    height: 260px;
+    max-height: none;
+}
 
-    .hero-photo-card__img {
-        height: auto;
-        max-height: none;
-    }
+.peek-grid--cats .peek-card--inactive {
+    opacity: 0.92;
+}
 
-    .hero-cattery__panel {
-        padding: 1.15rem;
-    }
+.pagination-wrap {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.85rem;
+    padding-top: 0.3rem;
+    padding-bottom: 0.6rem;
+}
 
-    .hero-cattery__title {
-        font-size: clamp(1.8rem, 8vw, 2.6rem);
-    }
+.pagination-btn,
+.pagination-current {
+    min-width: 48px;
+    min-height: 48px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    font-weight: 700;
+}
 
-    .peek-card img {
-        max-height: min(42vh, 360px);
-    }
+.pagination-btn {
+    background: linear-gradient(180deg, #f3e4da 0%, #ead8cd 100%);
+    color: var(--accent-deeper);
+    box-shadow: 0 8px 18px rgba(90, 57, 42, 0.08);
+}
 
-    .gallery-belt {
-        animation-duration: 34s;
-    }
+.pagination-current {
+    padding: 0 1rem;
+    background: rgba(255,255,255,0.68);
+    color: var(--accent-deep);
+}
 
-    .gallery-belt__item {
-        height: min(14vh, 110px);
-    }
-
-    .facts-strip {
-        flex-direction: column;
-    }
-
-    .fact-pill {
-        width: 100%;
-    }
-
-    .character-grid-section,
-    .about-us-section {
-        border-radius: 24px;
-        margin: 0.5rem 0 0.9rem;
-    }
-
-    .footer-admin-row {
-        justify-content: flex-start;
-        text-align: left;
-    }
-
-    .admin-floating-link {
-        left: 0.8rem;
-        bottom: 0.8rem;
-        min-height: 42px;
-        padding: 0.65rem 0.9rem;
-        font-size: 0.82rem;
-    }
-
-    .scroll-top {
-        right: 0.8rem;
-        bottom: 0.8rem;
-        width: 48px;
-        height: 48px;
-    }
-
-    .peek-card__title {
-        padding: 0.65rem 0.85rem;
-        font-size: 0.95rem;
-    }
+.cats-bottom-actions {
+    display: flex;
+    justify-content: center;
+    padding-top: 0.8rem;
 }

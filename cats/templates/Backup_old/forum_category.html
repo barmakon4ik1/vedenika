@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{{ category.name }} — {% trans "Форум" %} — Vedenika{% endblock %}
+
+{% block content %}
+<div class="forum-wrap">
+
+  <nav class="breadcrumb-warm">
+    <a href="{% url 'forum_index' %}">{% trans "Форум" %}</a>
+    <span class="breadcrumb-sep">/</span>
+    <span class="breadcrumb-current">{{ category.name }}</span>
+  </nav>
+
+  <div class="page-header">
+    <div>
+      <div class="eyebrow">{% trans "Форум" %} · {{ category.icon }}</div>
+      <h1 class="page-title"><em>{{ category.name }}</em></h1>
+      {% if category.description %}
+        <p class="forum-category-intro">{{ category.description }}</p>
+      {% endif %}
+    </div>
+    {% if request.user.is_authenticated %}
+      <a href="{% url 'forum_topic_create' category.slug %}" class="btn-warm">
+        + {% trans "Новая тема" %}
+      </a>
+    {% else %}
+      <a href="{% url 'account_login' %}" class="btn-sq btn-sq-outline">
+        {% trans "Войдите чтобы писать" %}
+      </a>
+    {% endif %}
+  </div>
+
+  {% if topics %}
+    <div class="forum-topics-list">
+      {% for topic in topics %}
+        <a href="{{ topic.get_absolute_url }}" class="forum-topic-row {% if topic.is_pinned %}forum-topic-row--pinned{% endif %}">
+
+          <div class="forum-topic-icon">
+            {% if topic.is_pinned %}📌{% else %}💬{% endif %}
+          </div>
+
+          <div class="forum-topic-body">
+            <div class="forum-topic-title">{{ topic.title }}</div>
+            <div class="forum-topic-meta">
+              <span class="forum-meta-author">{{ topic.author.profile.display_name }}</span>
+              <span class="forum-meta-sep">·</span>
+              <span class="forum-meta-time">{{ topic.created_at|timesince }} {% trans "назад" %}</span>
+            </div>
+          </div>
+
+          <div class="forum-topic-stats">
+            <div class="forum-stat">
+              <div class="forum-stat-num">{{ topic.posts_count }}</div>
+              <div class="forum-stat-label">{% trans "ответов" %}</div>
+            </div>
+            <div class="forum-stat">
+              <div class="forum-stat-num">{{ topic.views_count }}</div>
+              <div class="forum-stat-label">{% trans "просмотров" %}</div>
+            </div>
+          </div>
+
+          {% with last=topic.last_post %}
+            {% if last %}
+              <div class="forum-topic-last">
+                <div class="forum-last-author">{{ last.author.profile.display_name }}</div>
+                <div class="forum-last-time">{{ last.created_at|timesince }} {% trans "назад" %}</div>
+              </div>
+            {% endif %}
+          {% endwith %}
+
+        </a>
+      {% endfor %}
+    </div>
+
+  {% else %}
+    <div class="empty-state">
+      <div class="empty-state-icon">💬</div>
+      <div class="empty-state-title">{% trans "Тем пока нет" %}</div>
+      <p class="empty-state-desc">{% trans "Будьте первым!" %}</p>
+      {% if request.user.is_authenticated %}
+        <a href="{% url 'forum_topic_create' category.slug %}" class="btn-warm" style="margin-top:16px;display:inline-block;">
+          + {% trans "Создать тему" %}
+        </a>
+      {% endif %}
+    </div>
+  {% endif %}
+
+</div>
+{% endblock %}
