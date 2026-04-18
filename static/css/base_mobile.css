@@ -266,3 +266,50 @@
     }
 }
 
+/* =========================
+   LITTER MOBILE
+   ========================= */
+
+.litter-card {
+    grid-template-columns: 1fr;
+}
+
+.litter-card-stats {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.5rem;
+}
+
+.litter-kittens-strip {
+    flex-wrap: wrap;
+}
+
+/* =========================
+   Litter list compact mobile
+   ========================= */
+
+@media (max-width: 991.98px) {
+    .litters-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .litter-card-compact__media img,
+    .litter-card-compact__empty {
+        height: 240px;
+    }
+
+    .litter-card-compact__body {
+        padding: 0.95rem;
+    }
+
+    .litter-card-compact__title {
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-end;
+        gap: 0.2rem;
+    }
+
+    .litter-card-compact__date {
+        white-space: normal;
+    }
+}

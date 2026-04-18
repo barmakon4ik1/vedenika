@@ -445,6 +445,14 @@ class LitterListView(ListView):
             # Помёт считается активным, пока галочка стоит
             is_active = litter.is_active
 
+            album = (
+                litter.gallery_albums
+                .filter(is_active=True, category=GalleryAlbum.Category.LITTER)
+                .first()
+            )
+
+            card_image = album.get_cover() if album else None
+
             litters_data.append({
                 "litter":     litter,
                 "kittens":    kittens,
@@ -452,7 +460,10 @@ class LitterListView(ListView):
                 "females":    females,
                 "age_months": age_months,
                 "is_active":  is_active,
+                "card_image": card_image,
             })
+
+
 
         context["litters_data"] = litters_data
         return context

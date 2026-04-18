@@ -1,128 +1,120 @@
 {% extends "base.html" %}
 {% load static %}
-{% load i18n %}
 
-{% block title %}{% trans "Помёты" %} — Vedenika{% endblock %}
+{% block title %}Würfe — Vedenika{% endblock %}
 
 {% block content %}
 
-<div class="litters-wrap">
+<section class="litters-page">
+  <div class="container">
 
-  <!-- PAGE HEADER -->
-  <div class="page-header">
-    <div>
-      <div class="eyebrow">{% trans "Питомник Vedenika" %}</div>
-      <h1 class="page-title">{% trans "Наши" %} <em>{% trans "помёты" %}</em></h1>
+    <div class="cats-hero">
+      <div class="cats-hero__content">
+{#        <div class="hero-cattery__eyebrow">Vedenika Maine Coon Cattery</div>#}
+        <h1 class="hero-cattery__title">Unsere Würfe</h1>
+{#        <p class="hero-cattery__lead">#}
+{#          Ein Überblick über unsere Würfe, Elternpaare und Kitten.#}
+{#        </p>#}
+      </div>
     </div>
-  </div>
 
-  <!-- LITTERS TIMELINE -->
-  <div class="litters-timeline">
-    {% for item in litters_data %}
-      {% with litter=item.litter %}
-
-      <div class="litter-card {% if item.is_active %}litter-card--active{% endif %}">
-
-        <!-- LEFT: LETTER & META -->
-        <div class="litter-card-aside">
-          <div class="litter-letter">{{ litter.litter_code|first }}</div>
-          <div class="litter-meta-date">{{ litter.birth_date|date:"d.m.Y" }}</div>
-          {% if item.is_active %}
-            <div class="litter-badge litter-badge--active">{% trans "Активный" %}</div>
-          {% else %}
-            <div class="litter-badge litter-badge--past">{% trans "Завершён" %}</div>
-          {% endif %}
-        </div>
-
-        <!-- CENTER: PARENTS + KITTENS PREVIEW -->
-        <div class="litter-card-main">
-
-          <!-- Parents -->
-          <div class="litter-parents">
-            <a href="{% url 'cat_detail' litter.mother.pk %}" class="litter-parent">
-              {% with img=litter.mother.get_main_image %}
-                {% if img %}
-                  <img src="{{ img.image.url }}" alt="{{ litter.mother.registered_name }}">
+    <section class="litters-showcase">
+      {% if litters_data %}
+        <div class="litters-grid">
+          {% for item in litters_data %}
+            {% with litter=item.litter %}
+            <article class="litter-card-compact {% if item.is_active %}litter-card-compact--active{% else %}litter-card-compact--past{% endif %}">
+              <a href="{% url 'litter_detail' litter.pk %}" class="litter-card-compact__media">
+                {% if item.card_image %}
+                  <img src="{{ item.card_image.url }}" alt="{{ litter.litter_code }}">
+                {% elif litter.mother and litter.mother.get_main_image %}
+                  <img src="{{ litter.mother.get_main_image.image.url }}" alt="{{ litter.litter_code }}">
+                {% elif litter.father and litter.father.get_main_image %}
+                  <img src="{{ litter.father.get_main_image.image.url }}" alt="{{ litter.litter_code }}">
                 {% else %}
-                  <div class="litter-parent-no-img">♀</div>
+                  <div class="litter-card-compact__empty">🐾</div>
                 {% endif %}
-              {% endwith %}
-              <div class="litter-parent-name">{{ litter.mother.registered_name }}</div>
-              <div class="litter-parent-role">{% trans "Мама" %}</div>
-            </a>
 
-            <div class="litter-parents-x">×</div>
+                <div class="litter-card-compact__title">
+                  <span class="litter-card-compact__code">{{ litter.litter_code }}</span>
+                  <span class="litter-card-compact__date">{{ litter.birth_date|date:"d.m.Y" }}</span>
+                </div>
 
-            <a href="{% url 'cat_detail' litter.father.pk %}" class="litter-parent">
-              {% with img=litter.father.get_main_image %}
-                {% if img %}
-                  <img src="{{ img.image.url }}" alt="{{ litter.father.registered_name }}">
+                {% if item.is_active %}
+                  <span class="litter-card-compact__badge litter-card-compact__badge--active">Aktiv</span>
                 {% else %}
-                  <div class="litter-parent-no-img">♂</div>
+                  <span class="litter-card-compact__badge litter-card-compact__badge--past">Abgeschlossen</span>
                 {% endif %}
-              {% endwith %}
-              <div class="litter-parent-name">{{ litter.father.registered_name }}</div>
-              <div class="litter-parent-role">{% trans "Папа" %}</div>
-            </a>
-          </div>
+              </a>
 
-          <!-- Kittens preview strip -->
-          {% if item.kittens %}
-            <div class="litter-kittens-strip">
-              {% for kitten in item.kittens|slice:":6" %}
-                <a href="{% url 'cat_detail' kitten.pk %}" class="litter-kitten-thumb {% if kitten.sex == 'M' %}litter-kitten-thumb--male{% else %}litter-kitten-thumb--female{% endif %}">
-                  {% with img=kitten.get_main_image %}
-                    {% if img %}
-                      <img src="{{ img.image.url }}" alt="{{ kitten.registered_name }}">
-                    {% else %}
-                      <div class="litter-kitten-no-img">
-                        {% if kitten.sex == "M" %}♂{% else %}♀{% endif %}
-                      </div>
+              <div class="litter-card-compact__body">
+
+                <div class="litter-card-compact__parents">
+                  <span class="litter-card-compact__parent litter-card-compact__parent--female">
+                    ♀ {{ litter.mother.call_name|default:litter.mother.registered_name }}
+                  </span>
+                  <span class="litter-card-compact__cross">×</span>
+                  <span class="litter-card-compact__parent litter-card-compact__parent--male">
+                    ♂ {{ litter.father.call_name|default:litter.father.registered_name }}
+                  </span>
+                </div>
+
+                {% if item.kittens %}
+                  <div class="litter-card-compact__kittens">
+                    {% for kitten in item.kittens|slice:":6" %}
+                      <a href="{% url 'cat_detail' kitten.pk %}" class="litter-card-compact__kitten-thumb">
+                        {% with img=kitten.get_main_image %}
+                          {% if img %}
+                            <img src="{{ img.image.url }}" alt="{{ kitten.registered_name }}">
+                          {% else %}
+                            <div class="litter-card-compact__kitten-empty">
+                              {% if kitten.sex == "M" %}♂{% else %}♀{% endif %}
+                            </div>
+                          {% endif %}
+                        {% endwith %}
+                      </a>
+                    {% endfor %}
+                    {% if item.kittens|length > 6 %}
+                      <a href="{% url 'litter_detail' litter.pk %}" class="litter-card-compact__kitten-more">
+                        +{{ item.kittens|length|add:"-6" }}
+                      </a>
                     {% endif %}
-                  {% endwith %}
-                </a>
-              {% endfor %}
-              {% if item.kittens|length > 6 %}
-                <a href="{% url 'litter_detail' litter.pk %}" class="litter-kitten-more">
-                  +{{ item.kittens|length|add:"-6" }}
-                </a>
-              {% endif %}
-            </div>
-          {% endif %}
+                  </div>
+                {% endif %}
 
+                <div class="litter-card-compact__stats">
+                  <div class="litter-card-compact__stat">
+                    <strong>{{ item.kittens|length }}</strong>
+                    <span>Kitten</span>
+                  </div>
+                  <div class="litter-card-compact__stat">
+                    <strong>{{ item.males|length }}</strong>
+                    <span>Kater</span>
+                  </div>
+                  <div class="litter-card-compact__stat">
+                    <strong>{{ item.females|length }}</strong>
+                    <span>Katzen</span>
+                  </div>
+                </div>
+
+                <div class="litter-card-compact__actions">
+                  <a href="{% url 'litter_detail' litter.pk %}" class="button button--secondary">Mehr erfahren</a>
+                </div>
+              </div>
+            </article>
+            {% endwith %}
+          {% endfor %}
         </div>
-
-        <!-- RIGHT: STATS + LINK -->
-        <div class="litter-card-stats">
-          <div class="litter-stat">
-            <div class="litter-stat-num">{{ item.kittens|length }}</div>
-            <div class="litter-stat-label">{% trans "котят" %}</div>
-          </div>
-          <div class="litter-stat">
-            <div class="litter-stat-num">{{ item.males|length }}</div>
-            <div class="litter-stat-label">{% trans "котов" %}</div>
-          </div>
-          <div class="litter-stat">
-            <div class="litter-stat-num">{{ item.females|length }}</div>
-            <div class="litter-stat-label">{% trans "кошек" %}</div>
-          </div>
-
-          <a href="{% url 'litter_detail' litter.pk %}" class="litter-detail-btn">
-            {% trans "Подробнее" %} →
-          </a>
+      {% else %}
+        <div class="empty-state">
+          <div class="empty-state-icon">🐾</div>
+          <div class="empty-state-title">Noch keine Würfe</div>
+          <p class="empty-state-desc">Informationen zu unseren Würfen erscheinen hier.</p>
         </div>
+      {% endif %}
+    </section>
 
-      </div>
-      {% endwith %}
-    {% empty %}
-      <div class="empty-state">
-        <div class="empty-state-icon">🐾</div>
-        <div class="empty-state-title">{% trans "Помётов пока нет" %}</div>
-        <p class="empty-state-desc">{% trans "Информация о помётах появится здесь." %}</p>
-      </div>
-    {% endfor %}
   </div>
-
-</div>
+</section>
 
 {% endblock %}

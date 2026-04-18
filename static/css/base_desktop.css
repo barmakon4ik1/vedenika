@@ -1644,3 +1644,330 @@ a {
   letter-spacing: 1px;
   z-index: 1001;
 }
+
+/* =========================
+   LITTER LIST – NEW STYLE
+   ========================= */
+
+.litter-card {
+    display: grid;
+    grid-template-columns: 120px 1fr 160px;
+    gap: 1.2rem;
+    padding: 1.2rem;
+    border-radius: 26px;
+    background: linear-gradient(180deg, #f8efea 0%, #f0e2d8 100%);
+    box-shadow: var(--shadow-soft);
+    margin-bottom: 1.2rem;
+}
+
+.litter-card--active {
+    outline: 2px solid rgba(120, 150, 110, 0.25);
+}
+
+.litter-letter {
+    font-family: "Cormorant Garamond", serif;
+    font-size: 2.6rem;
+    color: var(--accent-deep);
+}
+
+.litter-meta-date {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.litter-badge {
+    margin-top: 0.5rem;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 0.7rem;
+    font-weight: 700;
+}
+
+.litter-badge--active {
+    background: #4a7a5a;
+    color: #fff;
+}
+
+.litter-badge--past {
+    background: #ddd;
+    color: #666;
+}
+
+/* parents */
+.litter-parent img,
+.litter-parent-no-img {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+    margin: 0 auto;
+    background: var(--bg-soft);
+    border: 2px solid rgba(63, 37, 29, 0.08);
+}
+
+.litter-parent-no-img {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-soft);
+    font-size: 1.2rem;
+}
+
+.litter-parent-name {
+    margin-top: 0.45rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    line-height: 1.2;
+    text-align: center;
+    color: var(--text-main);
+    max-width: 86px;
+}
+
+.litter-parent-role {
+    margin-top: 0.15rem;
+    font-size: 0.68rem;
+    color: var(--text-soft);
+    text-align: center;
+}
+
+/* kittens */
+.litter-kitten-thumb img {
+    width: 52px;
+    height: 52px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+/* stats */
+.litter-stat-num {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--accent-deep);
+}
+
+.litter-stat-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+/* button align */
+.litter-detail-btn {
+    margin-top: 0.6rem;
+}
+
+/* =========================
+   Litter list compact cards
+   ========================= */
+
+.litters-page {
+    padding: 1rem 0 2rem;
+}
+
+.litters-showcase {
+    padding-top: 0.2rem;
+}
+
+.litters-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+@media (min-width: 1500px) {
+    .litters-grid {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+}
+
+.litter-card-compact {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    border-radius: 24px;
+    overflow: hidden;
+    background: linear-gradient(180deg, #f8efea 0%, #f0e2d8 100%);
+    box-shadow: var(--shadow-soft);
+    border: 1px solid rgba(63, 37, 29, 0.05);
+}
+
+.litter-card-compact__media {
+    position: relative;
+    display: block;
+    text-decoration: none;
+    background: linear-gradient(180deg, #2e211c 0%, #1e1512 100%);
+}
+
+.litter-card-compact__media img {
+    display: block;
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    object-position: center;
+}
+
+.litter-card-compact__empty {
+    height: 250px;
+    display: grid;
+    place-items: center;
+    color: #d8c7bd;
+    font-size: 2rem;
+}
+
+.litter-card-compact__title {
+    position: absolute;
+    left: 0.75rem;
+    right: 0.75rem;
+    bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    min-height: 44px;
+    padding: 0.7rem 0.9rem;
+    border-radius: 18px;
+    background: linear-gradient(180deg, rgba(20,14,12,0.22) 0%, rgba(20,14,12,0.72) 100%);
+    color: #fff;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.12);
+}
+
+.litter-card-compact__code {
+    font-family: "Cormorant Garamond", serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.litter-card-compact__date {
+    font-size: 0.82rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.litter-card-compact__badge {
+    position: absolute;
+    top: 0.75rem;
+    left: 0.75rem;
+    display: inline-flex;
+    align-items: center;
+    min-height: 34px;
+    padding: 0.4rem 0.7rem;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 700;
+}
+
+.litter-card-compact__badge--active {
+    background: rgba(61, 122, 78, 0.88);
+    color: #fff;
+}
+
+.litter-card-compact__badge--past {
+    background: rgba(24, 17, 14, 0.72);
+    color: rgba(255,255,255,0.9);
+}
+
+.litter-card-compact__body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    padding: 1rem;
+}
+
+.litter-card-compact__parents {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    flex-wrap: wrap;
+    text-align: center;
+}
+
+.litter-card-compact__parent {
+    font-size: 0.9rem;
+    font-weight: 700;
+    line-height: 1.35;
+}
+
+.litter-card-compact__parent--female {
+    color: #8c3e59;
+}
+
+.litter-card-compact__parent--male {
+    color: #3f5a83;
+}
+
+.litter-card-compact__cross {
+    color: var(--text-soft);
+    font-weight: 700;
+}
+
+.litter-card-compact__kittens {
+    display: flex;
+    gap: 0.45rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.litter-card-compact__kitten-thumb,
+.litter-card-compact__kitten-more {
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    overflow: hidden;
+    display: block;
+    text-decoration: none;
+    box-shadow: 0 4px 12px rgba(28, 20, 16, 0.08);
+}
+
+.litter-card-compact__kitten-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.litter-card-compact__kitten-empty,
+.litter-card-compact__kitten-more {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(180deg, #ead8cd 0%, #e1cabc 100%);
+    color: var(--accent-deep);
+    font-weight: 700;
+    font-size: 0.82rem;
+}
+
+.litter-card-compact__stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.55rem;
+}
+
+.litter-card-compact__stat {
+    padding: 0.65rem 0.45rem;
+    border-radius: 16px;
+    text-align: center;
+    background: rgba(255,255,255,0.48);
+    border: 1px solid rgba(63, 37, 29, 0.06);
+}
+
+.litter-card-compact__stat strong {
+    display: block;
+    color: var(--accent-deep);
+    font-size: 1.05rem;
+    line-height: 1.1;
+}
+
+.litter-card-compact__stat span {
+    display: block;
+    margin-top: 0.15rem;
+    color: var(--text-soft);
+    font-size: 0.76rem;
+}
+
+.litter-card-compact__actions {
+    display: flex;
+    justify-content: center;
+    padding-top: 0.1rem;
+}
