@@ -1904,21 +1904,31 @@ a {
 }
 
 .litter-card-compact__kittens {
-    display: flex;
-    gap: 0.45rem;
-    flex-wrap: wrap;
-    justify-content: center;
+    display: inline-grid;
+    grid-template-rows: repeat(2, 42px);
+    grid-auto-columns: 42px;
+    grid-auto-flow: column;
+    gap: 6px;
+
+    width: max-content;
+    margin: 0 auto;
+
+    justify-content: start;
+    align-content: start;
 }
 
-.litter-card-compact__kitten-thumb,
-.litter-card-compact__kitten-more {
-    width: 42px;
-    height: 42px;
-    border-radius: 10px;
-    overflow: hidden;
-    display: block;
-    text-decoration: none;
-    box-shadow: 0 4px 12px rgba(28, 20, 16, 0.08);
+.litter-card-compact__kittens {
+    display: inline-grid;
+    grid-template-rows: repeat(2, 42px);
+    grid-auto-columns: 42px;
+    grid-auto-flow: column;
+    gap: 6px;
+
+    width: max-content;
+    margin: 0 auto;
+
+    justify-content: start;
+    align-content: start;
 }
 
 .litter-card-compact__kitten-thumb img {

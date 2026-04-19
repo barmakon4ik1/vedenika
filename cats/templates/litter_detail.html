@@ -3,165 +3,260 @@
 {% load i18n %}
 {% load cats_extras %}
 
-{% block title %}{% trans "Помёт" %} {{ litter.litter_code }} — Vedenika{% endblock %}
+{% block title %}{% trans "Wurf" %} {{ litter.litter_code }} — Vedenika{% endblock %}
 
 {% block content %}
+<section class="cat-detail-page">
+  <div class="container">
 
-<div class="litter-detail-wrap">
+    <nav class="detail-breadcrumb" aria-label="{% trans 'Breadcrumb' %}">
+      <a href="{% url 'home' %}">{% trans "Startseite" %}</a>
+      <span class="detail-breadcrumb__sep">/</span>
+      <a href="{% url 'litter_list' %}">{% trans "Würfe" %}</a>
+      <span class="detail-breadcrumb__sep">/</span>
+      <span class="detail-breadcrumb__current">
+        {% trans "Wurf" %} {{ litter.litter_code }} {{ litter.birth_date|date:"Y" }}
+      </span>
+    </nav>
 
-  <!-- BREADCRUMB -->
-  <nav class="breadcrumb-warm">
-    <a href="{% url 'home' %}">{% trans "Главная" %}</a>
-    <span class="breadcrumb-sep">/</span>
-    <a href="{% url 'litter_list' %}">{% trans "Помёты" %}</a>
-    <span class="breadcrumb-sep">/</span>
-    <span class="breadcrumb-current">{% trans "Помёт" %} {{ litter.litter_code }}</span>
-  </nav>
+    <div class="cat-detail-layout">
 
-  <!-- PAGE HEADER -->
-  <div class="page-header" style="margin-bottom: 40px;">
-    <div>
-      <div class="eyebrow">
-        {% if is_active %}{% trans "Активный помёт" %}{% else %}{% trans "Помёт завершён" %}{% endif %}
-        · {{ litter.birth_date|date:"Y" }}
-      </div>
-      <h1 class="page-title">
-        {% trans "Помёт" %} <em>«{{ litter.litter_code }}»</em>
-      </h1>
-    </div>
-    <a href="{% url 'litter_list' %}" class="btn-sq btn-sq-outline">← {% trans "Все помёты" %}</a>
-  </div>
+      <!-- Левая колонка -->
+      <div class="cat-detail-media-column">
 
-  <!-- ===== HERO: PARENTS + STATS ===== -->
-  <div class="litter-hero">
+        <!-- Большое фото помета -->
+        <div class="cat-detail-main-photo-card">
+            <div class="cat-detail-main-photo-card">
+              <a href="{% url 'litter_detail' litter.pk %}" class="cat-detail-main-photo-link">
 
-    <!-- Parents -->
-    <div class="litter-hero-parents">
-      <div class="litter-hero-parent">
-        <a href="{% url 'cat_detail' litter.mother.pk %}" class="litter-hero-parent-photo">
-          {% with img=litter.mother.get_main_image %}
-            {% if img %}
-              <img src="{{ img.image.url }}" alt="{{ litter.mother.registered_name }}">
-            {% else %}
-              <div class="litter-hero-no-photo">♀</div>
-            {% endif %}
-          {% endwith %}
-        </a>
-        <div class="litter-hero-parent-role female">{% trans "Мама" %}</div>
-        <a href="{% url 'cat_detail' litter.mother.pk %}" class="litter-hero-parent-name">
-          {{ litter.mother.registered_name }}
-        </a>
-        {% if litter.mother.ems_code %}
-          <div class="litter-hero-parent-ems">{{ litter.mother.ems_code }}</div>
-        {% endif %}
-      </div>
-
-      <div class="litter-hero-cross">
-        <div class="litter-hero-cross-icon">×</div>
-        <div class="litter-hero-cross-date">{{ litter.birth_date|date:"d.m.Y" }}</div>
-      </div>
-
-      <div class="litter-hero-parent">
-        <a href="{% url 'cat_detail' litter.father.pk %}" class="litter-hero-parent-photo">
-          {% with img=litter.father.get_main_image %}
-            {% if img %}
-              <img src="{{ img.image.url }}" alt="{{ litter.father.registered_name }}">
-            {% else %}
-              <div class="litter-hero-no-photo">♂</div>
-            {% endif %}
-          {% endwith %}
-        </a>
-        <div class="litter-hero-parent-role male">{% trans "Папа" %}</div>
-        <a href="{% url 'cat_detail' litter.father.pk %}" class="litter-hero-parent-name">
-          {{ litter.father.registered_name }}
-        </a>
-        {% if litter.father.ems_code %}
-          <div class="litter-hero-parent-ems">{{ litter.father.ems_code }}</div>
-        {% endif %}
-      </div>
-    </div>
-
-    <!-- Stats sidebar -->
-    <div class="litter-hero-stats">
-      <div class="litter-hero-stat">
-        <div class="litter-hero-stat-num">{{ kittens|length }}</div>
-        <div class="litter-hero-stat-label">{% trans "котят всего" %}</div>
-      </div>
-      <div class="litter-hero-stat">
-        <div class="litter-hero-stat-num">{{ males|length }}</div>
-        <div class="litter-hero-stat-label">{% trans "котов" %}</div>
-      </div>
-      <div class="litter-hero-stat">
-        <div class="litter-hero-stat-num">{{ females|length }}</div>
-        <div class="litter-hero-stat-label">{% trans "кошек" %}</div>
-      </div>
-
-      <div class="litter-hero-divider"></div>
-
-      <div class="litter-hero-info-row">
-        <span class="litter-hero-info-label">{% trans "Дата рождения" %}</span>
-        <span class="litter-hero-info-value">{{ litter.birth_date|date:"d.m.Y" }}</span>
-      </div>
-
-      {% if is_active %}
-        <div class="litter-hero-info-row">
-          <span class="litter-hero-info-label">{% trans "Возраст" %}</span>
-          <span class="litter-hero-info-value">
-            {% if age_months < 1 %}
-              {{ age_weeks }} {% trans "нед." %}
-            {% else %}
-              {{ age_months }} {% trans "мес." %}
-            {% endif %}
-          </span>
+                 {% if card_image %}
+                    {% if album %}
+                      <a href="{% url 'gallery_album' album.pk %}" class="cat-detail-main-photo-link">
+                        <img src="{{ card_image.url }}" alt="{{ litter.litter_code }}" class="cat-detail-main-photo">
+                        <span class="cat-detail-main-photo-overlay">{% trans "Galerie ansehen" %} →</span>
+                      </a>
+                    {% else %}
+                      <img src="{{ card_image.url }}" alt="{{ litter.litter_code }}" class="cat-detail-main-photo">
+                    {% endif %}
+                  {% else %}
+                    <div class="cat-detail-main-photo-empty">
+                      <div class="cat-detail-main-photo-empty__icon">🐾</div>
+                      <div class="cat-detail-main-photo-empty__text">{% trans "Noch kein Foto" %}</div>
+                    </div>
+                  {% endif %}
+              </a>
+            </div>
         </div>
-      {% endif %}
 
-      {% if litter.cattery %}
-        <div class="litter-hero-info-row">
-          <span class="litter-hero-info-label">{% trans "Питомник" %}</span>
-          <span class="litter-hero-info-value">{{ litter.cattery }}</span>
+        <!-- Родители -->
+        <div class="cat-detail-strip-card">
+          <div class="cat-detail-strip-card__header">
+            <div class="cat-detail-strip-card__title">{% trans "Eltern" %}</div>
+            <a href="{% url 'litter_list' %}" class="cat-detail-strip-card__link">
+              {% trans "Alle Würfe" %} →
+            </a>
+          </div>
+
+          <div class="peek-grid">
+            <a class="peek-card" href="{% url 'cat_detail' litter.mother.pk %}">
+              {% with img=litter.mother.get_main_image %}
+                {% if img %}
+                  <img src="{{ img.image.url }}" alt="{{ litter.mother.call_name|default:litter.mother.registered_name }}">
+                {% else %}
+                  <div class="peek-card__empty">♀</div>
+                {% endif %}
+              {% endwith %}
+              <span class="peek-card__title">
+                ♀ {{ litter.mother.call_name|default:litter.mother.registered_name }}
+              </span>
+            </a>
+
+            <a class="peek-card" href="{% url 'cat_detail' litter.father.pk %}">
+              {% with img=litter.father.get_main_image %}
+                {% if img %}
+                  <img src="{{ img.image.url }}" alt="{{ litter.father.call_name|default:litter.father.registered_name }}">
+                {% else %}
+                  <div class="peek-card__empty">♂</div>
+                {% endif %}
+              {% endwith %}
+              <span class="peek-card__title">
+                ♂ {{ litter.father.call_name|default:litter.father.registered_name }}
+              </span>
+            </a>
+          </div>
         </div>
-      {% endif %}
 
-      {% if litter.remark %}
-        <div class="litter-hero-remark">{{ litter.remark }}</div>
-      {% endif %}
+      </div>
 
+      <!-- Правая колонка -->
+      <div class="cat-detail-info-column">
+
+        <div class="cat-detail-intro-card">
+{#          {% if is_active %}#}
+{#            <div class="cat-detail-sex-badge cat-detail-sex-badge--female">#}
+{#              {% trans "Aktiv" %}#}
+{#            </div>#}
+{#          {% else %}#}
+{#            <div class="cat-detail-sex-badge">#}
+{#              {% trans "Abgeschlossen" %}#}
+{#            </div>#}
+{#          {% endif %}#}
+
+          <h1 class="cat-detail-title">{% trans "Wurf" %} {{ litter.litter_code }}</h1>
+
+          <div class="cat-detail-subtitle">
+            {{ litter.birth_date|date:"d.m.Y" }}
+            {% if litter.cattery %} · {{ litter.cattery }}{% endif %}
+          </div>
+
+          {% if litter.remark %}
+            <div class="cat-detail-registered-name">{{ litter.remark }}</div>
+          {% endif %}
+        </div>
+
+        <div class="cat-detail-info-card">
+          <div class="cat-detail-section-title">{% trans "Übersicht" %}</div>
+          <div class="cat-detail-fields-grid">
+            <div class="cat-detail-field">
+              <div class="cat-detail-field-label">{% trans "Geburtsdatum" %}</div>
+              <div class="cat-detail-field-value">{{ litter.birth_date|date:"d.m.Y" }}</div>
+            </div>
+
+            <div class="cat-detail-field">
+              <div class="cat-detail-field-label">{% trans "Kitten gesamt" %}</div>
+              <div class="cat-detail-field-value">{{ kittens|length }}</div>
+            </div>
+
+            <div class="cat-detail-field">
+              <div class="cat-detail-field-label">{% trans "Kater" %}</div>
+              <div class="cat-detail-field-value">{{ males|length }}</div>
+            </div>
+
+            <div class="cat-detail-field">
+              <div class="cat-detail-field-label">{% trans "Katzen" %}</div>
+              <div class="cat-detail-field-value">{{ females|length }}</div>
+            </div>
+
+            {% if is_active %}
+              <div class="cat-detail-field">
+                <div class="cat-detail-field-label">{% trans "Alter" %}</div>
+                <div class="cat-detail-field-value">
+                  {% if age_months < 1 %}
+                    {{ age_weeks }} {% trans "Wo." %}
+                  {% else %}
+                    {{ age_months }} {% trans "Mon." %}
+                  {% endif %}
+                </div>
+              </div>
+            {% endif %}
+
+            <div class="cat-detail-field">
+              <div class="cat-detail-field-label">{% trans "Zuchtstätte" %}</div>
+              <div class="cat-detail-field-value {% if not litter.cattery %}is-empty{% endif %}">
+                {{ litter.cattery|default:"—" }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="cat-detail-info-card">
+          <div class="cat-detail-section-title">{% trans "Elternpaar" %}</div>
+          <div class="cat-detail-fields-grid">
+            <div class="cat-detail-field">
+              <div class="cat-detail-field-label">{% trans "Mutter" %}</div>
+              <div class="cat-detail-field-value">
+                <a href="{% url 'cat_detail' litter.mother.pk %}">
+                  {{ litter.mother.registered_name }}
+                </a>
+              </div>
+            </div>
+
+            <div class="cat-detail-field">
+              <div class="cat-detail-field-label">{% trans "EMS Mutter" %}</div>
+              <div class="cat-detail-field-value {% if not litter.mother.ems_code %}is-empty{% endif %}">
+                {{ litter.mother.ems_code|default:"—" }}
+              </div>
+            </div>
+
+            <div class="cat-detail-field">
+              <div class="cat-detail-field-label">{% trans "Vater" %}</div>
+              <div class="cat-detail-field-value">
+                <a href="{% url 'cat_detail' litter.father.pk %}">
+                  {{ litter.father.registered_name }}
+                </a>
+              </div>
+            </div>
+
+            <div class="cat-detail-field">
+              <div class="cat-detail-field-label">{% trans "EMS Vater" %}</div>
+              <div class="cat-detail-field-value {% if not litter.father.ems_code %}is-empty{% endif %}">
+                {{ litter.father.ems_code|default:"—" }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="cat-detail-admin-actions">
+          <a href="{% url 'litter_list' %}" class="button button--secondary">
+            {% trans "Alle Würfe" %}
+          </a>
+        </div>
+
+      </div>
     </div>
+
+    {% if males %}
+      <section class="cattery-peek cats-peek-section">
+        <div class="section-heading section-heading--compact">
+          <div class="section-heading__eyebrow">♂ {% trans "Kater" %}</div>
+          <h2>{% trans "Kater aus diesem Wurf" %}</h2>
+        </div>
+
+        <div class="peek-grid peek-grid--cats">
+          {% for kitten in males %}
+            <a class="peek-card" href="{% url 'cat_detail' kitten.pk %}">
+              {% with img=kitten.get_main_image %}
+                {% if img %}
+                  <img src="{{ img.image.url }}" alt="{{ kitten.call_name|default:kitten.registered_name }}">
+                {% else %}
+                  <div class="peek-card__empty">♂</div>
+                {% endif %}
+              {% endwith %}
+              <span class="peek-card__title">
+                {{ kitten.call_name|default:kitten.registered_name }}
+              </span>
+            </a>
+          {% endfor %}
+        </div>
+      </section>
+    {% endif %}
+
+    {% if females %}
+      <section class="cattery-peek cats-peek-section">
+        <div class="section-heading section-heading--compact">
+          <div class="section-heading__eyebrow">♀ {% trans "Katzen" %}</div>
+          <h2>{% trans "Katzen aus diesem Wurf" %}</h2>
+        </div>
+
+        <div class="peek-grid peek-grid--cats">
+          {% for kitten in females %}
+            <a class="peek-card" href="{% url 'cat_detail' kitten.pk %}">
+              {% with img=kitten.get_main_image %}
+                {% if img %}
+                  <img src="{{ img.image.url }}" alt="{{ kitten.call_name|default:kitten.registered_name }}">
+                {% else %}
+                  <div class="peek-card__empty">♀</div>
+                {% endif %}
+              {% endwith %}
+              <span class="peek-card__title">
+                {{ kitten.call_name|default:kitten.registered_name }}
+              </span>
+            </a>
+          {% endfor %}
+        </div>
+      </section>
+    {% endif %}
+
   </div>
-
-  <!-- ===== MALES ===== -->
-  {% if males %}
-    <div class="litter-section">
-      <div class="litter-section-header">
-        <div class="litter-section-title male">♂ {% trans "Коты" %}</div>
-        <div class="litter-section-count">{{ males|length }}</div>
-      </div>
-
-      <div class="litter-kittens-grid">
-        {% for kitten in males %}
-          {% include "litter_kitten_card.html" with kitten=kitten location=kitten_locations|get_item:kitten.pk %}
-        {% endfor %}
-      </div>
-    </div>
-  {% endif %}
-
-  <!-- ===== FEMALES ===== -->
-  {% if females %}
-    <div class="litter-section">
-      <div class="litter-section-header">
-        <div class="litter-section-title female">♀ {% trans "Кошки" %}</div>
-        <div class="litter-section-count">{{ females|length }}</div>
-      </div>
-
-      <div class="litter-kittens-grid">
-        {% for kitten in females %}
-          {% include "litter_kitten_card.html" with kitten=kitten location=kitten_locations|get_item:kitten.pk %}
-        {% endfor %}
-      </div>
-    </div>
-  {% endif %}
-
-</div>
-
+</section>
 {% endblock %}

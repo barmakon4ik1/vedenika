@@ -521,6 +521,14 @@ class LitterDetailView(DetailView):
             else:
                 kitten_locations[kitten.pk] = None
 
+        album = (
+            litter.gallery_albums
+            .filter(is_active=True, category=GalleryAlbum.Category.LITTER)
+            .first()
+        )
+
+        card_image = album.get_cover() if album else None
+
         context.update({
             "kittens":          kittens,
             "males":            males,
@@ -529,6 +537,8 @@ class LitterDetailView(DetailView):
             "age_weeks":        age_weeks,
             "is_active":        is_active,
             "kitten_locations": kitten_locations,
+            "card_image": card_image,
+            "album": album,
         })
         return context
 

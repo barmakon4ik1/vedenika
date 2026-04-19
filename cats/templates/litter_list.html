@@ -61,25 +61,20 @@
 
                 {% if item.kittens %}
                   <div class="litter-card-compact__kittens">
-                    {% for kitten in item.kittens|slice:":6" %}
-                      <a href="{% url 'cat_detail' kitten.pk %}" class="litter-card-compact__kitten-thumb">
-                        {% with img=kitten.get_main_image %}
-                          {% if img %}
-                            <img src="{{ img.image.url }}" alt="{{ kitten.registered_name }}">
-                          {% else %}
-                            <div class="litter-card-compact__kitten-empty">
-                              {% if kitten.sex == "M" %}♂{% else %}♀{% endif %}
-                            </div>
-                          {% endif %}
-                        {% endwith %}
-                      </a>
-                    {% endfor %}
-                    {% if item.kittens|length > 6 %}
-                      <a href="{% url 'litter_detail' litter.pk %}" class="litter-card-compact__kitten-more">
-                        +{{ item.kittens|length|add:"-6" }}
-                      </a>
-                    {% endif %}
-                  </div>
+                      {% for kitten in item.kittens|slice:":10" %}
+                        <a href="{% url 'cat_detail' kitten.pk %}" class="litter-card-compact__kitten-thumb">
+                          {% with img=kitten.get_main_image %}
+                            {% if img %}
+                              <img src="{{ img.image.url }}" alt="{{ kitten.registered_name }}">
+                            {% else %}
+                              <div class="litter-card-compact__kitten-empty">
+                                {% if kitten.sex == "M" %}♂{% else %}♀{% endif %}
+                              </div>
+                            {% endif %}
+                          {% endwith %}
+                        </a>
+                      {% endfor %}
+                    </div>
                 {% endif %}
 
                 <div class="litter-card-compact__stats">
@@ -97,9 +92,9 @@
                   </div>
                 </div>
 
-                <div class="litter-card-compact__actions">
-                  <a href="{% url 'litter_detail' litter.pk %}" class="button button--secondary">Mehr erfahren</a>
-                </div>
+{#                <div class="litter-card-compact__actions">#}
+{#                  <a href="{% url 'litter_detail' litter.pk %}" class="button button--secondary">Mehr erfahren</a>#}
+{#                </div>#}
               </div>
             </article>
             {% endwith %}
