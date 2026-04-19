@@ -1981,3 +1981,22 @@ a {
     justify-content: center;
     padding-top: 0.1rem;
 }
+
+/* Компактные карточки контактов */
+.cat-detail-info-column .peek-card {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    padding: 10px 14px;
+}
+
+.cat-detail-info-column .peek-card__empty {
+    font-size: 0.85rem;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.cat-detail-info-column .peek-card__title {
+    font-size: 0.95rem;
+}

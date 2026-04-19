@@ -100,36 +100,40 @@
     </footer>
 
     <script>
-        (function () {
-            const toggle = document.querySelector('[data-menu-toggle]');
-            const panel = document.querySelector('[data-menu-panel]');
-            if (toggle && panel) {
-                toggle.addEventListener('click', function () {
-                    const expanded = toggle.getAttribute('aria-expanded') === 'true';
-                    toggle.setAttribute('aria-expanded', String(!expanded));
-                    panel.classList.toggle('is-open');
-                    document.body.classList.toggle('menu-open');
-                });
-            }
+    (function () {
+        const toggle = document.querySelector('[data-menu-toggle]');
+        const panel = document.querySelector('[data-menu-panel]');
+        if (toggle && panel) {
+            toggle.addEventListener('click', function () {
+                const expanded = toggle.getAttribute('aria-expanded') === 'true';
+                toggle.setAttribute('aria-expanded', String(!expanded));
+                panel.classList.toggle('is-open');
+                document.body.classList.toggle('menu-open');
+            });
+        }
 
-            const scrollTopBtn = document.querySelector('[data-scroll-top]');
-            if (scrollTopBtn) {
-                const onScroll = () => {
-                    if (window.scrollY > 500) {
-                        scrollTopBtn.classList.add('is-visible');
-                    } else {
-                        scrollTopBtn.classList.remove('is-visible');
-                    }
-                };
-                window.addEventListener('scroll', onScroll, { passive: true });
-                onScroll();
+        const scrollTopBtn = document.querySelector('[data-scroll-top]');
+        if (scrollTopBtn) {
+            const onScroll = () => {
+                const threshold = window.innerWidth <= 991 ? 120 : 180;
 
-                scrollTopBtn.addEventListener('click', () => {
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                });
-            }
-        })();
-    </script>
+                if (window.scrollY > threshold) {
+                    scrollTopBtn.classList.add('is-visible');
+                } else {
+                    scrollTopBtn.classList.remove('is-visible');
+                }
+            };
+
+            window.addEventListener('scroll', onScroll, { passive: true });
+            window.addEventListener('resize', onScroll);
+            onScroll();
+
+            scrollTopBtn.addEventListener('click', () => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
+    })();
+</script>
     {% block extra_js %}{% endblock %}
 </body>
 </html>

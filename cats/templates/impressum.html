@@ -5,118 +5,244 @@
 {% block title %}Impressum — Vedenika{% endblock %}
 
 {% block content %}
+<section class="cats-landing">
+  <div class="container">
 
-<div class="form-page-wrap">
-
-  <nav class="breadcrumb-warm">
-    <a href="{% url 'home' %}">{% trans "Главная" %}</a>
-    <span class="breadcrumb-sep">/</span>
-    <span class="breadcrumb-current">Impressum</span>
-  </nav>
-
-  <div class="page-header">
-    <div>
-      <div class="eyebrow">{% trans "Правовая информация" %}</div>
-      <h1 class="page-title"><em>Impressum</em></h1>
-    </div>
-  </div>
-
-  <!-- § 5 TMG -->
-  <div class="form-section">
-    <div class="form-section-header">
-      <div class="form-section-title">Angaben gemäß § 5 TMG</div>
-    </div>
-
-    {% if owner %}
-      <div class="impressum-block">
-        <div class="impressum-name">{{ owner.first_name }} {{ owner.last_name }}</div>
-        <div class="impressum-label">{% trans "Privatperson / Частное лицо" %}</div>
+    <section class="cats-hero">
+      <div class="cats-hero__content">
+        <h1 class="hero-cattery__title">Impressum & Datenschutz</h1>
       </div>
+    </section>
 
-      <div class="impressum-block">
-        <div class="impressum-section-title">{% trans "Standort / Местонахождение" %}</div>
-        <div class="impressum-text">
-          {% if owner.address and owner.address.city %}
-            {{ owner.address.city }}{% if owner.address.country %}, {{ owner.address.country }}{% endif %}
-          {% else %}
-            <span class="impressum-placeholder">Pforzheim, Deutschland</span>
-          {% endif %}
+    <div class="cat-detail-layout">
+
+      <!-- Левая колонка -->
+      <div class="cat-detail-media-column">
+
+        <div class="cat-detail-main-photo-card">
+          <div class="cat-detail-main-photo-link">
+            <img src="{% static 'img/Vedenika-Logo2.png' %}" alt="Vedenika" class="cat-detail-main-photo">
+          </div>
         </div>
-      </div>
 
-      <div class="impressum-block">
-        <div class="impressum-section-title">{% trans "Kontakt / Контакт" %}</div>
-        <div class="impressum-contacts">
-          {% if owner.email %}
-            <div class="impressum-contact-row">
-              <span class="impressum-contact-label">E-Mail</span>
-              <a href="mailto:{{ owner.email }}" class="impressum-contact-value">{{ owner.email }}</a>
+        <div class="cat-detail-info-card">
+          <div class="cat-detail-section-title">Angaben gemäß § 5 DDG</div>
+
+          {% if owner %}
+            <div class="cat-detail-fields-grid">
+
+              <div class="cat-detail-field">
+                <div class="cat-detail-field-label">{% trans "Name" %}</div>
+                <div class="cat-detail-field-value">
+                  {{ owner.first_name }} {{ owner.last_name }}
+                </div>
+              </div>
+
+              <div class="cat-detail-field">
+                <div class="cat-detail-field-label">{% trans "Status" %}</div>
+                <div class="cat-detail-field-value">
+                  {% trans "Privatperson" %}
+                </div>
+              </div>
+
+              <div class="cat-detail-field">
+                <div class="cat-detail-field-label">{% trans "Standort" %}</div>
+                <div class="cat-detail-field-value">
+                  {% if owner.address and owner.address.city %}
+                    {{ owner.address.city }}{% if owner.address.country %}, {{ owner.address.country }}{% endif %}
+                  {% else %}
+                    Pforzheim, Deutschland
+                  {% endif %}
+                </div>
+              </div>
+
+              {% if owner.email %}
+                <div class="cat-detail-field">
+                  <div class="cat-detail-field-label">E-Mail</div>
+                  <div class="cat-detail-field-value">
+                    <a href="mailto:{{ owner.email }}">{{ owner.email }}</a>
+                  </div>
+                </div>
+              {% endif %}
+
             </div>
+
+            <div class="cat-detail-subtitle" style="margin-top: 1rem;">
+              {% trans "Die vollständige postalische Anschrift wird auf Anfrage per E-Mail mitgeteilt." %}
+            </div>
+          {% else %}
+            <div class="cat-detail-subtitle">— {% trans "Keine Daten verfügbar" %} —</div>
           {% endif %}
         </div>
-        <div class="impressum-note">
-          {% trans "Полный почтовый адрес предоставляется по запросу по электронной почте." %}
-        </div>
+
       </div>
 
-    {% else %}
-      <div class="impressum-placeholder">— {% trans "Данные не найдены" %} —</div>
-    {% endif %}
+      <!-- Правая колонка -->
+      <div class="cat-detail-info-column">
+
+        <div class="cat-detail-info-card">
+          <div class="cat-detail-section-title">{% trans "Hinweis" %}</div>
+          <div class="cat-detail-subtitle">
+            {% trans "Diese Website ist ein privates, nichtkommerzielles Projekt von Liebhabern der Maine-Coon-Rasse." %}
+          </div>
+          <div class="cat-detail-subtitle">
+            {% trans "Es erfolgt kein Verkauf über diese Website. Informationen zu Katzen, Würfen und Galerie dienen der Vorstellung der Cattery und der Kontaktaufnahme." %}
+          </div>
+        </div>
+
+{#        <div class="cat-detail-info-card">#}
+{#          <div class="cat-detail-section-title">Verantwortlich für den Inhalt</div>#}
+{#          {% if owner %}#}
+{#            <div class="cat-detail-subtitle">#}
+{#              {{ owner.first_name }} {{ owner.last_name }}#}
+{#            </div>#}
+{#          {% else %}#}
+{#            <div class="cat-detail-subtitle">—</div>#}
+{#          {% endif %}#}
+{#          <div class="cat-detail-subtitle">#}
+{#            {% trans "Sofern einzelne Inhalte journalistisch-redaktionellen Charakter haben, ist die oben genannte Person inhaltlich verantwortlich." %}#}
+{#          </div>#}
+{#        </div>#}
+
+        <div class="cat-detail-info-card">
+          <div class="cat-detail-section-title">Haftung für Inhalte</div>
+          <div class="cat-detail-subtitle">
+            {% trans "Die Inhalte dieser Website wurden mit größter Sorgfalt erstellt. Für Richtigkeit, Vollständigkeit und Aktualität wird jedoch keine Gewähr übernommen." %}
+          </div>
+        </div>
+
+        <div class="cat-detail-info-card">
+          <div class="cat-detail-section-title">Urheberrecht</div>
+          <div class="cat-detail-subtitle">
+            {% trans "Die auf dieser Website veröffentlichten Inhalte, Texte und Bilder unterliegen dem deutschen Urheberrecht. Jede Verwendung außerhalb der Grenzen des Urheberrechts bedarf der vorherigen Zustimmung." %}
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Длинная часть ниже -->
+    <section class="breed-story">
+      <div class="section-heading">
+        <h2>{% trans "Datenschutzhinweise" %}</h2>
+        <p>{% trans "Nachfolgend informieren wir über die Verarbeitung personenbezogener Daten beim Besuch dieser Website." %}</p>
+      </div>
+
+      <div class="feature-panel-grid">
+        <article class="feature-panel">
+          <h3>{% trans "1. Verantwortliche Stelle" %}</h3>
+          {% if owner %}
+            <p>
+              {{ owner.first_name }} {{ owner.last_name }}<br>
+              {% if owner.address and owner.address.city %}
+                {{ owner.address.city }}{% if owner.address.country %}, {{ owner.address.country }}{% endif %}<br>
+              {% endif %}
+              {% if owner.email %}
+                E-Mail: <a href="mailto:{{ owner.email }}">{{ owner.email }}</a>
+              {% endif %}
+            </p>
+          {% else %}
+            <p>—</p>
+          {% endif %}
+        </article>
+
+        <article class="feature-panel">
+          <h3>{% trans "2. Zugriffsdaten / Server-Logfiles" %}</h3>
+          <p>
+            {% trans "Beim Aufruf dieser Website können durch den Hosting-Anbieter technisch erforderliche Daten verarbeitet werden, insbesondere IP-Adresse, Datum und Uhrzeit des Zugriffs, angeforderte Datei, übertragene Datenmenge, Browsertyp und Betriebssystem." %}
+          </p>
+          <p>
+            {% trans "Die Verarbeitung erfolgt zur Gewährleistung von Stabilität, Sicherheit und technischer Auslieferung der Website." %}
+          </p>
+        </article>
+
+        <article class="feature-panel">
+          <h3>{% trans "3. Rechtsgrundlagen" %}</h3>
+          <p>
+            {% trans "Die Verarbeitung technisch notwendiger Zugriffsdaten erfolgt auf Grundlage von Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an sicherem und funktionsfähigem Betrieb der Website)." %}
+          </p>
+          <p>
+            {% trans "Soweit eine Kontaktaufnahme per E-Mail erfolgt, erfolgt die Verarbeitung der mitgeteilten Daten zur Bearbeitung der Anfrage auf Grundlage von Art. 6 Abs. 1 lit. b DSGVO oder Art. 6 Abs. 1 lit. f DSGVO." %}
+          </p>
+        </article>
+
+        <article class="feature-panel">
+          <h3>{% trans "4. Kontaktaufnahme per E-Mail" %}</h3>
+          <p>
+            {% trans "Wenn Sie uns per E-Mail kontaktieren, verarbeiten wir die von Ihnen mitgeteilten Daten ausschließlich zur Bearbeitung Ihrer Anfrage und für eventuelle Anschlussfragen." %}
+          </p>
+          <p>
+            {% trans "Eine Weitergabe an Dritte erfolgt nicht, sofern keine gesetzliche Verpflichtung besteht." %}
+          </p>
+        </article>
+
+        <article class="feature-panel">
+          <h3>{% trans "5. Empfänger personenbezogener Daten" %}</h3>
+          <p>
+            {% trans "Empfänger können technische Dienstleister sein, insbesondere Hosting-Anbieter oder E-Mail-Dienstleister, soweit dies für den Betrieb der Website und die Kommunikation erforderlich ist." %}
+          </p>
+        </article>
+
+        <article class="feature-panel">
+          <h3>{% trans "6. Speicherdauer" %}</h3>
+          <p>
+            {% trans "Server-Logfiles werden nur so lange gespeichert, wie dies aus technischen und sicherheitsrelevanten Gründen erforderlich ist." %}
+          </p>
+          <p>
+            {% trans "Daten aus Kontaktanfragen werden gelöscht, sobald der Zweck der Verarbeitung entfällt und keine gesetzlichen Aufbewahrungspflichten bestehen." %}
+          </p>
+        </article>
+
+        <article class="feature-panel">
+          <h3>{% trans "7. Cookies" %}</h3>
+          <p>
+            {% trans "Diese Website verwendet nach aktuellem Stand keine Cookies zu Werbe- oder Trackingzwecken." %}
+          </p>
+          <p>
+            {% trans "Soweit technisch notwendige Sitzungs- oder Sicherheitsfunktionen eingesetzt werden, dienen diese ausschließlich dem Betrieb der Website." %}
+          </p>
+        </article>
+
+        <article class="feature-panel">
+          <h3>{% trans "8. Externe Links und Social Media" %}</h3>
+          <p>
+            {% trans "Diese Website enthält Links zu externen Diensten wie Instagram, Facebook oder WhatsApp. Beim Anklicken dieser Links verlassen Sie diese Website. Für die Datenverarbeitung auf den verlinkten Seiten sind ausschließlich deren Betreiber verantwortlich." %}
+          </p>
+        </article>
+
+        <article class="feature-panel">
+          <h3>{% trans "9. Ihre Rechte" %}</h3>
+          <p>
+            {% trans "Sie haben das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung, Datenübertragbarkeit sowie Widerspruch gegen die Verarbeitung Ihrer personenbezogenen Daten im Rahmen der gesetzlichen Vorgaben." %}
+          </p>
+          <p>
+            {% trans "Sofern eine Verarbeitung auf Einwilligung beruht, haben Sie das Recht, diese Einwilligung jederzeit mit Wirkung für die Zukunft zu widerrufen." %}
+          </p>
+        </article>
+
+        <article class="feature-panel">
+          <h3>{% trans "10. Beschwerderecht" %}</h3>
+          <p>
+            {% trans "Sie haben das Recht, sich bei einer Datenschutz-Aufsichtsbehörde zu beschweren, wenn Sie der Ansicht sind, dass die Verarbeitung Ihrer personenbezogenen Daten rechtswidrig erfolgt." %}
+          </p>
+        </article>
+
+        <article class="feature-panel">
+          <h3>{% trans "11. Keine automatisierte Entscheidungsfindung" %}</h3>
+          <p>
+            {% trans "Eine automatisierte Entscheidungsfindung einschließlich Profiling findet auf dieser Website nicht statt." %}
+          </p>
+        </article>
+
+        <article class="feature-panel">
+          <h3>{% trans "12. Stand dieser Hinweise" %}</h3>
+          <p>
+            {% trans "Diese Hinweise wurden zuletzt aktualisiert, um die derzeitige Struktur und Funktionsweise dieser Website abzubilden. Bei technischen oder rechtlichen Änderungen werden die Inhalte entsprechend angepasst." %}
+          </p>
+        </article>
+      </div>
+    </section>
+
   </div>
-
-  <!-- Hinweis -->
-  <div class="form-section">
-    <div class="form-section-header">
-      <div class="form-section-title">Hinweis / Примечание</div>
-    </div>
-    <div class="impressum-legal-text">
-      <p>
-        {% trans "Данный сайт является частным некоммерческим проектом любителей породы мейн-кун. Никакая коммерческая деятельность на сайте не ведётся." %}
-      </p>
-      <p>
-        <strong>Privatpersonen</strong> sind nach dem Urteil des LG München I (Az. 21 O 6872/22) nicht verpflichtet,
-        ihre vollständige Privatadresse im Impressum anzugeben, sofern eine andere zuverlässige Kontaktmöglichkeit
-        (z.B. E-Mail-Adresse) vorhanden ist.
-      </p>
-    </div>
-  </div>
-
-  <!-- Haftungsausschluss -->
-  <div class="form-section">
-    <div class="form-section-header">
-      <div class="form-section-title">Haftungsausschluss</div>
-    </div>
-    <div class="impressum-legal-text">
-      <p>
-        <strong>Haftung für Inhalte:</strong>
-        Die Inhalte dieser Seiten wurden mit größter Sorgfalt erstellt.
-        Für die Richtigkeit, Vollständigkeit und Aktualität können wir keine Gewähr übernehmen.
-      </p>
-      <p>
-        <strong>Urheberrecht:</strong>
-        Die erstellten Inhalte und Werke unterliegen dem deutschen Urheberrecht.
-        Die Vervielfältigung bedarf der schriftlichen Zustimmung.
-      </p>
-    </div>
-  </div>
-
-  <!-- Datenschutz -->
-  <div class="form-section">
-    <div class="form-section-header">
-      <div class="form-section-title">Datenschutzerklärung</div>
-    </div>
-    <div class="impressum-legal-text">
-      <p>
-        <strong>Datenschutz:</strong>
-        Diese Website erhebt keine personenbezogenen Daten ohne ausdrückliche Einwilligung.
-        Es werden keine Cookies zu Werbezwecken eingesetzt.
-      </p>
-      <p>
-        Bei Fragen zum Datenschutz wenden Sie sich bitte per E-Mail an uns.
-      </p>
-    </div>
-  </div>
-
-</div>
-
+</section>
 {% endblock %}

@@ -6,155 +6,144 @@
 {% block title %}{{ album|trans_title }} — Vedenika{% endblock %}
 
 {% block content %}
+<section class="cat-gallery-page">
+  <div class="container">
 
-<div class="gallery-page-wrap">
+    <nav class="detail-breadcrumb" aria-label="{% trans 'Breadcrumb' %}">
+      <a href="{% url 'home' %}">{% trans "Startseite" %}</a>
+      <span class="detail-breadcrumb__sep">/</span>
+      <a href="{% url 'gallery_list' %}">{% trans "Galerie" %}</a>
+      <span class="detail-breadcrumb__sep">/</span>
+      <span class="detail-breadcrumb__current">{{ album|trans_title }}</span>
+    </nav>
 
-  <!-- BREADCRUMB -->
-  <nav class="breadcrumb-warm">
-    <a href="{% url 'home' %}">{% trans "Главная" %}</a>
-    <span class="breadcrumb-sep">/</span>
-    <a href="{% url 'gallery_list' %}">{% trans "Галерея" %}</a>
-    <span class="breadcrumb-sep">/</span>
-    <span class="breadcrumb-current">
-      {{ album|trans_title }}
-    </span>
-  </nav>
-
-  <!-- PAGE HEADER -->
-  <div class="gallery-header">
-    <div class="gallery-header-left">
-      <div class="eyebrow">
-        {% if album.category == 'LIFE' %}{% trans "Повседневная жизнь" %}
-        {% elif album.category == 'LITTER' %}{% trans "Помёт" %}
-        {% else %}{% trans "Художественные" %}{% endif %}
-        {% if album.date %} · {{ album.date|date:"d.m.Y" }}{% endif %}
-      </div>
-      <h1 class="page-title">
-        <em>{{ album|trans_title }}</em>
-      </h1>
-      {% with desc=album|trans_description %}
-        {% if desc %}
-          <p class="gallery-album-desc">{{ desc }}</p>
-        {% endif %}
-      {% endwith %}
-    </div>
-    <div class="gallery-header-actions">
-      <a href="{% url 'gallery_list' %}" class="btn-sq btn-sq-outline">
-        ← {% trans "Все альбомы" %}
-      </a>
-    </div>
-  </div>
-
-  <!-- PHOTO COUNT -->
-  {% if photos %}
-    <div class="results-meta">
-      <div class="results-count">
-        {% trans "Фотографий" %}: <strong>{{ photos|length }}</strong>
-      </div>
-    </div>
-  {% endif %}
-
-  <!-- MASONRY GRID -->
-  {% if photos %}
-    <div class="gallery-grid" id="galleryGrid">
-      {% for photo in photos %}
-        <div class="gallery-item"
-             data-index="{{ forloop.counter0 }}"
-             data-src="{{ photo.image.url }}">
-          <img src="{{ photo.image.url }}"
-               alt="{% if photo.title %}{{ photo.title }}{% else %}{{ album|trans_title }}{% endif %}">
-
-          {% if photo.title %}
-            <div class="gallery-photo-caption">{{ photo.title }}</div>
-          {% endif %}
-
-          {% if photo.instagram_url %}
-            <a href="{{ photo.instagram_url }}"
-               target="_blank"
-               rel="noopener"
-               class="gallery-insta-badge"
-               onclick="event.stopPropagation()">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <rect x="2" y="2" width="20" height="20" rx="5"/>
-                <circle cx="12" cy="12" r="4"/>
-                <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" stroke="none"/>
-              </svg>
-            </a>
-          {% endif %}
+    <section class="cats-hero">
+      <div class="cats-hero__content">
+        <div class="hero-cattery__eyebrow">
+          {% if album.category == 'LIFE' %}{% trans "Alltag" %}
+          {% elif album.category == 'LITTER' %}{% trans "Wurf" %}
+          {% else %}{% trans "Künstlerisch" %}{% endif %}
+          {% if album.date %} · {{ album.date|date:"d.m.Y" }}{% endif %}
         </div>
-      {% endfor %}
-    </div>
-
-    <!-- LIGHTBOX -->
-    <div class="lightbox-backdrop" id="lightbox">
-      <button class="lightbox-close" id="lightboxClose">✕</button>
-      <button class="lightbox-nav prev" id="lightboxPrev">‹</button>
-      <div class="lightbox-inner">
-        <img src="" alt="" class="lightbox-img" id="lightboxImg">
-        <div class="lightbox-caption" id="lightboxCaption"></div>
+        <h1 class="hero-cattery__title">{{ album|trans_title }}</h1>
+        {% with desc=album|trans_description %}
+          {% if desc %}
+            <p class="hero-cattery__lead">{{ desc }}</p>
+          {% endif %}
+        {% endwith %}
       </div>
-      <button class="lightbox-nav next" id="lightboxNext">›</button>
-      <div class="lightbox-counter" id="lightboxCounter"></div>
-    </div>
+    </section>
 
-    <script>
-      (function() {
-        var items   = document.querySelectorAll('.gallery-item');
-        var lb      = document.getElementById('lightbox');
-        var lbImg   = document.getElementById('lightboxImg');
-        var lbCap   = document.getElementById('lightboxCaption');
-        var lbCount = document.getElementById('lightboxCounter');
-        var total   = items.length;
-        var current = 0;
+    {% if photos %}
+      <div class="pagination-wrap" style="justify-content: flex-start; padding-top: 0; padding-bottom: 1rem;">
+        <span class="pagination-current">{% trans "Fotos" %}: {{ photos|length }}</span>
+        <a href="{% url 'gallery_list' %}" class="button button--secondary">← {% trans "Alle Alben" %}</a>
+      </div>
 
-        function open(idx) {
-          current = idx;
-          var item    = items[idx];
-          lbImg.src   = item.dataset.src;
-          var capEl   = item.querySelector('.gallery-photo-caption');
-          lbCap.textContent = capEl ? capEl.textContent : '';
-          lbCount.textContent = (idx + 1) + ' / ' + total;
-          lb.classList.add('open');
-          document.body.style.overflow = 'hidden';
-        }
+      <div class="gallery-wrap">
+        <div class="gallery-grid" id="galleryGrid">
+          {% for photo in photos %}
+            <div class="gallery-item"
+                 data-index="{{ forloop.counter0 }}"
+                 data-src="{{ photo.image.url }}">
+              <img src="{{ photo.image.url }}"
+                   alt="{% if photo.title %}{{ photo.title }}{% else %}{{ album|trans_title }}{% endif %}">
 
-        function close() {
-          lb.classList.remove('open');
-          document.body.style.overflow = '';
-        }
+              {% if photo.instagram_url %}
+                <a href="{{ photo.instagram_url }}"
+                   target="_blank"
+                   rel="noopener"
+                   class="gallery-insta-badge"
+                   onclick="event.stopPropagation()">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="2" y="2" width="20" height="20" rx="5"/>
+                    <circle cx="12" cy="12" r="4"/>
+                    <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" stroke="none"/>
+                  </svg>
+                </a>
+              {% endif %}
 
-        function prev() { open((current - 1 + total) % total); }
-        function next() { open((current + 1) % total); }
+              {% if photo.title %}
+                <div class="gallery-item-overlay">
+                  <div class="gallery-item-actions">
+                    <span class="gallery-action-btn is-primary">{{ photo.title }}</span>
+                  </div>
+                </div>
+              {% endif %}
+            </div>
+          {% endfor %}
+        </div>
+      </div>
 
-        items.forEach(function(item) {
-          item.addEventListener('click', function(e) {
-            if (e.target.closest('a')) return;
-            open(parseInt(item.dataset.index));
+      <div class="lightbox-backdrop" id="lightbox">
+        <button class="lightbox-close" id="lightboxClose">✕</button>
+        <button class="lightbox-nav prev" id="lightboxPrev">‹</button>
+        <div class="lightbox-inner">
+          <img src="" alt="" class="lightbox-img" id="lightboxImg">
+          <div class="lightbox-caption" id="lightboxCaption"></div>
+        </div>
+        <button class="lightbox-nav next" id="lightboxNext">›</button>
+        <div class="lightbox-counter" id="lightboxCounter"></div>
+      </div>
+
+      <script>
+        (function() {
+          var items   = document.querySelectorAll('.gallery-item');
+          var lb      = document.getElementById('lightbox');
+          var lbImg   = document.getElementById('lightboxImg');
+          var lbCap   = document.getElementById('lightboxCaption');
+          var lbCount = document.getElementById('lightboxCounter');
+          var total   = items.length;
+          var current = 0;
+
+          function open(idx) {
+            current = idx;
+            var item    = items[idx];
+            lbImg.src   = item.dataset.src;
+            var capEl   = item.querySelector('.gallery-action-btn.is-primary');
+            lbCap.textContent = capEl ? capEl.textContent : '';
+            lbCount.textContent = (idx + 1) + ' / ' + total;
+            lb.classList.add('open');
+            document.body.style.overflow = 'hidden';
+          }
+
+          function close() {
+            lb.classList.remove('open');
+            document.body.style.overflow = '';
+          }
+
+          function prev() { open((current - 1 + total) % total); }
+          function next() { open((current + 1) % total); }
+
+          items.forEach(function(item) {
+            item.addEventListener('click', function(e) {
+              if (e.target.closest('a')) return;
+              open(parseInt(item.dataset.index));
+            });
           });
-        });
 
-        document.getElementById('lightboxClose').addEventListener('click', close);
-        document.getElementById('lightboxPrev').addEventListener('click', prev);
-        document.getElementById('lightboxNext').addEventListener('click', next);
-        lb.addEventListener('click', function(e) { if (e.target === lb) close(); });
+          document.getElementById('lightboxClose').addEventListener('click', close);
+          document.getElementById('lightboxPrev').addEventListener('click', prev);
+          document.getElementById('lightboxNext').addEventListener('click', next);
+          lb.addEventListener('click', function(e) { if (e.target === lb) close(); });
 
-        document.addEventListener('keydown', function(e) {
-          if (!lb.classList.contains('open')) return;
-          if (e.key === 'Escape')      close();
-          if (e.key === 'ArrowLeft')   prev();
-          if (e.key === 'ArrowRight')  next();
-        });
-      })();
-    </script>
+          document.addEventListener('keydown', function(e) {
+            if (!lb.classList.contains('open')) return;
+            if (e.key === 'Escape') close();
+            if (e.key === 'ArrowLeft') prev();
+            if (e.key === 'ArrowRight') next();
+          });
+        })();
+      </script>
 
-  {% else %}
-    <div class="empty-gallery">
-      <div class="empty-gallery-icon">📷</div>
-      <div class="empty-gallery-title">{% trans "В альбоме пока нет фотографий" %}</div>
-      <p class="empty-gallery-desc">{% trans "Скоро здесь появятся фото." %}</p>
-    </div>
-  {% endif %}
+    {% else %}
+      <div class="empty-gallery">
+        <div class="empty-gallery__icon">📷</div>
+        <div class="empty-gallery__title">{% trans "Noch keine Fotos im Album" %}</div>
+        <p class="empty-gallery__desc">{% trans "Bald erscheinen hier Bilder." %}</p>
+      </div>
+    {% endif %}
 
-</div>
-
+  </div>
+</section>
 {% endblock %}
